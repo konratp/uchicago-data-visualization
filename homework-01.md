@@ -48,6 +48,130 @@ data.
 
 ## Question 3: NYC marathon winners
 
+``` r
+#define dataset of interest
+marathon <- nyc_marathon
+
+#create histogram of the distribution of marathon times
+ggplot(data = marathon,
+       mapping = aes(y = time_hrs),)+
+  geom_histogram(binwidth = 0.03, na.rm = TRUE, fill = "navy")+
+  theme_minimal()+
+  labs(title = "Distribution of Finishing Times of NYC Marathon Winners",
+       "Includes data from NYC Marathons between 1970-2020",
+       y = "Marathon Completion Time in Hours",
+       x = "Number of Winners Finishing per Completion Time",
+       caption = "Source: OpenIntro Package")
+```
+
+![](homework-01_files/figure-gfm/exercise-3a-1.png)<!-- -->
+
+``` r
+#create box plot of the distribution of marathon times
+ggplot(data = marathon,
+       mapping = aes(y = time_hrs),)+
+  geom_boxplot(na.rm = TRUE, color = "navy")+
+  theme_minimal()+
+  theme(axis.text.x=element_blank())+
+  labs(title = "Distribution of Finishing Times of NYC Marathon Winners",
+       subtitle = "Includes data from NYC Marathons between 1970-2020",
+       y = "Marathon Completion Time in Hours",
+       caption = "Source: OpenIntro Package")
+```
+
+![](homework-01_files/figure-gfm/exercise-3a-2.png)<!-- -->
+
+The above histogram and box plots show us the distribution of finishing
+times of NYC Marathon winners between 1970 and 2020. The box plot
+indicates that the interquartile range of these finishing times is
+between a little over 2.125 and a little under 2.5, with the median
+finishing time being roughly 2.375 hours. We can also see that there are
+four outliers in the data, all of which Marathon winners that won with
+relatively slow times. Neither the median nor the interquartile range
+are apparent in the histogram. However, the histogram potentially
+indicates the mode of the data, though no conclusive statements can be
+made about the mode as the visualization of it depends on the bin width
+which is chosen arbitrarily. The histogram also provides more insights
+into the distribution of values within the interquartile range; for
+example, we can tell that the distribution of winning times is bimodal
+(perhaps due to gender?). The box plot does not provide us with those
+same insights into the data structure.
+
+``` r
+#create side by side box plots of finishing time by gender
+ggplot(data = marathon,
+       mapping = aes(y = time_hrs, color = division),)+
+  scale_color_manual(values = c("magenta", "cyan"))+
+  geom_boxplot(na.rm = TRUE, show.legend = FALSE)+
+  facet_wrap(vars(division))+
+  theme_minimal()+
+  theme(axis.text.x=element_blank())+
+  labs(title = "Distribution of Finishing Times of NYC Marathon Winners by Gender",
+       subtitle = "Includes data from NYC Marathons between 1970-2020",
+       y = "Marathon Completion Time in Hours",
+       x = "Gender",
+       caption = "Source: OpenIntro Package")
+```
+
+![](homework-01_files/figure-gfm/exercise-3b-1.png)<!-- -->
+
+Comparing the completion times of female (cyan-colored) and male
+(magenta-colored) NYC Marathon winners, one can see that men tend to
+have lower completion times and run the Marathon quicker than women,
+indicated by the lower median and interquartile range. However, there
+are a few outliers among the male runners who appear to have finished
+the race at a similar or slower time to the median of female Marathon
+winners. In comparison to the box plot constructed in exercise 3a, the
+box plots divided by gender reveal more outliers.
+
+``` r
+ggplot(data = marathon,
+       mapping = aes(y = time_hrs, color = division))+
+  scale_color_manual(values = c("magenta", "cyan"))+
+  geom_boxplot(na.rm = TRUE, show.legend = FALSE)+
+  theme_minimal()+
+  theme(axis.text.x=element_blank())+
+  labs(title = "Distribution of Finishing Times of NYC Marathon Winners by Gender",
+       subtitle = "Includes data from NYC Marathons between 1970-2020",
+       y = "Marathon Completion Time in Hours",
+       x = "Gender",
+       caption = "Source: OpenIntro Package")
+```
+
+![](homework-01_files/figure-gfm/exercise-3c-1.png)<!-- -->
+
+\[INCLUDE EXPLANATION OF WHAT’S REDUNDANT\]
+
+``` r
+ggplot(data = marathon,
+       mapping = aes(x = year, y = time_hrs, color = division, shape = division))+
+  scale_color_manual(values = c("magenta", "cyan"), name = "Gender")+
+  scale_shape_manual(values = c(16, 17), name = "Gender")+
+  geom_point(na.rm = TRUE)+
+  theme_minimal()+
+  labs(title = "Finishing Times of NYC Marathon Winners by Year and Gender",
+       subtitle = "Includes data from NYC Marathons between 1970-2020",
+       x = "Year",
+       y = "Marathon Completion Time in Hours",
+       caption = "Source: OpenIntro Package")
+```
+
+![](homework-01_files/figure-gfm/exercie-3d-1.png)<!-- -->
+
+This plot is the first one that allows us to better understand the
+changes in completion times by gender *and* over the years. We can see
+that every year, the male winner of the NYC marathon reached the finish
+line before the female winner of that year. Moreover, we can see that in
+some years, both the male and female winner finished quicker and in
+others, both finished slower. This might indicate that performance
+depends on situational factors that differ by year (e.g. different
+weather). We can also see that starting in the first few years, i.e. the
+early 1970s, both men and women performed worse in the Marathon.
+Starting in the mid-1970s, the completion times appear to stabilize for
+both men and women. This might be due to technological advances
+(e.g. new shoe technology) that both male and female participants
+benefited starting in the mid-1970s.
+
 ## Question 4: US counties
 
 ## Question 5: Napoleon’s march.
