@@ -4,28 +4,49 @@ author: "Konrat Pekkip"
 output: github_document
 ---
 
-```{r setup}
+```{r setup, include = FALSE}
 library(tidyverse)
 library(knitr)
 opts_chunk$set(echo=TRUE, include = TRUE, warning=FALSE, message=FALSE)
 ```
 
-1.  **Reverse-engineering the grammar of graphics.**
+## Question 1: Reverse-Engineering the Grammar of Graphics
 
-```{r exercise-1}
+**Data**: The data underlying this graph comes from ["The Covid Tracking Project"](https://covidtracking.com/).
 
-```
+**Aesthetics**: The creators of the graph map the following aesthetics to the data: Percent change in the 7-day average of tests administered (mapped to the y-axis, indicated by the color green), and percent change in the 7-day average of new COVID infections recorded (mapped to the y-axis, indicated by the color orange^[I'm not sure if this is accurate as I'm partially colorblind.]), both of which are relative to the starting value from June 1st, 2020. A third aesthetic mapped to the data is time (mapped to the x-axis), namely the time period between June 1st, 2020 and July 5th, 2020.
 
-2.  **Road traffic accidents in Edinburgh.**
+**Geometries**: The creators of the graph utilize line graphs to visualize the trends in the dataset. Moreover, they highlight the differences between the two variables mapped to the y-axis, number of tests administered and cases recorded, by shading the area between the two lines.
+
+**Facets**: The authors analyze the data not for the whole United States, but faceted by states, allowing for comparisons between every state (except Vermont and Hawai'i). Moreover, the graph is split in two groups, one of which consists of the 28 states with higher numbers of new cases than testing, the other consisting of the 21 states with higher numbers of tests than new cases.
+
+**Statistics**: The authors chose to include in the graph the percentage changes in numbers for both the number of new cases as well as the number of tests administered. This is particularly helpful because they do not include the x and y axes (and corresponding values) in the visualization.
+
+**Coordinates**: The authors chose not to include x or y axes in the visualization of the dataset, and do not provide another coordinate system in the visualization of the data.
+
+**Theme**: The authors chose to visualize the data using a very simplistic theme that does not include a coordinate system (as mentioned before) or a grid that would help us better understand trends in the data.
+
+## Question 2: Road traffic accidents in Edinburgh
 
 ```{r exercise-2}
 
 ```
 
-3.  **NYC marathon winners.**
+## Question 3: NYC marathon winners
 
+```{r exercise-3}
 
-4.  **US counties.**
+```
 
+## Question 4: US counties
 
-5.  **Napoleon’s march.**
+```{r exercise-4}
+
+```
+
+## Question 5: Napoleon’s march.
+
+```{r exercise-5}
+
+```
+
