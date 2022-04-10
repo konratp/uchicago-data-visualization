@@ -31,8 +31,21 @@ opts_chunk$set(echo=TRUE, include = TRUE, warning=FALSE, message=FALSE)
 ## Question 2: Road traffic accidents in Edinburgh
 
 ```{r exercise-2}
-
+#recreate plot indicating number of accidents during the day
+accidents %>%
+  mutate(weekend = ifelse(day_of_week == "Saturday" | day_of_week == "Sunday", "Weekend", "Weekday")) %>%
+  ggplot(mapping = aes(x = time, fill = severity))+
+  geom_density(alpha = 0.5)+
+  scale_fill_viridis_d(name = "Severity")+
+  facet_wrap(vars(weekend), ncol = 1)+
+  theme_minimal()+
+  labs(title = "Number of Accidents throughout the Day",
+       subtitle = "By Day of Week and Severity",
+       y = "Density",
+       x = "Time of Day")
 ```
+
+The above plot displays the density of accidents that occur in Edinburgh in 2018 both on weekdays and on weekends. The timing and density of slight accidents appears similar on weekends and weekdays, peaking around or a little after 4pm. Similarly, serious accidents appear to peak in the afternoon both on weekends and weekdays. Fatal accidents are only reported to occur on weekdays and not weekends, which is surprising given people's alcohol consumptions on weekends which one could expect to lead to higher numbers of fatal accidents. On weekdays, fatal accidents appear to peak a little before noon, and the number of fatal incidents that occur at night appears higher than those occurring in the afternoon.
 
 ## Question 3: NYC marathon winners
 
