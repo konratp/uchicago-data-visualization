@@ -368,40 +368,93 @@ ggplot(data = county,
 
 ``` r
 #define data set
-napoleon <- read_rds("data/napoleon.rds")
+napoleon <- read_rds("data/napoleon.rds") #defining an object that contains the list of three tibbles containing all relevant data
 
 #define different datasets from list
-cities <- napoleon$cities
-temperatures <- napoleon$temperatures
-troops <- napoleon$troops
+cities <- napoleon$cities #defining the cities dataset
+temperatures <- napoleon$temperatures #defining the temperatures dataset
+troops <- napoleon$troops #defining the troops dataset
+breaks <- c(1, 2, 3) * 10^5 #to print values not in exponential but regular notation
 
-#create ggplot with information from troops dataset
-breaks <- c(1, 2, 3) * 10^5 
-ggplot(data = troops, 
-                   mapping = aes(x = long, 
-                                 y = lat, 
-                                 group = group, 
-                                 color = direction, 
-                                 size = survivors)) +
-  geom_path(lineend = "round")+
-  scale_size(range = c(0.5, 15))+
-  scale_color_manual(values = c("#E8CBAB", "#1F1A1B"),
-                     labels = c("Advance", "Retreat"))+
-  guides(color = FALSE, size = FALSE)
+#create ggplot with information from troops and cities datasets
+ggtroops <- ggplot(data = troops, 
+                   mapping = aes(x = long,
+                                 y = lat))+ #create ggplot with longitude and latitude as x and y values
+  geom_path(aes(size = survivors,
+                colour = direction,
+                group = group,
+                alpha = 0.75), #specifying geom_path aesthetics to include number of survivors, direction (advancing or retreating), and different groups, also change transparency level
+            lineend = "round", #round line ends for better visual appeal
+            show.legend = FALSE)+ #disable legend
+  scale_size("Survivors", range = c(1,10),
+             labels = comma(breaks)) + #formatting the scales of the graph
+  scale_color_manual("Direction", 
+                     values = c("#E8CBAB", "#1F1A1B"),
+                     labels=c("Advance", "Retreat"))+ #setting the colors to the ones Minard used in his graph; indicating whether troops were advancing or retreating
+  geom_point(data = cities)+ #map city locations onto longitude/latitude
+  geom_text_repel(data = cities, 
+                  mapping = aes(label = city))+ #to avoid overlaying of different city names and data points
+  coord_cartesian(xlim = c(24, 38))+ #set x axis limits to be the same as temperature plot later
+  labs(title = "Figurative Map of the Successive Losses in Men of the French Army in the Russian campaign of 1812-1813",
+       x = NULL, 
+       y = NULL, 
+       alpha = NULL)+ #remove axis labels, set title
+  guides(color = "none",
+         size = "none")+ #removes legends of both the color argument (advance or retreat) and the size argument (number of survivors)
+  theme_void()+ #plots graph onto a blank slate as opposed to default grey ggplot2 theme
+  theme(plot.title = element_text(hjust = 0.5))
+
+#create ggplot with information from temperature dataset
+ggtemp <- temperatures %>%
+  mutate(label = paste0(temp, "° ", date))%>% #add ° symbol to temperatures for the graph to be closer to Minard's original
+  ggplot(mapping = aes(x = long, y = temp))+ #create ggplot with same longitudinal data as x axis, temperature as y axis
+  geom_path(color = "grey", size = 1.5)+ #maps progression of temperature in the color grey
+  geom_point(size = 1)+ #specifies size of data points
+  geom_text_repel(mapping = aes(label = label), 
+                  size=2.5)+ #to make sure all temperature data points are actually displayed on the graph
+  coord_cartesian(xlim = c(24, 38))+ #match x axis limits with ggtroops plot
+  labs(x = NULL, y="Temperature")+ #set y axis label to be temperature
+  theme_bw() + #set theme
+  theme(panel.grid.major.x = element_blank(), #removes all grid lines except for the temperature section
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.text.x = element_blank(), axis.ticks = element_blank(),#removes axis text and ticks
+        panel.border = element_blank(), #removes border around the plotting area
+        plot.title = element_text(hjust = 0.5))+ #centers title
+  labs(title = "Temperature in Degrees Réaumur",
+       caption = "Paris, November 20th, 1869")
+
+#merge both plots into single graph
+grid.arrange(ggtroops, ggtemp, nrow=2, heights=c(3.5, 1.2)) #assembles ggtroops and ggtemp plots
+grid.rect(width = .99, height = .99, gp = gpar(lwd = 2, col = "gray", fill = NA)) #add border surrounding entire graph
 ```
 
 ![](homework-01_files/figure-gfm/exercise-5-1.png)<!-- -->
 
-``` r
-ggplot(troops, aes(x = long, y = lat, group = group,
-                   color = direction, size = survivors)) +
-  geom_path(lineend = "round") +
-  scale_size(range = c(0.5, 15)) +
-  scale_colour_manual(values = c("#DFC17E", "#252523")) +
-  labs(x = NULL, y = NULL) +
-  guides(color = FALSE, size = FALSE)
-```
+In order to recreate Minard’s graph covering Napoleon’s failed invasion
+of Russia, I greatly benefited and pulled most of the code from Michael
+Friendly’s blog post titled [“Minard meets
+ggplot2”](http://euclid.psych.yorku.ca/www/psy6135/tutorials/Minard.html).
+This was the only external source I used, and it was quite helpful as
+Friendly provides a step-by-step tutorial (which I followed almost in
+its entirety!) on how to recreate Minard’s famous graph using ggplot2.
 
-![](homework-01_files/figure-gfm/exercise-5-2.png)<!-- -->
+For a detailed explanation of what each line of code above does, please
+refer to my in-line comments. Broadly, the above chunk of code defines
+two ggplot elements. The first, `ggtroops`, maps the advances and
+retreats of Napoleon’s army as well as the number of surviving soldiers
+and geographic location. The lighter, beige-ish color indicates troop
+movements towards Moscow, and black indicates troops retreating back to
+France. The second ggplot, `ggtemp`, maps the temperature changes as
+troops moved closer towards Moscow. I then merged both plots using the
+`grid.arrange()` function in order to display one graph as the final
+output.
+
+Some of the changes I made to this plot include adding a title, both for
+the whole plot as well as for the subsection regarding the temperature
+changes throughout the campaign. I also slightly decreased the
+transparency of geom_path in the ggtroops plot, in order to make the
+plot less overwhelming and to showcase individual datapoints for
+different cities.
 
 [^1]: I’m not sure if this is accurate as I’m partially colorblind.
