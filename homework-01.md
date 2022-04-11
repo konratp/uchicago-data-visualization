@@ -44,7 +44,7 @@ simplistic theme that does not include a coordinate system (as mentioned
 before) or a grid that would help us better understand trends in the
 data.
 
-## Question 2: Road traffic accidents in Edinburgh
+## Question 2: Road Traffic Accidents in Edinburgh
 
 ``` r
 #recreate plot indicating number of accidents during the day
@@ -75,7 +75,7 @@ accidents appear to peak a little before noon, and the number of fatal
 incidents that occur at night appears higher than those occurring in the
 afternoon.
 
-## Question 3: NYC marathon winners
+## Question 3: NYC Marathon Winners
 
 ``` r
 #create histogram of the distribution of marathon times
@@ -225,7 +225,7 @@ both men and women. This might be due to technological advances
 (e.g. new shoe technology) that both male and female participants
 benefited starting in the mid-1970s.
 
-## Question 4: US counties
+## Question 4: US Counties
 
 ``` r
 #examine code from exercise 4a
@@ -364,6 +364,44 @@ ggplot(data = county,
 
 ![](homework-01_files/figure-gfm/exercise-4b-8.png)<!-- -->
 
-## Question 5: Napoleon’s march.
+## Question 5: Napoleon’s March.
+
+``` r
+#define data set
+napoleon <- read_rds("data/napoleon.rds")
+
+#define different datasets from list
+cities <- napoleon$cities
+temperatures <- napoleon$temperatures
+troops <- napoleon$troops
+
+#create ggplot with information from troops dataset
+breaks <- c(1, 2, 3) * 10^5 
+ggplot(data = troops, 
+                   mapping = aes(x = long, 
+                                 y = lat, 
+                                 group = group, 
+                                 color = direction, 
+                                 size = survivors)) +
+  geom_path(lineend = "round")+
+  scale_size(range = c(0.5, 15))+
+  scale_color_manual(values = c("#E8CBAB", "#1F1A1B"),
+                     labels = c("Advance", "Retreat"))+
+  guides(color = FALSE, size = FALSE)
+```
+
+![](homework-01_files/figure-gfm/exercise-5-1.png)<!-- -->
+
+``` r
+ggplot(troops, aes(x = long, y = lat, group = group,
+                   color = direction, size = survivors)) +
+  geom_path(lineend = "round") +
+  scale_size(range = c(0.5, 15)) +
+  scale_colour_manual(values = c("#DFC17E", "#252523")) +
+  labs(x = NULL, y = NULL) +
+  guides(color = FALSE, size = FALSE)
+```
+
+![](homework-01_files/figure-gfm/exercise-5-2.png)<!-- -->
 
 [^1]: I’m not sure if this is accurate as I’m partially colorblind.

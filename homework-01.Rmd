@@ -9,6 +9,9 @@ library(tidyverse)
 library(knitr)
 library(dsbox)
 library(openintro)
+library(scales)
+library(grid)
+library(gridExtra)
 opts_chunk$set(echo=TRUE, include = TRUE, warning=FALSE, message=FALSE)
 ```
 
@@ -28,7 +31,7 @@ opts_chunk$set(echo=TRUE, include = TRUE, warning=FALSE, message=FALSE)
 
 **Theme**: The authors chose to visualize the data using a very simplistic theme that does not include a coordinate system (as mentioned before) or a grid that would help us better understand trends in the data.
 
-## Question 2: Road traffic accidents in Edinburgh
+## Question 2: Road Traffic Accidents in Edinburgh
 
 ```{r exercise-2}
 #recreate plot indicating number of accidents during the day
@@ -47,7 +50,7 @@ accidents %>%
 
 The above plot displays the density of accidents that occur in Edinburgh in 2018 both on weekdays and on weekends. The timing and density of slight accidents appears similar on weekends and weekdays, peaking around or a little after 4pm. Similarly, serious accidents appear to peak in the afternoon both on weekends and weekdays. Fatal accidents are only reported to occur on weekdays and not weekends, which is surprising given people's alcohol consumptions on weekends which one could expect to lead to higher numbers of fatal accidents. On weekdays, fatal accidents appear to peak a little before noon, and the number of fatal incidents that occur at night appears higher than those occurring in the afternoon.
 
-## Question 3: NYC marathon winners
+## Question 3: NYC Marathon Winners
 
 ```{r exercise-3a}
 #create histogram of the distribution of marathon times
@@ -140,7 +143,7 @@ ggplot(data = nyc_marathon,
 
 This plot is the first one that allows us to better understand the changes in completion times by gender *and* over the years. We can see that every year, the male winner of the NYC marathon reached the finish line before the female winner of that year. Moreover, we can see that in some years, both the male and female winner finished quicker and in others, both finished slower. This might indicate that performance depends on situational factors that differ by year (e.g. different weather). We can also see that starting in the first few years, i.e. the early 1970s, both men and women performed worse in the Marathon. Starting in the mid-1970s, the completion times appear to stabilize for both men and women. This might be due to technological advances (e.g. new shoe technology) that both male and female participants benefited starting in the mid-1970s.
 
-## Question 4: US counties
+## Question 4: US Counties
 
 ```{r exercise-4a}
 #examine code from exercise 4a
@@ -230,9 +233,38 @@ ggplot(data = county,
   labs(title = "Plot H")
 ```
 
-## Question 5: Napoleon’s march.
+## Question 5: Napoleon’s March.
 
 ```{r exercise-5}
+#define data set
+napoleon <- read_rds("data/napoleon.rds")
 
+#define different datasets from list
+cities <- napoleon$cities
+temperatures <- napoleon$temperatures
+troops <- napoleon$troops
+
+#create ggplot with information from troops dataset
+breaks <- c(1, 2, 3) * 10^5 
+ggplot(data = troops, 
+                   mapping = aes(x = long, 
+                                 y = lat, 
+                                 group = group, 
+                                 color = direction, 
+                                 size = survivors)) +
+  geom_path(lineend = "round")+
+  scale_size(range = c(0.5, 15))+
+  scale_color_manual(values = c("#E8CBAB", "#1F1A1B"),
+                     labels = c("Advance", "Retreat"))+
+  guides(color = FALSE, size = FALSE)
+
+
+ggplot(troops, aes(x = long, y = lat, group = group,
+                   color = direction, size = survivors)) +
+  geom_path(lineend = "round") +
+  scale_size(range = c(0.5, 15)) +
+  scale_colour_manual(values = c("#DFC17E", "#252523")) +
+  labs(x = NULL, y = NULL) +
+  guides(color = FALSE, size = FALSE)
 ```
 
