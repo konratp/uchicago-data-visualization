@@ -1,6 +1,6 @@
-Project proposal
+Project 1 Proposal
 ================
-Team name
+Elated Anura
 
 ``` r
 library(tidyverse)
