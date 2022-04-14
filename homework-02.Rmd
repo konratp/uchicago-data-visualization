@@ -1,0 +1,39 @@
+---
+title: "Homework 02"
+author: "INSERT YOUR NAME HERE"
+output: github_document
+---
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(fs)
+# add any other packages you use here
+```
+
+
+1.  **A new day, a new plot, a new geom.**
+
+```{r label-me-1}
+
+```
+
+2.  **Key lyme pie.**
+
+```{r label-me-2}
+
+```
+
+3.  **Foreign Connected PACs.**
+
+```{r load-pac-data}
+# get a list of files with "Foreign Connected PAC" in their names
+list_of_files <- dir_ls(path = "data", regexp = "Foreign Connected PAC")
+
+# read all files and row bind them
+# keeping track of the file name in a new column called year
+pac <- read_csv(list_of_files, id = "year")
+```
+
+
+4.  **Hop on.**
+
