@@ -522,5 +522,5 @@ types of medals, seasons, NATO/Warsaw Pact member states (new)
 
 Q2: country, average number of medals per country (new and may be
 different from Q1 since it is not grouped by the year variable), hosting
-status (external), costs per game/athelets (external), revenue
+status (external), costs per game/athletes (external), revenue
 (external)

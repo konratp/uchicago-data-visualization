@@ -73,3 +73,8 @@ The following lays out our plan for answering each of the research questions. A 
 
 We can potentially further discuss the monetary costs-and-benefit comparison of hosting an Olympic Games with external data sets containing the needed information. We can either compare the trends throughout the years (adjusted by inflation). The x-axis will then be the year variable, and the y-axis will be monetary values for either the cost or the revenue variable. It can even incorporate the season variable to show different trends for the summer and winter Olympics.
 
+Note: Just to distinguish the exact variables used in explaining Q1 and Q2 so they are not completely overlapping, the potentially used variables are listed here:
+
+Q1: year/time, country, average number of medals per country (new), types of medals, seasons, NATO/Warsaw Pact member states (new)
+
+Q2: country, average number of medals per country (new and may be different from Q1 since it is not grouped by the year variable), hosting status (external), costs per game/athletes (external), revenue (external)
