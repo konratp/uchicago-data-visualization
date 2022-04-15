@@ -13,6 +13,29 @@ library(tidyverse)
 A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
 
 Make sure to load the data and use inline code for some of this information.
+```{r}
+# The dataset we’re analyzing is available on kaggle and  contains historical data on the modern Olympic game and includes all games starting from Athens 1896 till 2016. This data was scraped from www.sports-reference.com in 2018 and wrangled by rgriffin. Till 1992 winter and summer games used to be held in the same year. After 1992, both summer and winter games take place in a 4-years cycle such that winter game in 1994, summer in 1996, then again winter in 1998 and so on.
+
+#This data contains 271116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual olympic athlete event. The name of columns are:
+
+#ID - A unique number for each athlete
+Name - Name of athlete
+Sex - M or F, M for male, F for Female
+Age - An integer showing the age of athlete in years
+Height - Height of athlete In centimeters
+Weight - Weight of athlete in kilograms
+Team - Team name/Name of the country an athlete represents
+NOC - National Olympic Committee 3-letter code
+Games - Year and season in which the game occurs
+Year - An integer showing the year in which the event takes place
+Season - Summer or Winter
+City - Name of city that hosts the olympic game
+Sport - Name of the sport played
+Event - Name of particular event
+Medal - Gold, Silver, Bronze, or NA
+
+```
+
 
 ## Questions
 
