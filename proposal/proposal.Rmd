@@ -6,9 +6,6 @@ output: github_document
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
-
-olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
-
 ```
 
 ## Dataset
@@ -20,6 +17,11 @@ Make sure to load the data and use inline code for some of this information.
 ## Questions
 
 The two questions you want to answer.
+
+```{r}
+
+
+```
 
 ## Analysis plan
 
