@@ -24,7 +24,7 @@ Sex - M or F, M for male, F for Female
 Age - An integer showing the age of athlete in years
 Height - Height of athlete In centimeters
 Weight - Weight of athlete in kilograms
-Team - Team name/Name of the country an athlete represents
+Team - Team name
 NOC - National Olympic Committee 3-letter code
 Games - Year and season in which the game occurs
 Year - An integer showing the year in which the event takes place
@@ -54,9 +54,22 @@ library(kableExtra) # make-up tables
 library(stargazer) # nice regression outputs
 olympics_data %>%
   select(vars_of_interest) %>%
-  lapply(., function(i) mean(i)) %>% 
+  lapply(., function(i) mean(i, na.rm =TRUE)) %>% 
   do.call(rbind, .) %>%
   kable(digits = 3)
+olympics_data %>%
+  group_by(team) %>%
+   summarise(count=n())
+olympics_data %>%
+  group_by(sport) %>%
+   summarise(count=n())
+olympics_data %>%
+  group_by(city) %>%
+   summarise(count=n())
+olympics_data %>%
+  group_by(season) %>%
+   summarise(count=n())
+# this gives the number of participants who pafrticipated in the games held in these cities
 ```
 
 ## Questions
