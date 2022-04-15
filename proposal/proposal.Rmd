@@ -10,9 +10,7 @@ library(tidyverse)
 
 ## Dataset
 
-A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
-
-Make sure to load the data and use inline code for some of this information.
+A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset. Make sure to load the data and use inline code for some of this information.
 
 The dataset we’re analyzing is available on kaggle and  contains historical data on the modern Olympic game and includes all games starting from Athens 1896 till 2016. This data was scraped from www.sports-reference.com in 2018 and wrangled by rgriffin. Till 1992 winter and summer games used to be held in the same year. After 1992, both summer and winter games take place in a 4-years cycle such that winter game in 1994, summer in 1996, then again winter in 1998 and so on.
 
@@ -36,14 +34,12 @@ Medal - Gold, Silver, Bronze, or NA
 
 In our data set 72.5 percent of the participants are male whereas the rest are female if we exclude missing values. The average age of athlete is 25.557 years, the oldest athlete is 97 years and the youngest is 10 years old. The average height of an athlete is 175.339 cm, the maximum height is 226 cm, and minimum is 127 cm. The average weight of an athlete is 70.702 maximum is 214 and minimum is 25 kilograms. 222552 of the athlestes played in the summer seasons and 222552 played in the winter season.
 
-```{r}
+```{r Overview of the dataset}
 olympics_data <- read.csv("/Users/kamranahmed/Documents/GitHub/proj1-elated-anura/data/olympics.csv")
-```
-
-```{r}
 head(olympics_data)
 ```
-```{r}
+
+```{r Discribe variables of interest}
 olympics_data$sex_dummy <- ifelse(olympics_data$sex=="M", 1,0)
 vars_of_interest <- c("sex_dummy", "age", "height", "weight")
 library(tidyverse) # data manipulation
@@ -74,11 +70,6 @@ olympics_data %>%
 ## Questions
 
 The two questions you want to answer.
-
-```{r}
-
-
-```
 
 2. How did countries perform in the Olympics Games when they were hosting v.s. not hosting the game? Is there any relationship between hosing the Game and the overall performance - measured by the number of medals? To even further expand this question, what are the costs compared to benefits in monetary values of hosting an Olympic Games?
 
