@@ -68,6 +68,10 @@ The two questions you want to answer.
 
 ```
 
+2. How did countries perform in the Olympics Games when they were hosting v.s. not hosting the game? Is there any relationship between hosing the Game and the overall performance - measured by the number of medals? To even further expand this question, what are the costs compared to benefits in monetary values of hosting an Olympic Games?
+
 ## Analysis plan
 
 A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
+
+Q2: In the first step, we will summarize the data set into a table showing the average number of medals won by each country every year. We will incorporate an external data set with information on hosting countries. We will create a summarized data set and data visualizations to show whether countries would perform better (or worse) when they were hosting a Game compared to when they were not. We will also need to create a categorized or dummy variable for whether or not to host the Game. So the x-axis may represent the new dummy variable, and the y-axis may represent the average number of medals. The third variable engaged is the hosting country variable which can be illustrated by different shapes or colors, combined with the legend. We can potentially further discuss the monetary costs-and-benefit comparison of hosting an Olympic Games with external data sets containing the needed information. We can either compare the trends throughout the years (adjusted by inflation). The x-axis will then be the year variable, and the y-axis will be monetary values for either the cost or the revenue variable. It can even incorporate the season variable to show different trends for summer and winter Olympics.
