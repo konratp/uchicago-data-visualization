@@ -37,6 +37,28 @@ Medal - Gold, Silver, Bronze, or NA
 ```
 
 
+```{r}
+olympics_data <- read.csv("/Users/kamranahmed/Documents/GitHub/proj1-elated-anura/data/olympics.csv")
+```
+
+```{r}
+head(olympics_data)
+```
+```{r}
+olympics_data$sex_dummy <- ifelse(olympics_data$sex=="M", 1,0)
+vars_of_interest <- c("sex_dummy", "age", "height", "weight")
+library(tidyverse) # data manipulation
+library(psych) # describe function: statistical summary
+library(broom) # tidy function: statistical outputs into tibbles
+library(kableExtra) # make-up tables
+library(stargazer) # nice regression outputs
+olympics_data %>%
+  select(vars_of_interest) %>%
+  lapply(., function(i) mean(i)) %>% 
+  do.call(rbind, .) %>%
+  kable(digits = 3)
+```
+
 ## Questions
 
 The two questions you want to answer.
