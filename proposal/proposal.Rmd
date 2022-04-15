@@ -13,12 +13,12 @@ library(tidyverse)
 A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
 
 Make sure to load the data and use inline code for some of this information.
-```{r}
-# The dataset we’re analyzing is available on kaggle and  contains historical data on the modern Olympic game and includes all games starting from Athens 1896 till 2016. This data was scraped from www.sports-reference.com in 2018 and wrangled by rgriffin. Till 1992 winter and summer games used to be held in the same year. After 1992, both summer and winter games take place in a 4-years cycle such that winter game in 1994, summer in 1996, then again winter in 1998 and so on.
 
-#This data contains 271116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual olympic athlete event. The name of columns are:
+The dataset we’re analyzing is available on kaggle and  contains historical data on the modern Olympic game and includes all games starting from Athens 1896 till 2016. This data was scraped from www.sports-reference.com in 2018 and wrangled by rgriffin. Till 1992 winter and summer games used to be held in the same year. After 1992, both summer and winter games take place in a 4-years cycle such that winter game in 1994, summer in 1996, then again winter in 1998 and so on.
 
-#ID - A unique number for each athlete
+This data contains 271116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual olympic athlete event. The name of columns are:
+
+ID - A unique number for each athlete
 Name - Name of athlete
 Sex - M or F, M for male, F for Female
 Age - An integer showing the age of athlete in years
@@ -33,8 +33,6 @@ City - Name of city that hosts the olympic game
 Sport - Name of the sport played
 Event - Name of particular event
 Medal - Gold, Silver, Bronze, or NA
-
-```
 
 
 ```{r}
@@ -87,4 +85,6 @@ The two questions you want to answer.
 
 A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
 
-Q2: In the first step, we will summarize the data set into a table showing the average number of medals won by each country every year. We will incorporate an external data set with information on hosting countries. We will create a summarized data set and data visualizations to show whether countries would perform better (or worse) when they were hosting a Game compared to when they were not. We will also need to create a categorized or dummy variable for whether or not to host the Game. So the x-axis may represent the new dummy variable, and the y-axis may represent the average number of medals. The third variable engaged is the hosting country variable which can be illustrated by different shapes or colors, combined with the legend. We can potentially further discuss the monetary costs-and-benefit comparison of hosting an Olympic Games with external data sets containing the needed information. We can either compare the trends throughout the years (adjusted by inflation). The x-axis will then be the year variable, and the y-axis will be monetary values for either the cost or the revenue variable. It can even incorporate the season variable to show different trends for summer and winter Olympics.
+Q2:  In the first step, we will summarize the data set into a table showing the average number of medals won by each country every year. We will incorporate an external data set with information on hosting countries. We will also need to create one categorized or dummy variable for whether or not to host the Game. We will create a summarized data set and data visualizations to show whether countries would perform better (or worse) when they were hosting a Game compared to when they were not. The summarized data set will contain a new variable representing the average number of medals for each country divided by the hosting status. So the x-axis may represent the new dummy variable, and the y-axis may represent the average number of medals. The third variable can be illustrated by different shapes or colors, combined with the legend to show the hosting status. 
+
+We can potentially further discuss the monetary costs-and-benefit comparison of hosting an Olympic Games with external data sets containing the needed information. We can either compare the trends throughout the years (adjusted by inflation). The x-axis will then be the year variable, and the y-axis will be monetary values for either the cost or the revenue variable. It can even incorporate the season variable to show different trends for the summer and winter Olympics.
