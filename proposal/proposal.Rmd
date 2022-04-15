@@ -4,49 +4,31 @@ author: "Elated Anura"
 output: github_document
 ---
 
-```{r load-packages, message = FALSE}
-library(tidyverse)
-```
-
-## Dataset
-
-A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset. Make sure to load the data and use inline code for some of this information.
-
-The dataset we’re analyzing is available on kaggle and  contains historical data on the modern Olympic game and includes all games starting from Athens 1896 till 2016. This data was scraped from www.sports-reference.com in 2018 and wrangled by rgriffin. Till 1992 winter and summer games used to be held in the same year. After 1992, both summer and winter games take place in a 4-years cycle such that winter game in 1994, summer in 1996, then again winter in 1998 and so on. The data set contains rich information on worldwide participation in Olympic Games across yeas. We choose it since we are interested in showing political or historical factors that could influence countries' performance and contribution to hosting the Games.
-
-This data contains 271116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual olympic athlete event. There are data on 66 different sports, 1184 different teams, 51 games, 230 different NOCs, 42 different host cities across 35 different years. The name of columns are:
-
-ID - A unique number for each athlete
-Name - Name of athlete
-Sex - M or F, M for male, F for Female
-Age - An integer showing the age of athlete in years
-Height - Height of athlete In centimeters
-Weight - Weight of athlete in kilograms
-Team - Team name
-NOC - National Olympic Committee 3-letter code
-Games - Year and season in which the game occurs
-Year - An integer showing the year in which the event takes place
-Season - Summer or Winter
-City - Name of city that hosts the olympic game
-Sport - Name of the sport played
-Event - Name of particular event
-Medal - Gold, Silver, Bronze, or NA
-
-In our data set 72.5 percent of the participants are male whereas the rest are female if we exclude missing values. The average age of athlete is 25.557 years, the oldest athlete is 97 years and the youngest is 10 years old. The average height of an athlete is 175.339 cm, the maximum height is 226 cm, and minimum is 127 cm. The average weight of an athlete is 70.702 maximum is 214 and minimum is 25 kilograms. 222552 of the athletes played in the summer seasons and 222552 played in the winter season.
-
-```{r Overview of the dataset}
-olympics_data <- read.csv("/Users/kamranahmed/Documents/GitHub/proj1-elated-anura/data/olympics.csv")
-head(olympics_data)
-```
-
-```{r Discribe variables of interest}
-olympics_data$sex_dummy <- ifelse(olympics_data$sex=="M", 1,0)
-vars_of_interest <- c("sex_dummy", "age", "height", "weight")
+```{r load-packages, message = FALSE, include = FALSE}
 library(tidyverse) # data manipulation
 library(psych) # describe function: statistical summary
 library(broom) # tidy function: statistical outputs into tibbles
 library(kableExtra) # make-up tables
 library(stargazer) # nice regression outputs
+library(here) # simplifies relative file paths
+```
+
+## Dataset
+
+The dataset we’re analyzing is available on kaggle and  contains historical data on the modern Olympic game and includes all games starting from Athens 1896 till 2016. This data was scraped from [www.sports-reference.com](www.sports-reference.com) in 2018 and wrangled by rgriffin. Until 1992, winter and summer games used to be held in the same year. Since 1992, both summer and winter games have been taking place in a 4-year cycle (an olympiad!), resulting in winter games in 1994, summer in 1996, then again winter in 1998, and so on. The data set contains rich information on worldwide participation in Olympic Games across yeas. We chose it because we're interested in the Olympics, and we believe we can show political and historical trends influencing countries' performances and contributions to hosting the Games.
+
+This data contains 271,116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual Olympic event. There is data on 66 different sports, 1184 different teams, 51 games, 230 different NOCs, 42 different host cities across 35 different years. The variables are included in the codebook in the 'r readme' file in the data folder in this repository.
+
+In our data set, 72.5 percent of the participants are male whereas the rest are female if we exclude missing values. The average age of the athletes is 25.6 years, with the oldest athlete being 97 years old, and the youngest being 10 years old. The average athlete height is 175.4cm, the maximum height is 226cm, and the minimum height is 127 cm. The average weight of an athlete is 70.7 kilograms, with the maximum being 214kg and the minimum being 25kg. 222,552 of the athletes participated in the summer games, while 222,552 participated in the winter season.
+
+```{r load-data}
+olympics_data <- read_csv(here("data", "olympics.csv"))
+```
+
+```{r variable-descriptio}
+#create dummy variables to ease statistical analysis
+olympics_data$sex_dummy <- ifelse(olympics_data$sex=="M", 1,0)
+vars_of_interest <- c("sex_dummy", "age", "height", "weight")
 olympics_data %>%
   select(vars_of_interest) %>%
   lapply(., function(i) summary(i, na.rm =TRUE)) %>% 
@@ -61,7 +43,7 @@ olympics_data %>%
 olympics_data %>%
   group_by(city) %>%
    summarise(count=n())
-# this gives the number of participants who pafrticipated in the games held in these cities
+# this gives the number of participants who participated in the games held in these cities
 olympics_data %>%
   group_by(season) %>%
    summarise(count=n())
@@ -75,13 +57,15 @@ length(unique(olympics_data$city))
 
 ## Questions
 
-The two questions you want to answer.
+We're planning on creating graphs that will allows us to answer the following two questions:
+
+1. How has the dominance of the Soviet Union/Russia and the United States changed throughout the cold war and after? Has the share of medals won by either NATO or Warsaw Pact countries decreased since the end of the cold war?
 
 2. How did countries perform in the Olympics Games when they were hosting v.s. not hosting the game? Is there any relationship between hosing the Game and the overall performance - measured by the number of medals? To even further expand this question, what are the costs compared to benefits in monetary values of hosting an Olympic Games?
 
 ## Analysis plan
 
-A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
+The following lays out our plan for answering each of the research questions.
 
 Q2:  In the first step, we will summarize the data set into a table showing the average number of medals won by each country every year. We will incorporate an external data set with information on hosting countries. We will also need to create one categorized or dummy variable for whether or not to host the Game. We will create a summarized data set and data visualizations to show whether countries would perform better (or worse) when they were hosting a Game compared to when they were not. The summarized data set will contain a new variable representing the average number of medals for each country divided by the hosting status. So the x-axis may represent the new dummy variable, and the y-axis may represent the average number of medals. The third variable can be illustrated by different shapes or colors, combined with the legend to show the hosting status. 
 
