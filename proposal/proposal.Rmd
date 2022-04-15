@@ -34,6 +34,7 @@ Sport - Name of the sport played
 Event - Name of particular event
 Medal - Gold, Silver, Bronze, or NA
 
+In our data set 72.5 percent of the participants are male whereas the rest are female if we exclude missing values. The average age of athlete is 25.557 years, the oldest athlete is 97 years and the youngest is 10 years old. The average height of an athlete is 175.339 cm, the maximum height is 226 cm, and minimum is 127 cm. The average weight of an athlete is 70.702 maximum is 214 and minimum is 25 kilograms. 222552 of the athlestes played in the summer seasons and 222552 played in the winter season.
 
 ```{r}
 olympics_data <- read.csv("/Users/kamranahmed/Documents/GitHub/proj1-elated-anura/data/olympics.csv")
@@ -52,7 +53,7 @@ library(kableExtra) # make-up tables
 library(stargazer) # nice regression outputs
 olympics_data %>%
   select(vars_of_interest) %>%
-  lapply(., function(i) mean(i, na.rm =TRUE)) %>% 
+  lapply(., function(i) summary(i, na.rm =TRUE)) %>% 
   do.call(rbind, .) %>%
   kable(digits = 3)
 olympics_data %>%
