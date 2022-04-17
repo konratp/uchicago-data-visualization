@@ -1,19 +1,34 @@
 ---
 title: "Homework 02"
-author: "INSERT YOUR NAME HERE"
+author: "Konrat Pekkip"
 output: github_document
 ---
 
-```{r load-packages, message = FALSE}
+```{r load-packages, message = FALSE, include = FALSE}
+#load required packages
 library(tidyverse)
 library(fs)
-# add any other packages you use here
+library(ggridges)
+library(dsbox)
 ```
-
 
 1.  **A new day, a new plot, a new geom.**
 
-```{r label-me-1}
+```{r exercise-1}
+ex1 <- edibnb %>%
+  mutate(median_review = fct_reorder(neighbourhood, review_scores_rating, median, na.rm = TRUE))
+
+
+
+
+ex1 %>%
+  ggplot(data = subset(., !is.na(neighbourhood)),
+         mapping = aes(x = median_review,
+                       y = neighbourhood))+
+  geom_density_ridges(na.rm = TRUE,
+                      quantile_lines=TRUE,
+                      quantile_fun=function(x,...)median(x))
+
 
 ```
 
