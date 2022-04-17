@@ -82,8 +82,9 @@ pac2 <- pac %>%
                                        pattern = "\\$")))
 
 test <- pac2 %>%
-  group_by(year) %>%
-  mutate(totalsum = sum(total))
+  group_by(party, add = TRUE) %>%
+  group_by(year, .add = TRUE) %>%
+  summarize(totalsum = sum(total))
 
 #recreate visualization
 test %>%
