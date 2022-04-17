@@ -10,6 +10,8 @@ library(tidyverse)
 library(fs)
 library(ggridges)
 library(dsbox)
+library(janitor)
+library(stringr)
 ```
 
 1.  **A new day, a new plot, a new geom.**
@@ -41,8 +43,12 @@ The above plot showcases the distribution and density of AirBnb review scores by
 
 2.  **Key lyme pie.**
 
-```{r label-me-2}
+```{r exercise-2}
+#create data frame
 
+#create pie chart
+
+#present information as bar graph
 ```
 
 3.  **Foreign Connected PACs.**
@@ -54,6 +60,36 @@ list_of_files <- dir_ls(path = "data", regexp = "Foreign Connected PAC")
 # read all files and row bind them
 # keeping track of the file name in a new column called year
 pac <- read_csv(list_of_files, id = "year")
+
+#clean data and pivot_longer the dems/repubs variables
+pac2 <- pac %>%
+  clean_names() %>%
+  separate(col = country_of_origin_parent_company,
+           into = c("country_of_origin", "parent_company"),
+           sep = '/') %>%
+  separate(col = year,
+           into = c("remove","year"),
+           sep = "-") %>%
+  select(-remove) %>%
+  mutate(year = as.numeric(str_remove(string = year,
+                           pattern = ".csv"))) %>%
+  pivot_longer(cols = c("dems", "repubs"),
+               names_to = "party",
+               values_to = "contribution_amount") %>%
+  mutate(contribution_amount = as.numeric(str_remove(string = contribution_amount,
+                                                     pattern = "\\$")),
+         total = as.numeric(str_remove(string = total,
+                                       pattern = "\\$")))
+
+test <- pac2 %>%
+  group_by(year) %>%
+  mutate(totalsum = sum(total))
+
+#recreate visualization
+test %>%
+  group_by(party) %>%
+  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE)+
+  geom_line()
 ```
 
 
