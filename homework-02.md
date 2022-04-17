@@ -50,6 +50,14 @@ broader trend across Scottish cities, or specific to Edinburgh.
 
 2.  **Key lyme pie.**
 
+``` r
+#create data frame
+
+#create pie chart
+
+#present information as bar graph
+```
+
 3.  **Foreign Connected PACs.**
 
 ``` r
@@ -68,5 +76,55 @@ pac <- read_csv(list_of_files, id = "year")
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+#clean data and pivot_longer the dems/repubs variables
+pac2 <- pac %>%
+  clean_names() %>%
+  separate(col = country_of_origin_parent_company,
+           into = c("country_of_origin", "parent_company"),
+           sep = '/') %>%
+  separate(col = year,
+           into = c("remove","year"),
+           sep = "-") %>%
+  select(-remove) %>%
+  mutate(year = as.numeric(str_remove(string = year,
+                           pattern = ".csv"))) %>%
+  pivot_longer(cols = c("dems", "repubs"),
+               names_to = "party",
+               values_to = "contribution_amount") %>%
+  mutate(contribution_amount = as.numeric(str_remove(string = contribution_amount,
+                                                     pattern = "\\$")),
+         total = as.numeric(str_remove(string = total,
+                                       pattern = "\\$")))
+```
+
+    ## Warning: Expected 2 pieces. Additional pieces discarded in 16 rows [125, 349,
+    ## 552, 732, 910, 930, 1124, 1149, 1357, 1386, 1595, 1623, 1845, 1874, 2083, 2106].
+
+``` r
+test <- pac2 %>%
+  group_by(year, party) %>%
+  summarize(totalsum = sum(contribution_amount))
+```
+
+    ## `summarise()` has grouped output by 'year'. You can override using the
+    ## `.groups` argument.
+
+``` r
+#recreate visualization
+test %>%
+  group_by(party) %>%
+  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE)+
+  geom_line(size = 1.75)+
+  scale_color_manual(values = c("blue", "red"))+
+  theme_minimal()+
+  labs(title = "Contributions to US political parties from UK-connected PACs",
+       x = "Year",
+       y = "Total amount",
+       caption = "Source: OpenSecrets.org")
+```
+
+![](homework-02_files/figure-gfm/load-pac-data-1.png)<!-- -->
 
 4.  **Hop on.**

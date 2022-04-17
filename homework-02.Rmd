@@ -82,15 +82,22 @@ pac2 <- pac %>%
                                        pattern = "\\$")))
 
 test <- pac2 %>%
-  group_by(party, add = TRUE) %>%
-  group_by(year, .add = TRUE) %>%
-  summarize(totalsum = sum(total))
+  group_by(year, party) %>%
+  summarize(totalsum = sum(contribution_amount)) %>%
+  mutate(party = ifelse(party == "dems", "Democrat", "Republican"))
 
 #recreate visualization
 test %>%
   group_by(party) %>%
   ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE)+
-  geom_line()
+  geom_line(size = 1.75)+
+  scale_color_manual(values = c("blue", "red"))+
+  theme_minimal()+
+  labs(title = "Contributions to US political parties from UK-connected PACs",
+       x = "Year",
+       y = "Total amount",
+       color = "Party",
+       caption = "Source: OpenSecrets.org")
 ```
 
 
