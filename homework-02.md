@@ -126,4 +126,33 @@ cleaned_pac %>%
 
 ![](homework-02_files/figure-gfm/exercise-3-visualizations-2.png)<!-- -->
 
+The above visualizations showcase the amount of contributions, in
+dolllars, that companies from the United Kingdom and Germany have issued
+to the two major American political parties, the Democrats and the
+Republicans. Companies from both countries appear to support the
+Republican party more so than the Democratic party, perhaps due to the
+Republicans’ laissez-faire approach to regulating (big) corporations. We
+can also see that for companies from both the UK and Germany, the amount
+of money donated to American parties has increased over time, albeit
+with ups and downs. Perhaps this is related to court rulings like
+*Citizens United vs FEC* that make it easier for companies to donate
+money to political parties in the US.
+
+Whereas to a degree in the UK, and more so in Germany, recent
+governments have been closer, both ideologically and policy-wise, to the
+Democratic party than the Republicans, the same does not appear to hold
+true for companies based in these countries. However, this might have
+changed during the Trump administration: we can see that both companies
+in the United Kingdom and companies in Germany increased their
+contributions to the Democratic party leading up to the critical 2020
+Presidential election whereas their contributions to the GOP decreased.
+Perhaps corporations in both countries were worried about increasing
+political instability in the United States to the degree where these
+concerns outweighed the economic benefits that came with supporting the
+Republican party. It might also be due to the tariffs the Trump
+administration placed on foreign companies during the trade war with the
+European Union. Perhaps foreign corporations tend to simply support the
+party they view most likely not to support a protectionist approach to
+economic policy.
+
 4.  **Hop on.**
