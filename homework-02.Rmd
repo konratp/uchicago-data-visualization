@@ -46,6 +46,25 @@ The above plot showcases the distribution and density of AirBnb review scores by
 
 ```{r exercise-2}
 #create data frame
+test <- tribble(
+  ~"state", ~"case_count",
+  "Pennsylvania", 10208,
+  "New Jersey", 4000,
+  "New York", 3638,
+  "Wisconsin", 1869,
+  "Connecticut", 1859,
+  "Maine", 1405,
+  "Minnesota", 1541,
+  "New Hampshire", 1428,
+  "Maryland", 1382,
+  "Virginia", 1139,
+  "Rhode Island", 1111,
+  "West Virginia", 671,
+  "Vermont", 576,
+  "Delaware", 520,
+  "Ohio", 293,
+  "Remaining States + DC", 2026
+)
 
 #create pie chart
 
