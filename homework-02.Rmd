@@ -71,7 +71,9 @@ lyme %>%
   ggplot(mapping = aes(x = 1, y = case_count, fill = state)) +
   geom_bar(stat = "identity") +
   coord_polar(theta = "y", start=0) +
-  labs(title = "Pie Chart") +
+  labs(title = "Lyme Disease Association Lyme Disease Analysis\n2018 US Reported Lyme Disease Cases Featuring Top 15 States",
+       fill = NULL) +
+  theme(plot.title = element_text(hjust = 0.5)) +
   theme_void()
 
 #present information as bar graph
