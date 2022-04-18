@@ -13,6 +13,7 @@ library(dsbox)
 library(janitor)
 library(stringr)
 library(scales)
+library(cowplot)
 ```
 
 1.  **A new day, a new plot, a new geom.**
@@ -44,7 +45,7 @@ The above plot showcases the distribution and density of AirBnb review scores by
 
 2.  **Key lyme pie.**
 
-```{r exercise-2}
+```{r exercise-2, warning = FALSE}
 #create data frame
 lyme <- tribble(
   ~"state", ~"case_count",
@@ -72,11 +73,35 @@ lyme %>%
   geom_bar(stat = "identity") +
   coord_polar(theta = "y", start=0) +
   labs(title = "Lyme Disease Association Lyme Disease Analysis\n2018 US Reported Lyme Disease Cases Featuring Top 15 States",
-       fill = NULL) +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  theme_void()
-
+       fill = NULL,
+       caption = "U.S. TOTAL CASES 2018: 33,666\nSource data compiled from CDC pub. data (DVBD)") +
+  scale_fill_viridis_d(option = "turbo") +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.title.position = "plot",
+        legend.box.background = element_rect(colour = "black"),
+        legend.key.size = unit(0.4, "cm"),
+        panel.background = element_rect(fill = "white", size = 1),
+        plot.caption = element_text(hjust = -0.1))
 #present information as bar graph
+```
+
+```{r}
+#to be deleted:
+
++
+ panel_border(color = "black", size = 1, linetype = 1, remove = FALSE)
+
+,
+        panel.border = element_rect(color = "black")
+
+        plot.caption = element_text(hjust = c(0, 0), vjust = -2),
+
+
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"),
+        legend.box.background = element_rect(colour = "black")
 ```
 
 3.  **Foreign Connected PACs.**

@@ -52,9 +52,43 @@ broader trend across Scottish cities, or specific to Edinburgh.
 
 ``` r
 #create data frame
+lyme <- tribble(
+  ~"state", ~"case_count",
+  "Pennsylvania", 10208,
+  "New Jersey", 4000,
+  "New York", 3638,
+  "Wisconsin", 1869,
+  "Connecticut", 1859,
+  "Maine", 1405,
+  "Minnesota", 1541,
+  "New Hampshire", 1428,
+  "Maryland", 1382,
+  "Virginia", 1139,
+  "Rhode Island", 1111,
+  "West Virginia", 671,
+  "Vermont", 576,
+  "Delaware", 520,
+  "Ohio", 293,
+  "Remaining States + DC", 2026) %>%
+  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1))
 
 #create pie chart
+lyme %>%
+  ggplot(mapping = aes(x = 1, y = case_count, fill = state)) +
+  geom_bar(stat = "identity") +
+  coord_polar(theta = "y", start=0) +
+  labs(title = "Lyme Disease Association Lyme Disease Analysis\n2018 US Reported Lyme Disease Cases Featuring Top 15 States",
+       fill = NULL,
+       caption = "U.S. TOTAL CASES 2018: 33,666\nSource data compiled from CDC pub. data (DVBD)") +
+  scale_fill_viridis_d(option = "turbo") +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = c(0, 0), vjust = -2))
+```
 
+![](homework-02_files/figure-gfm/exercise-2-1.png)<!-- -->
+
+``` r
 #present information as bar graph
 ```
 
