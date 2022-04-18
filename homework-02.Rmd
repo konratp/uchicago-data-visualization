@@ -46,7 +46,7 @@ The above plot showcases the distribution and density of AirBnb review scores by
 
 ```{r exercise-2}
 #create data frame
-test <- tribble(
+lyme <- tribble(
   ~"state", ~"case_count",
   "Pennsylvania", 10208,
   "New Jersey", 4000,
@@ -63,10 +63,16 @@ test <- tribble(
   "Vermont", 576,
   "Delaware", 520,
   "Ohio", 293,
-  "Remaining States + DC", 2026
-)
+  "Remaining States + DC", 2026) %>%
+  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1))
 
 #create pie chart
+lyme %>%
+  ggplot(mapping = aes(x = 1, y = case_count, fill = state)) +
+  geom_bar(stat = "identity") +
+  coord_polar(theta = "y", start=0) +
+  labs(title = "Pie Chart") +
+  theme_void()
 
 #present information as bar graph
 ```
