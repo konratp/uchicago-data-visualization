@@ -12,6 +12,7 @@ library(ggridges)
 library(dsbox)
 library(janitor)
 library(stringr)
+library(scales)
 ```
 
 1.  **A new day, a new plot, a new geom.**
@@ -22,7 +23,7 @@ edibnb %>%
   group_by(neighbourhood) %>%
   mutate(median_review = median(review_scores_rating, na.rm = TRUE)) %>%
   ungroup() %>%
-  mutate(neighbourhood = fct_reorder(.f = neighbourhood, .x = median_review, .fun = median)) %>%
+  mutate(neighbourhood = fct_reorder(.f = neighbourhood, .x = median_review)) %>%
   ggplot(data = subset(., !is.na(neighbourhood)),
          mapping = aes(x = review_scores_rating, 
                        y = neighbourhood,
@@ -53,7 +54,7 @@ The above plot showcases the distribution and density of AirBnb review scores by
 
 3.  **Foreign Connected PACs.**
 
-```{r load-pac-data}
+```{r exercise-3-clean-data, include = FALSE}
 # get a list of files with "Foreign Connected PAC" in their names
 list_of_files <- dir_ls(path = "data", regexp = "Foreign Connected PAC")
 
@@ -62,7 +63,7 @@ list_of_files <- dir_ls(path = "data", regexp = "Foreign Connected PAC")
 pac <- read_csv(list_of_files, id = "year")
 
 #clean data and pivot_longer the dems/repubs variables
-pac2 <- pac %>%
+cleaned_pac <- pac %>%
   clean_names() %>%
   separate(col = country_of_origin_parent_company,
            into = c("country_of_origin", "parent_company"),
@@ -80,26 +81,61 @@ pac2 <- pac %>%
                                                      pattern = "\\$")),
          total = as.numeric(str_remove(string = total,
                                        pattern = "\\$")))
+```
 
-test <- pac2 %>%
+```{r exercise-3-visualizations}
+#recreate visualization for contributions from UK companies
+cleaned_pac %>%
+  filter(country_of_origin == "UK") %>%
   group_by(year, party) %>%
   summarize(totalsum = sum(contribution_amount)) %>%
-  mutate(party = ifelse(party == "dems", "Democrat", "Republican"))
-
-#recreate visualization
-test %>%
+  mutate(party = ifelse(party == "dems", "Democrat", "Republican"))  %>%
+  ungroup() %>%
   group_by(party) %>%
-  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE)+
-  geom_line(size = 1.75)+
-  scale_color_manual(values = c("blue", "red"))+
-  theme_minimal()+
+  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE) +
+  geom_line(size = 1.5) +
+  scale_color_manual(values = c("blue", "red")) +
+  scale_x_continuous(name = "Year", 
+                     breaks = seq(2000, 2020, 4)) +
+  scale_y_continuous(name = "Total Amount",
+                     labels = label_number(prefix = "$",
+                                           suffix = "M", 
+                                           scale = 1e-6)) +
+  theme_minimal() +
+  theme(axis.title.y = element_text(hjust = 0),
+        axis.title.x = element_text(hjust = 0),
+        legend.justification=c(1,0), 
+        legend.position=c(1,0)) +
   labs(title = "Contributions to US political parties from UK-connected PACs",
-       x = "Year",
-       y = "Total amount",
+       color = "Party",
+       caption = "Source: OpenSecrets.org")
+
+#create similar visualization for contributions from another country (Germany)
+cleaned_pac %>%
+  filter(country_of_origin == "Germany") %>%
+  group_by(year, party) %>%
+  summarize(totalsum = sum(contribution_amount)) %>%
+  mutate(party = ifelse(party == "dems", "Democrat", "Republican"))  %>%
+  ungroup() %>%
+  group_by(party) %>%
+  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE) +
+  geom_line(size = 1.5) +
+  scale_color_manual(values = c("blue", "red")) +
+  scale_x_continuous(name = "Year", 
+                     breaks = seq(2000, 2020, 4)) +
+  scale_y_continuous(name = "Total Amount",
+                     labels = label_number(prefix = "$",
+                                           suffix = "M", 
+                                           scale = 1e-6)) +
+  theme_minimal() +
+  theme(axis.title.y = element_text(hjust = 0),
+        axis.title.x = element_text(hjust = 0),
+        legend.justification=c(1,0), 
+        legend.position=c(1,0)) +
+  labs(title = "Contributions to US political parties from Germany-connected PACs",
        color = "Party",
        caption = "Source: OpenSecrets.org")
 ```
-
 
 4.  **Hop on.**
 

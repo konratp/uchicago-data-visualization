@@ -10,7 +10,7 @@ edibnb %>%
   group_by(neighbourhood) %>%
   mutate(median_review = median(review_scores_rating, na.rm = TRUE)) %>%
   ungroup() %>%
-  mutate(neighbourhood = fct_reorder(.f = neighbourhood, .x = median_review, .fun = median)) %>%
+  mutate(neighbourhood = fct_reorder(.f = neighbourhood, .x = median_review)) %>%
   ggplot(data = subset(., !is.na(neighbourhood)),
          mapping = aes(x = review_scores_rating, 
                        y = neighbourhood,
@@ -61,70 +61,69 @@ broader trend across Scottish cities, or specific to Edinburgh.
 3.  **Foreign Connected PACs.**
 
 ``` r
-# get a list of files with "Foreign Connected PAC" in their names
-list_of_files <- dir_ls(path = "data", regexp = "Foreign Connected PAC")
-
-# read all files and row bind them
-# keeping track of the file name in a new column called year
-pac <- read_csv(list_of_files, id = "year")
-```
-
-    ## Rows: 2184 Columns: 6
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (5): PAC Name (Affiliate), Country of Origin/Parent Company, Total, Dems...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
-#clean data and pivot_longer the dems/repubs variables
-pac2 <- pac %>%
-  clean_names() %>%
-  separate(col = country_of_origin_parent_company,
-           into = c("country_of_origin", "parent_company"),
-           sep = '/') %>%
-  separate(col = year,
-           into = c("remove","year"),
-           sep = "-") %>%
-  select(-remove) %>%
-  mutate(year = as.numeric(str_remove(string = year,
-                           pattern = ".csv"))) %>%
-  pivot_longer(cols = c("dems", "repubs"),
-               names_to = "party",
-               values_to = "contribution_amount") %>%
-  mutate(contribution_amount = as.numeric(str_remove(string = contribution_amount,
-                                                     pattern = "\\$")),
-         total = as.numeric(str_remove(string = total,
-                                       pattern = "\\$")))
-```
-
-    ## Warning: Expected 2 pieces. Additional pieces discarded in 16 rows [125, 349,
-    ## 552, 732, 910, 930, 1124, 1149, 1357, 1386, 1595, 1623, 1845, 1874, 2083, 2106].
-
-``` r
-test <- pac2 %>%
+#recreate visualization for contributions from UK companies
+cleaned_pac %>%
+  filter(country_of_origin == "UK") %>%
   group_by(year, party) %>%
-  summarize(totalsum = sum(contribution_amount))
+  summarize(totalsum = sum(contribution_amount)) %>%
+  mutate(party = ifelse(party == "dems", "Democrat", "Republican"))  %>%
+  ungroup() %>%
+  group_by(party) %>%
+  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE) +
+  geom_line(size = 1.5) +
+  scale_color_manual(values = c("blue", "red")) +
+  scale_x_continuous(name = "Year", 
+                     breaks = seq(2000, 2020, 4)) +
+  scale_y_continuous(name = "Total Amount",
+                     labels = label_number(prefix = "$",
+                                           suffix = "M", 
+                                           scale = 1e-6)) +
+  theme_minimal() +
+  theme(axis.title.y = element_text(hjust = 0),
+        axis.title.x = element_text(hjust = 0),
+        legend.justification=c(1,0), 
+        legend.position=c(1,0)) +
+  labs(title = "Contributions to US political parties from UK-connected PACs",
+       color = "Party",
+       caption = "Source: OpenSecrets.org")
 ```
 
     ## `summarise()` has grouped output by 'year'. You can override using the
     ## `.groups` argument.
 
+![](homework-02_files/figure-gfm/exercise-3-visualizations-1.png)<!-- -->
+
 ``` r
-#recreate visualization
-test %>%
+#create similar visualization for contributions from another country (Germany)
+cleaned_pac %>%
+  filter(country_of_origin == "Germany") %>%
+  group_by(year, party) %>%
+  summarize(totalsum = sum(contribution_amount)) %>%
+  mutate(party = ifelse(party == "dems", "Democrat", "Republican"))  %>%
+  ungroup() %>%
   group_by(party) %>%
-  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE)+
-  geom_line(size = 1.75)+
-  scale_color_manual(values = c("blue", "red"))+
-  theme_minimal()+
-  labs(title = "Contributions to US political parties from UK-connected PACs",
-       x = "Year",
-       y = "Total amount",
+  ggplot(mapping = aes(x = year, y = totalsum, color = party), na.rm = TRUE) +
+  geom_line(size = 1.5) +
+  scale_color_manual(values = c("blue", "red")) +
+  scale_x_continuous(name = "Year", 
+                     breaks = seq(2000, 2020, 4)) +
+  scale_y_continuous(name = "Total Amount",
+                     labels = label_number(prefix = "$",
+                                           suffix = "M", 
+                                           scale = 1e-6)) +
+  theme_minimal() +
+  theme(axis.title.y = element_text(hjust = 0),
+        axis.title.x = element_text(hjust = 0),
+        legend.justification=c(1,0), 
+        legend.position=c(1,0)) +
+  labs(title = "Contributions to US political parties from Germany-connected PACs",
+       color = "Party",
        caption = "Source: OpenSecrets.org")
 ```
 
-![](homework-02_files/figure-gfm/load-pac-data-1.png)<!-- -->
+    ## `summarise()` has grouped output by 'year'. You can override using the
+    ## `.groups` argument.
+
+![](homework-02_files/figure-gfm/exercise-3-visualizations-2.png)<!-- -->
 
 4.  **Hop on.**
