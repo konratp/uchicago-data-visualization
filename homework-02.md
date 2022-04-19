@@ -70,27 +70,68 @@ lyme <- tribble(
   "Delaware", 520,
   "Ohio", 293,
   "Remaining States + DC", 2026) %>%
-  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1))
+  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1)) %>%
+  mutate(state = as.factor(state))
 
 #create pie chart
 lyme %>%
-  ggplot(mapping = aes(x = 1, y = case_count, fill = state)) +
+  ggplot(mapping = aes(x = 1, 
+                       y = case_count, 
+                       fill = fct_relevel(fct_reorder(state, 
+                                                      case_count, 
+                                                      .desc = FALSE), 
+                                          "Remaining States + DC", after = 0))) +
   geom_bar(stat = "identity") +
-  coord_polar(theta = "y", start=0) +
+  coord_polar(theta = "y", 
+              start=0) +
   labs(title = "Lyme Disease Association Lyme Disease Analysis\n2018 US Reported Lyme Disease Cases Featuring Top 15 States",
        fill = NULL,
        caption = "U.S. TOTAL CASES 2018: 33,666\nSource data compiled from CDC pub. data (DVBD)") +
   scale_fill_viridis_d(option = "turbo") +
+  guides(fill = guide_legend(reverse=TRUE)) +
   theme_void() +
   theme(plot.title = element_text(hjust = 0.5),
-        plot.caption = element_text(hjust = c(0, 0), vjust = -2))
+        plot.title.position = "plot",
+        legend.box.background = element_rect(colour = "black"),
+        legend.key.size = unit(0.4, "cm"),
+        panel.background = element_rect(fill = "white", size = 1),
+        plot.caption = element_text(hjust = -0.1))
 ```
 
 ![](homework-02_files/figure-gfm/exercise-2-1.png)<!-- -->
 
 ``` r
 #present information as bar graph
+lyme %>%
+  ggplot(mapping = aes(x = fct_relevel(fct_reorder(state, 
+                                                   case_count, 
+                                                   .desc = TRUE), 
+                                       "Remaining States + DC", 
+                                       after = 15), 
+                       y = case_count,
+                       fill = factor(ifelse(state == "Connecticut", 1, 2)))) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_manual(name = "state", values= c("navy", "gray46")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Lyme Disease Association Lyme Disease Analysis",
+       subtitle = "2018 US Reported Lyme Diseases Cases Featuring Top 15 States",
+       x = "State",
+       y = "Number of Reported Lyme Disease Cases",
+       caption = "Source: data compiled from CDC pub. data (DVBD)")
 ```
+
+![](homework-02_files/figure-gfm/exercise-2-2.png)<!-- -->
+
+I decided to use color to highlight the state of Connecticut, as I think
+it is a straightforward way of catching the eye of an observer. I chose
+a shade of gray as the color for all other states, as gray is a rather
+neutral color. I highlighted the value for Connecticut in navy, as it is
+a soothing color that is not too aggressive, yet still exists in stark
+contrast to the gray that is used to color the other states’ bars in
+this graph.
 
 3.  **Foreign Connected PACs.**
 
