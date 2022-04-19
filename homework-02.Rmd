@@ -66,22 +66,18 @@ lyme <- tribble(
   "Ohio", 293,
   "Remaining States + DC", 2026) %>%
   mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1)) %>%
-  mutate(state = as.factor(state)) %>%
-  mutate(state = reorder(state, case_count))
-
-lyme$state = reorder(lyme$state, lyme$case_count, order = TRUE)
-
-
+  mutate(state = as.factor(state))
 
 #create pie chart
 lyme %>%
-  ggplot(mapping = aes(x = 1, y = case_count, fill = state)) +
+  ggplot(mapping = aes(x = 1, y = case_count, fill = fct_relevel(fct_reorder(state, case_count, .desc = FALSE), "Remaining States + DC", after = 0))) +
   geom_bar(stat = "identity") +
   coord_polar(theta = "y", start=0) +
   labs(title = "Lyme Disease Association Lyme Disease Analysis\n2018 US Reported Lyme Disease Cases Featuring Top 15 States",
        fill = NULL,
        caption = "U.S. TOTAL CASES 2018: 33,666\nSource data compiled from CDC pub. data (DVBD)") +
   scale_fill_viridis_d(option = "turbo") +
+  guides(fill = guide_legend(reverse=TRUE)) +
   theme_void() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
@@ -89,6 +85,7 @@ lyme %>%
         legend.key.size = unit(0.4, "cm"),
         panel.background = element_rect(fill = "white", size = 1),
         plot.caption = element_text(hjust = -0.1))
+
 #present information as bar graph
 ```
 
