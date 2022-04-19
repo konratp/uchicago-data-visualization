@@ -14,6 +14,8 @@ library(janitor)
 library(stringr)
 library(scales)
 library(cowplot)
+library(RColorBrewer)
+library(colorspace)
 ```
 
 1.  **A new day, a new plot, a new geom.**
@@ -25,15 +27,17 @@ edibnb %>%
   mutate(median_review = median(review_scores_rating, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(neighbourhood = fct_reorder(.f = neighbourhood, .x = median_review)) %>%
-  ggplot(data = subset(., !is.na(neighbourhood)),
+  ggplot(data = subset(.,
+                       !is.na(neighbourhood)),
          mapping = aes(x = review_scores_rating, 
                        y = neighbourhood,
-                       fill = neighbourhood))+
+                       fill = neighbourhood)) +
   geom_density_ridges(na.rm = TRUE,
-                      quantile_lines=TRUE,
-                      quantile_fun=function(x,...)median(x),
-                      show.legend = FALSE)+
-  theme_minimal()+
+                      quantile_lines = TRUE,
+                      quantile_fun = function(x,...)median(x),
+                      show.legend = FALSE) +
+  theme_minimal() +
+  scale_fill_discrete_qualitative(palette = "Set 3") +
   labs(title = "Distribution of AirBnB Review Scores by Neighborhood of Edinburgh",
        subtitle = "In Descending Order Based on Median Review Score",
        x = "Density of AirBnB Review Scores",
@@ -65,8 +69,8 @@ lyme <- tribble(
   "Delaware", 520,
   "Ohio", 293,
   "Remaining States + DC", 2026) %>%
-  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1)) %>%
-  mutate(state = as.factor(state))
+  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1),
+         state = as.factor(state))
 ```
 
 ```{r exercise-2-pie-chart, warning = FALSE}
@@ -92,7 +96,7 @@ lyme %>%
         legend.box.background = element_rect(colour = "black"),
         legend.key.size = unit(0.4, "cm"),
         panel.background = element_rect(fill = "white", size = 1),
-        plot.caption = element_text(hjust = -0.1))
+        plot.caption = element_text(hjust = 0))
 ```
 
 ```{r exercise-2-bar-chart}
@@ -106,7 +110,7 @@ lyme %>%
                        y = case_count,
                        fill = factor(ifelse(state == "Connecticut", 1, 2)))) +
   geom_col(show.legend = FALSE) +
-  scale_fill_manual(name = "state", values= c("navy", "gray46")) +
+  scale_fill_manual(values = c("navy", "gray46")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 50, hjust = 1),
         plot.title = element_text(hjust = 0.5),
