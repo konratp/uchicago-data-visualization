@@ -45,7 +45,7 @@ The above plot showcases the distribution and density of AirBnb review scores by
 
 2.  **Key lyme pie.**
 
-```{r exercise-2, warning = FALSE}
+```{r exercise-2-create-data, include = FALSE}
 #create data frame
 lyme <- tribble(
   ~"state", ~"case_count",
@@ -67,7 +67,9 @@ lyme <- tribble(
   "Remaining States + DC", 2026) %>%
   mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1)) %>%
   mutate(state = as.factor(state))
+```
 
+```{r exercise-2-pie-chart, warning = FALSE}
 #create pie chart
 lyme %>%
   ggplot(mapping = aes(x = 1, 
@@ -91,7 +93,9 @@ lyme %>%
         legend.key.size = unit(0.4, "cm"),
         panel.background = element_rect(fill = "white", size = 1),
         plot.caption = element_text(hjust = -0.1))
+```
 
+```{r exercise-2-bar-chart}
 #present information as bar graph
 lyme %>%
   ggplot(mapping = aes(x = fct_relevel(fct_reorder(state, 
@@ -206,4 +210,41 @@ The above visualizations showcase the amount of contributions, in dolllars, that
 Whereas to a degree in the UK, and more so in Germany, recent governments have been closer, both ideologically and policy-wise, to the Democratic party than the Republicans, the same does not appear to hold true for companies based in these countries. However, this might have changed during the Trump administration: we can see that both companies in the United Kingdom and companies in Germany increased their contributions to the Democratic party leading up to the critical 2020 Presidential election whereas their contributions to the GOP decreased. Perhaps corporations in both countries were worried about increasing political instability in the United States to the degree where these concerns outweighed the economic benefits that came with supporting the Republican party. It might also be due to the tariffs the Trump administration placed on foreign companies during the trade war with the European Union. Perhaps foreign corporations tend to simply support the party they view most likely not to support a protectionist approach to economic policy.
 
 4.  **Hop on.**
+
+```{r exercise-4}
+#load data
+flights <- readRDS("data/flights.rds")
+planes <- readRDS("data/planes.rds")
+
+#join datasets
+joint2 <- inner_join(x = flights, y = planes, by = "tailnum")
+
+#questions: How do you remove NAs? why is none of the stuff im trying working?
+
+#discarded code below
+
+joint6 <- joint2 %>%
+  filter(nchar(tailnum == 6))
+
+joint7 <- joint2[nchar(joint2$tailnum) == 6,]
+  
+  df[nchar(as.character(df$ticker))==3,]
+
+joint4 <- joint2[!is.na(joint2$tailnum),]
+
+
+df[nchar(as.character(df$ticker))==3,]
+
+class(joint2$tailnum)
+
+dplyr::filter(df, nchar(as.character(ticker))==3)
+
+length(unique(joint2$tailnum))
+
+length(unique(joint7$tailnum))
+
+```
+
+
+Load the datasets and then join them such that each row is a flight out of Chicago. Use tailnum as the unique identifier to join by. The resulting dataset should contain flights with tailnums that exist in both datasets and should be named chi_flights_planes. Then, report the number of rows and columns in chi_flights_planes. (Note: It’s possible that not all flights in flights.rds have a corresponding plane in planes.rds.)
 

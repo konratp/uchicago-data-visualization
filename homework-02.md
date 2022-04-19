@@ -51,28 +51,6 @@ broader trend across Scottish cities, or specific to Edinburgh.
 2.  **Key lyme pie.**
 
 ``` r
-#create data frame
-lyme <- tribble(
-  ~"state", ~"case_count",
-  "Pennsylvania", 10208,
-  "New Jersey", 4000,
-  "New York", 3638,
-  "Wisconsin", 1869,
-  "Connecticut", 1859,
-  "Maine", 1405,
-  "Minnesota", 1541,
-  "New Hampshire", 1428,
-  "Maryland", 1382,
-  "Virginia", 1139,
-  "Rhode Island", 1111,
-  "West Virginia", 671,
-  "Vermont", 576,
-  "Delaware", 520,
-  "Ohio", 293,
-  "Remaining States + DC", 2026) %>%
-  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1)) %>%
-  mutate(state = as.factor(state))
-
 #create pie chart
 lyme %>%
   ggplot(mapping = aes(x = 1, 
@@ -95,10 +73,10 @@ lyme %>%
         legend.box.background = element_rect(colour = "black"),
         legend.key.size = unit(0.4, "cm"),
         panel.background = element_rect(fill = "white", size = 1),
-        plot.caption = element_text(hjust = -0.1))
+        plot.caption = element_text(hjust = 0))
 ```
 
-![](homework-02_files/figure-gfm/exercise-2-1.png)<!-- -->
+![](homework-02_files/figure-gfm/exercise-2-pie-chart-1.png)<!-- -->
 
 ``` r
 #present information as bar graph
@@ -123,7 +101,7 @@ lyme %>%
        caption = "Source: data compiled from CDC pub. data (DVBD)")
 ```
 
-![](homework-02_files/figure-gfm/exercise-2-2.png)<!-- -->
+![](homework-02_files/figure-gfm/exercise-2-bar-chart-1.png)<!-- -->
 
 I decided to use color to highlight the state of Connecticut, as I think
 it is a straightforward way of catching the eye of an observer. I chose
