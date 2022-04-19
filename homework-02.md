@@ -11,15 +11,17 @@ edibnb %>%
   mutate(median_review = median(review_scores_rating, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(neighbourhood = fct_reorder(.f = neighbourhood, .x = median_review)) %>%
-  ggplot(data = subset(., !is.na(neighbourhood)),
+  ggplot(data = subset(.,
+                       !is.na(neighbourhood)),
          mapping = aes(x = review_scores_rating, 
                        y = neighbourhood,
-                       fill = neighbourhood))+
+                       fill = neighbourhood)) +
   geom_density_ridges(na.rm = TRUE,
-                      quantile_lines=TRUE,
-                      quantile_fun=function(x,...)median(x),
-                      show.legend = FALSE)+
-  theme_minimal()+
+                      quantile_lines = TRUE,
+                      quantile_fun = function(x,...)median(x),
+                      show.legend = FALSE) +
+  theme_minimal() +
+  scale_fill_discrete_qualitative(palette = "Set 3") +
   labs(title = "Distribution of AirBnB Review Scores by Neighborhood of Edinburgh",
        subtitle = "In Descending Order Based on Median Review Score",
        x = "Density of AirBnB Review Scores",
@@ -89,7 +91,7 @@ lyme %>%
                        y = case_count,
                        fill = factor(ifelse(state == "Connecticut", 1, 2)))) +
   geom_col(show.legend = FALSE) +
-  scale_fill_manual(name = "state", values= c("navy", "gray46")) +
+  scale_fill_manual(values = c("navy", "gray46")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 50, hjust = 1),
         plot.title = element_text(hjust = 0.5),
@@ -209,3 +211,68 @@ party they view most likely not to support a protectionist approach to
 economic policy.
 
 4.  **Hop on.**
+
+``` r
+#load data
+flights <- readRDS("data/flights.rds")
+planes <- readRDS("data/planes.rds")
+
+#join datasets
+chi_flights_planes <- inner_join(x = flights, y = planes, by = "tailnum")
+
+#investigate distribution of number of seats per plane
+chi_flights_planes %>%
+  ggplot(mapping = aes(x = seats)) +
+  geom_histogram(binwidth = 20, fill = "lightcoral") +
+  scale_x_continuous(breaks = pretty_breaks(n = 10)) +
+  theme_minimal() +
+  labs(title = "Distribution of Number of Seats in Airplanes",
+       subtitle = "Among Flights Leaving Chicago, IL",
+       x = "Number of Seats in Airplane",
+       y = "Number of Flights Departed",
+       caption = "Source: FAA Aircraft Registry and\n Bureau of Transportation Services")
+```
+
+![](homework-02_files/figure-gfm/exercise-4-prepare-data-1.png)<!-- -->
+
+``` r
+#create new variable indicating plane size
+chi_flights_planes <- chi_flights_planes %>%
+  mutate(size = case_when(seats < 125 ~ "Small",
+                          seats >= 125 & seats < 250 ~ "Medium",
+                          seats >= 250 & seats < 350 ~ "Large",
+                          seats >= 350 ~ "Jumbo"))
+```
+
+Looking at the distribution of seats per plane leaving Chicago might
+give us insights into the sizes of the different planes. We can see that
+roughly, the distribution is quadrimodal, with clusters of planes
+peaking roughly around 75 seats, 100 seats, 275 seats, and 375 seats.
+Based on this information, I construct a new variable, `size`,
+indicating the size of an airplane. I arbitrarily decide cutoffs for the
+four different clusters visualized in the histogram above at 125 seats,
+250 seats, and 350 seats.
+
+``` r
+#recreate visualization
+chi_flights_planes %>%
+  group_by(size) %>%
+  summarize(count = n()) %>%
+  ggplot(mapping = aes(x = count,
+                       y = fct_rev(size))) +
+  geom_col(fill = "skyblue",
+           width = 0.1) +
+  geom_text(aes(label = emoji("airplane"), group = size),
+            position = position_dodge(width = 1),
+            family = "EmojiOne") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 120000, 20000),
+                     label = comma) +
+  labs(title = "Number of Flights out of Chicago in 2020",
+       subtitle = "By size of plane",
+       y = "Plane Size",
+       x = "Number of Flights",
+       caption = "Source: FAA Aircraft Registry and\n Bureau of Transportation Services")
+```
+
+![](homework-02_files/figure-gfm/exercise-4-visualization-1.png)<!-- -->

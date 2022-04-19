@@ -14,8 +14,9 @@ library(janitor)
 library(stringr)
 library(scales)
 library(cowplot)
-library(RColorBrewer)
 library(colorspace)
+library(ragg)
+library(emojifont)
 ```
 
 1.  **A new day, a new plot, a new geom.**
@@ -215,16 +216,16 @@ Whereas to a degree in the UK, and more so in Germany, recent governments have b
 
 4.  **Hop on.**
 
-```{r exercise-4}
+```{r exercise-4-prepare-data}
 #load data
 flights <- readRDS("data/flights.rds")
 planes <- readRDS("data/planes.rds")
 
 #join datasets
-joint2 <- inner_join(x = flights, y = planes, by = "tailnum")
+chi_flights_planes <- inner_join(x = flights, y = planes, by = "tailnum")
 
 #investigate distribution of number of seats per plane
-joint2 %>%
+chi_flights_planes %>%
   ggplot(mapping = aes(x = seats)) +
   geom_histogram(binwidth = 20, fill = "lightcoral") +
   scale_x_continuous(breaks = pretty_breaks(n = 10)) +
@@ -233,14 +234,43 @@ joint2 %>%
        subtitle = "Among Flights Leaving Chicago, IL",
        x = "Number of Seats in Airplane",
        y = "Number of Flights Departed",
-       caption = "Source: FAA Aircraft Registry and Bureau of Transportation Services")
+       caption = "Source: FAA Aircraft Registry and\n Bureau of Transportation Services")
 
 #create new variable indicating plane size
-joint2 <- joint2 %>%
+chi_flights_planes <- chi_flights_planes %>%
   mutate(size = case_when(seats < 125 ~ "Small",
                           seats >= 125 & seats < 250 ~ "Medium",
                           seats >= 250 & seats < 350 ~ "Large",
-                          seats >= 350 ~ "Jumbo"))
+                          seats >= 350 ~ "Jumbo"),
+         size_numeric = case_when(size == "Small" ~ 1,
+                                  size == "Medium" ~ 2,
+                                  size == "Large" ~ 3,
+                                  size == "Jumbo" ~ 4))
 ```
 
 Looking at the distribution of seats per plane leaving Chicago might give us insights into the sizes of the different planes. We can see that roughly, the distribution is quadrimodal, with clusters of planes peaking roughly around 75 seats, 100 seats, 275 seats, and 375 seats. Based on this information, I construct a new variable, `size`, indicating the size of an airplane. I arbitrarily decide cutoffs for the four different clusters visualized in the histogram above at 125 seats, 250 seats, and 350 seats.
+
+```{r exercise-4-visualization, dev = "ragg_png"}
+#recreate visualization
+chi_flights_planes %>%
+  group_by(size, size_numeric) %>%
+  summarize(count = n()) %>%
+  ggplot(mapping = aes(x = count,
+                       y = fct_rev(size))) +
+  geom_col(fill = "skyblue",
+           width = 0.1) +
+  geom_text(aes(label = emoji("airplane"), group = size, size = size_numeric),
+            hjust = 0.5,
+            vjust = 0.25,
+            family = "EmojiOne") +
+  scale_size_
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 120000, 20000),
+                     label = comma) +
+  labs(title = "Number of Flights out of Chicago in 2020",
+       subtitle = "By size of plane",
+       y = "Plane Size",
+       x = "Number of Flights",
+       caption = "Source: FAA Aircraft Registry and\n Bureau of Transportation Services")
+```
+
