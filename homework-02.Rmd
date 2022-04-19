@@ -236,33 +236,11 @@ joint2 %>%
        caption = "Source: FAA Aircraft Registry and Bureau of Transportation Services")
 
 #create new variable indicating plane size
+joint2 <- joint2 %>%
+  mutate(size = case_when(seats < 125 ~ "Small",
+                          seats >= 125 & seats < 250 ~ "Medium",
+                          seats >= 250 & seats < 350 ~ "Large",
+                          seats >= 350 ~ "Jumbo"))
 ```
 
-Looking at the distribution of seats per plane leaving Chicago might give us insights into the sizes of the different planes. We can see that roughly, the distribution is quadrimodal, with clusters of planes peaking roughly around 75 seats, 100 seats, 275 seats, and 375 seats. Based on this information, I construct a new variable, `size`, indicating the size of an airplane. I arbitrarily decide cutoffs for the four different clusters visualized in the histogram above at 125 seats, 225 seats, and 350 seats.
-
-```{r}
-#discarded code below
-
-joint6 <- joint2 %>%
-  filter(nchar(tailnum == 6))
-
-joint7 <- joint2[nchar(joint2$tailnum) == 6,]
-  
-  df[nchar(as.character(df$ticker))==3,]
-
-joint4 <- joint2[!is.na(joint2$tailnum),]
-
-
-df[nchar(as.character(df$ticker))==3,]
-
-class(joint2$tailnum)
-
-dplyr::filter(df, nchar(as.character(ticker))==3)
-
-length(unique(joint2$tailnum))
-
-length(unique(joint7$tailnum))
-
-```
-
-Load the datasets and then join them such that each row is a flight out of Chicago. Use tailnum as the unique identifier to join by. The resulting dataset should contain flights with tailnums that exist in both datasets and should be named chi_flights_planes. Then, report the number of rows and columns in chi_flights_planes. (Note: It’s possible that not all flights in flights.rds have a corresponding plane in planes.rds.)
+Looking at the distribution of seats per plane leaving Chicago might give us insights into the sizes of the different planes. We can see that roughly, the distribution is quadrimodal, with clusters of planes peaking roughly around 75 seats, 100 seats, 275 seats, and 375 seats. Based on this information, I construct a new variable, `size`, indicating the size of an airplane. I arbitrarily decide cutoffs for the four different clusters visualized in the histogram above at 125 seats, 250 seats, and 350 seats.
