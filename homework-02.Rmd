@@ -65,7 +65,13 @@ lyme <- tribble(
   "Delaware", 520,
   "Ohio", 293,
   "Remaining States + DC", 2026) %>%
-  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1))
+  mutate(case_percent = round((case_count / sum(case_count)) * 100, digits = 1)) %>%
+  mutate(state = as.factor(state)) %>%
+  mutate(state = reorder(state, case_count))
+
+lyme$state = reorder(lyme$state, lyme$case_count, order = TRUE)
+
+
 
 #create pie chart
 lyme %>%
