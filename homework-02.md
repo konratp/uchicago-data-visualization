@@ -238,10 +238,10 @@ chi_flights_planes %>%
 ``` r
 #create new variable indicating plane size
 chi_flights_planes <- chi_flights_planes %>%
-  mutate(size = case_when(seats < 125 ~ "Small",
+  mutate(size = as.factor(case_when(seats < 125 ~ "Small",
                           seats >= 125 & seats < 250 ~ "Medium",
                           seats >= 250 & seats < 350 ~ "Large",
-                          seats >= 350 ~ "Jumbo"))
+                          seats >= 350 ~ "Jumbo")))
 ```
 
 Looking at the distribution of seats per plane leaving Chicago might
@@ -262,12 +262,15 @@ chi_flights_planes %>%
                        y = fct_rev(size))) +
   geom_col(fill = "skyblue",
            width = 0.1) +
-  geom_text(aes(label = emoji("airplane"), group = size),
-            position = position_dodge(width = 1),
-            family = "EmojiOne") +
-  theme_minimal() +
+  geom_text(aes(label = emoji("airplane"), group = size, size = size),
+            hjust = 0.5,
+            vjust = 0.25,
+            family = "EmojiOne",
+            show.legend = FALSE) +
+  scale_size_manual(values = c(10,8,6.5,5,5)) +
   scale_x_continuous(breaks = seq(0, 120000, 20000),
                      label = comma) +
+  theme_minimal() +
   labs(title = "Number of Flights out of Chicago in 2020",
        subtitle = "By size of plane",
        y = "Plane Size",
