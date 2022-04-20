@@ -244,6 +244,7 @@ chi_flights_planes <- chi_flights_planes %>%
                           seats >= 350 ~ "Jumbo")))
 ```
 
+The dataset `chi_flights_planes` consists of 240031 rows and 27 columns.
 Looking at the distribution of seats per plane leaving Chicago might
 give us insights into the sizes of the different planes. We can see that
 roughly, the distribution is quadrimodal, with clusters of planes
@@ -279,3 +280,49 @@ chi_flights_planes %>%
 ```
 
 ![](homework-02_files/figure-gfm/exercise-4-visualization-1.png)<!-- -->
+
+``` r
+#create another visualization using the same dataset as before
+#visualizing delay in departure by airplane size, faceted for manufacturer
+chi_flights_planes %>%
+  mutate(airbus_boeing = case_when(manufacturer == "AIRBUS" ~ "Airbus",
+                                    manufacturer == "BOEING" ~ "Boeing",
+                                    manufacturer != "AIRBUS" | manufacturer != "BOEING" ~ "Other")) %>%
+  ggplot(mapping = aes(x = fct_rev(size), y = dep_delay, color = size)) +
+  facet_wrap(vars(airbus_boeing)) +
+  scale_color_discrete_sequential(palette = "Dark Mint") +
+  geom_jitter(shape = 1,
+              show.legend = FALSE) +
+  theme_minimal() +
+  labs(title = "Departure Delays by Size of Airplane",
+       subtitle = "Faceted by Airplane Manufacturer",
+       x = "Airplane Size",
+       y = "Departure Delay",
+       caption = "Source: FAA Aircraft Registry and\n Bureau of Transportation Services")
+```
+
+    ## Warning: Removed 8306 rows containing missing values (geom_point).
+
+![](homework-02_files/figure-gfm/exercise-4-additional-visualization-1.png)<!-- -->
+
+In this final plot of the homework set, I analyze the departure delays
+for airplanes of different sizes and those made by Airbus, Boeing, and
+other manufacturers. The first insight that strikes me as interesting is
+that only Boeing appears to manufacture planes that qualify as “large”
+in the framework I outlined above. Accordingly, neither for Airbus nor
+other manufacturers exists data for the departure delays of “large”
+airplanes. Secondly, it appears as though small Airbus planes are
+delayed less often than small Boeing planes and small planes
+manufactured by other manufacturers. However, it is difficult to tell
+the proportion of this number, as all non-delayed flights are grouped
+together at a y-intercept of 0. A possible confounder could be that more
+Boeing (i.e. American-made) planes are used for short distances, as
+these are operated by American airlines. This in turn could lead to
+overall less small Airbus planes flying out of Chicago, explaining the
+lower number of severely delayed flights. Relatedly, it appears as
+though Jumbo machines built by Airbus are the most delayed of the three
+– again, Airbus machines might be more likely to be used by European
+airlines (as they are often subsidized by the same governments that
+subsidize Airbus), thus leading to a higher overall number of Jumbo
+machines being used to fly out of Chicago and leading to higher absolute
+numbers of severely delayed flights.
