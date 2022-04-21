@@ -23,17 +23,33 @@ library(here) # simplifies relative file paths
 olympics_data <- read_csv(here("data", "olympics.csv"))
 ```
 
-The dataset we’re analyzing is available on kaggle and contains historical data on the modern Olympic game including all games starting from Athens 1896 till 2016. This data was scraped from [www.sports-reference.com](www.sports-reference.com) in 2018 and wrangled by rgriffin. Until 1992, winter and summer games used to be held in the same year. Since 1992, both summer and winter games have been taking place in a 4-year cycle (an olympiad!), resulting in winter games in 1994, summer in 1996, then again winter in 1998, and so on. The data set contains rich information on worldwide participation in Olympic Games across the years. We choose it because we're interested in the Olympics, and we believe we can show political and historical trends influencing countries' performances.
+The dataset we’re analyzing is available on kaggle and contains historical data on the modern Olympic game including all games starting from Athens 1896 till 2016. This data was scraped from [www.sports-reference.com](www.sports-reference.com) in 2018 and wrangled by rgriffin. Until 1992, winter and summer games used to be held in the same year. Since 1992, both summer and winter games have been taking place in a 4-year cycle (an olympiad!), resulting in winter games in 1994, summer in 1996, then again winter in 1998, and so on. The data set contains rich information on worldwide participation in Olympic Games across the years. We choose it because we're interested in the Olympics, and we believe that first we can show political and historical trends influencing countries' performances. Second, we narrow down to the angle of gender issues to find out female participation and performance over the years and across countries.
 
 This data contains 271,116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual Olympic event. There is data on 66 different sports, 1,184 different teams, 51 games, 230 different NOCs, 42 different host cities across 35 different years. The description of variables is included in the codebook in the `readme` file in the data folder in this repository.
+
+```{r sum-data-1, message=FALSE, warning=FALSE, echo=FALSE}
+sum_table_1 <- data.frame(character = c("Total obs.", 
+                                        "Total vars", 
+                                        "No. of sports", 
+                                        "No. of teams", 
+                                        "No. of games", 
+                                        "No. of NOCs",
+                                        "No. of hosting cities"), 
+                          count = c(nrow(olympics_data), 
+                                    ncol(olympics_data) - 1, 
+                                    length(unique(olympics_data$sport)), 
+                                    length(unique(olympics_data$team)),
+                                    length(unique(olympics_data$games)),
+                                    length(unique(olympics_data$noc)),
+                                    length(unique(olympics_data$city))))
+sum_table_1
+```
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
 season <- olympics_data %>% 
   group_by(season) %>%
   summarize(count = n())
-olympics_data %>%
-  group_by(city) %>%
-   summarise(count=n())
+length(unique(olympics_data$sport))
 ```
 
 
