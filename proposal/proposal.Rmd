@@ -61,7 +61,7 @@ We're planning on creating graphs that will allows us to answer the following tw
 
 1. How has the dominance of the Soviet Union/Russia and the United States changed throughout the cold war and after? Has the share of medals won by either NATO or Warsaw Pact countries decreased since the end of the cold war?
 
-2. How did countries perform in the Olympics Games when they were hosting v.s. not hosting the game? Is there any relationship between hosing the Game and the overall performance - measured by the number of medals? To even further expand this question, what are the costs compared to benefits in monetary values of hosting an Olympic Games?
+2. Given persisting gender inequalities in many countries, we are interested in analyzing gender representation at the Olympics. Does the proportion of female to male athletes differ between countries on different continents? Further, does the distribution of medals won by female vs male athletes differ between the different continents as well?
 
 ## Analysis plan
 
@@ -69,12 +69,10 @@ The following lays out our plan for answering each of the research questions. A 
 
 1. In a first step, we will construct a time-series plot comparing the number of medals won by the United States and the USSR/Russia and all other countries. We plot the variable ‘year’ on the x-axis and a newly created variable counting the number of gold medals per country on the y axis. Finally, different colors (or facets, to be determined) will indicate whether medals were won in the Summer Olympics or the Winter Olympics, as well as display cumulative medal wins. In a second step, we expand the same analysis to not only include the United States and the USSR/Russia, but to include member-states of both NATO and the Warsaw Pact. In order to do so, we will create a variable indicating whether a country is part of NATO, the Warsaw Pact, or non-aligned.
 
-2. In a first step, we will summarize the data set into a table showing the average number of medals won by each country every year. We will incorporate an external data set with information on hosting countries. We will also need to create one categorized or dummy variable for whether or not to host the Game. We will create a summarized data set and data visualizations to show whether countries would perform better (or worse) when they were hosting a Game compared to when they were not. The summarized data set will contain a new variable representing the average number of medals for each country divided by the hosting status. So the x-axis may represent the new dummy variable, and the y-axis may represent the average number of medals. The third variable can be illustrated by different shapes or colors, combined with the legend to show the hosting status. In order to answer this question, we will draw on additional variables from a secondary dataset including information about the host countries of each Olympic game.
-
-We can potentially further discuss the monetary costs-and-benefit comparison of hosting an Olympic Games with external data sets containing the needed information. We can either compare the trends throughout the years (adjusted by inflation). The x-axis will then be the year variable, and the y-axis will be monetary values for either the cost or the revenue variable. It can even incorporate the season variable to show different trends for the summer and winter Olympics.
+2. We will construct two plots to assess the second set of questions. Our first plot, a time-series plot, will indicate the proportion of female to male athletes on the y axis and year of the Olympic games on the x axis. Furthermore, we will make use of the color aesthetic to color code different lines by continent. Our second plot will replicate the same basic structure, except on the y axis it will map the proportion of medals won by female athletes by continent, which is again indicated by the color aesthetic.
 
 Note: Just to distinguish the exact variables used in explaining Q1 and Q2 so they are not completely overlapping, the potentially used variables are listed here:
 
-Q1: year/time, country, average number of medals per country (new), types of medals, seasons, NATO/Warsaw Pact member states (new)
+Q1: year/time, country (new variable derived from NOC), average number of medals per country (new), types of medals, seasons, NATO/Warsaw Pact member states (new)
 
-Q2: country, average number of medals per country (new and may be different from Q1 since it is not grouped by the year variable), hosting status (external), costs per game/athletes (external), revenue (external)
+Q2: country (new variable derived from NOC), sex, continent (new), medal, year
