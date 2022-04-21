@@ -10,7 +10,7 @@ starting from Athens 1896 till 2016. This data was scraped from
 [www.sports-reference.com](www.sports-reference.com) in 2018 and
 wrangled by rgriffin. Until 1992, winter and summer games used to be
 held in the same year. Since 1992, both summer and winter games have
-been taking place in a 4-year cycle (an olympiad\!), resulting in winter
+been taking place in a 4-year cycle (an olympiad!), resulting in winter
 games in 1994, summer in 1996, then again winter in 1998, and so on. The
 data set contains rich information on worldwide participation in Olympic
 Games across yeas. We chose it because we’re interested in the Olympics,
@@ -37,25 +37,14 @@ in the summer games, while 222,552 participated in the winter season.
 olympics_data <- read_csv(here("data", "olympics.csv"))
 ```
 
-    ## 
+    ## Rows: 271116 Columns: 15
     ## ── Column specification ────────────────────────────────────────────────────────
-    ## cols(
-    ##   id = col_double(),
-    ##   name = col_character(),
-    ##   sex = col_character(),
-    ##   age = col_double(),
-    ##   height = col_double(),
-    ##   weight = col_double(),
-    ##   team = col_character(),
-    ##   noc = col_character(),
-    ##   games = col_character(),
-    ##   year = col_double(),
-    ##   season = col_character(),
-    ##   city = col_character(),
-    ##   sport = col_character(),
-    ##   event = col_character(),
-    ##   medal = col_character()
-    ## )
+    ## Delimiter: ","
+    ## chr (10): name, sex, team, noc, games, season, city, sport, event, medal
+    ## dbl  (5): id, age, height, weight, year
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 ``` r
 #create dummy variables to ease statistical analysis
@@ -69,273 +58,139 @@ olympics_data %>%
 ```
 
 <table>
-
 <thead>
-
 <tr>
-
 <th style="text-align:left;">
-
 </th>
-
 <th style="text-align:right;">
-
 Min.
-
 </th>
-
 <th style="text-align:right;">
-
 1st Qu.
-
 </th>
-
 <th style="text-align:right;">
-
 Median
-
 </th>
-
 <th style="text-align:right;">
-
 Mean
-
 </th>
-
 <th style="text-align:right;">
-
 3rd Qu.
-
 </th>
-
 <th style="text-align:right;">
-
 Max.
-
 </th>
-
 <th style="text-align:right;">
-
 NA’s
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr>
-
 <td style="text-align:left;">
-
-sex\_dummy
-
+sex_dummy
 </td>
-
 <td style="text-align:right;">
-
 0
-
 </td>
-
 <td style="text-align:right;">
-
 0
-
 </td>
-
 <td style="text-align:right;">
-
 1
-
 </td>
-
 <td style="text-align:right;">
-
 0.725
-
 </td>
-
 <td style="text-align:right;">
-
 1
-
 </td>
-
 <td style="text-align:right;">
-
 1
-
 </td>
-
 <td style="text-align:right;">
-
 0
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 age
-
 </td>
-
 <td style="text-align:right;">
-
 10
-
 </td>
-
 <td style="text-align:right;">
-
 21
-
 </td>
-
 <td style="text-align:right;">
-
 24
-
 </td>
-
 <td style="text-align:right;">
-
 25.557
-
 </td>
-
 <td style="text-align:right;">
-
 28
-
 </td>
-
 <td style="text-align:right;">
-
 97
-
 </td>
-
 <td style="text-align:right;">
-
 9474
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 height
-
 </td>
-
 <td style="text-align:right;">
-
 127
-
 </td>
-
 <td style="text-align:right;">
-
 168
-
 </td>
-
 <td style="text-align:right;">
-
 175
-
 </td>
-
 <td style="text-align:right;">
-
 175.339
-
 </td>
-
 <td style="text-align:right;">
-
 183
-
 </td>
-
 <td style="text-align:right;">
-
 226
-
 </td>
-
 <td style="text-align:right;">
-
 60171
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 weight
-
 </td>
-
 <td style="text-align:right;">
-
 25
-
 </td>
-
 <td style="text-align:right;">
-
 60
-
 </td>
-
 <td style="text-align:right;">
-
 70
-
 </td>
-
 <td style="text-align:right;">
-
 70.702
-
 </td>
-
 <td style="text-align:right;">
-
 79
-
 </td>
-
 <td style="text-align:right;">
-
 214
-
 </td>
-
 <td style="text-align:right;">
-
 62875
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
 
 ``` r
@@ -460,11 +315,12 @@ following two questions:
     medals won by either NATO or Warsaw Pact countries decreased since
     the end of the cold war?
 
-2.  How did countries perform in the Olympics Games when they were
-    hosting v.s. not hosting the game? Is there any relationship between
-    hosing the Game and the overall performance - measured by the number
-    of medals? To even further expand this question, what are the costs
-    compared to benefits in monetary values of hosting an Olympic Games?
+2.  Given persisting gender inequalities in many countries, we are
+    interested in analyzing gender representation at the Olympics. Does
+    the proportion of female to male athletes differ between countries
+    on different continents? Further, does the distribution of medals
+    won by female vs male athletes differ between the different
+    continents as well?
 
 ## Analysis plan
 
@@ -488,39 +344,22 @@ variable with a proper country name.
     we will create a variable indicating whether a country is part of
     NATO, the Warsaw Pact, or non-aligned.
 
-2.  In a first step, we will summarize the data set into a table showing
-    the average number of medals won by each country every year. We will
-    incorporate an external data set with information on hosting
-    countries. We will also need to create one categorized or dummy
-    variable for whether or not to host the Game. We will create a
-    summarized data set and data visualizations to show whether
-    countries would perform better (or worse) when they were hosting a
-    Game compared to when they were not. The summarized data set will
-    contain a new variable representing the average number of medals for
-    each country divided by the hosting status. So the x-axis may
-    represent the new dummy variable, and the y-axis may represent the
-    average number of medals. The third variable can be illustrated by
-    different shapes or colors, combined with the legend to show the
-    hosting status. In order to answer this question, we will draw on
-    additional variables from a secondary dataset including information
-    about the host countries of each Olympic game.
-
-We can potentially further discuss the monetary costs-and-benefit
-comparison of hosting an Olympic Games with external data sets
-containing the needed information. We can either compare the trends
-throughout the years (adjusted by inflation). The x-axis will then be
-the year variable, and the y-axis will be monetary values for either the
-cost or the revenue variable. It can even incorporate the season
-variable to show different trends for the summer and winter Olympics.
+2.  We will construct two plots to assess the second set of questions.
+    Our first plot, a time-series plot, will indicate the proportion of
+    female to male athletes on the y axis and year of the Olympic games
+    on the x axis. Furthermore, we will make use of the color aesthetic
+    to color code different lines by continent. Our second plot will
+    replicate the same basic structure, except on the y axis it will map
+    the proportion of medals won by female athletes by continent, which
+    is again indicated by the color aesthetic.
 
 Note: Just to distinguish the exact variables used in explaining Q1 and
 Q2 so they are not completely overlapping, the potentially used
 variables are listed here:
 
-Q1: year/time, country, average number of medals per country (new),
-types of medals, seasons, NATO/Warsaw Pact member states (new)
+Q1: year/time, country (new variable derived from NOC), average number
+of medals per country (new), types of medals, seasons, NATO/Warsaw Pact
+member states (new)
 
-Q2: country, average number of medals per country (new and may be
-different from Q1 since it is not grouped by the year variable), hosting
-status (external), costs per game/athletes (external), revenue
-(external)
+Q2: country (new variable derived from NOC), sex, continent (new),
+medal, year
