@@ -90,7 +90,9 @@ In a more detailed way, we can also aggregate the events by disciplines to add m
 
 Finally, we will also create a bar chart indicating the 15 countries with the highest number of female Olympic medalists in recent 50 years. The range of years ensures that the numbers of events and participating countries/athletes are more stabilized. The number of medals is on the x axis, and the top-15 countries' names is on the y axis with a descending order. The number of different types of medals (gold, silver or bronze) will be shown in different colors. We also consider putting summer compared to winter seasons in different facets.
 
-*Note: Just to distinguish the exact variables used in explaining Q1 and Q2 so they are not completely overlapping, the potentially used variables are listed here:*
+## Final Note
+
+*Just to distinguish the exact variables used in explaining Q1 and Q2 so they are not completely overlapping, the potentially used variables are listed here:*
 
 - Q1: year, country (new variable derived from NOC), average number of medals per country (new and with appropriate normalization), types of medals, seasons, NATO/Warsaw Pact member states (new categorical variable)
 - Q2: year, country (new variable derived from NOC), continent (new categorical variable), the proportion of female athletes per year and later by continent (new), types of medals, seasons

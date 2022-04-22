@@ -5,6 +5,7 @@ Elated Anura
   - [Dataset](#dataset)
   - [Questions](#questions)
   - [Analysis plan](#analysis-plan)
+  - [Final Note](#final-note)
 
 ## Dataset
 
@@ -406,9 +407,11 @@ order. The number of different types of medals (gold, silver or bronze)
 will be shown in different colors. We also consider putting summer
 compared to winter seasons in different facets.
 
-*Note: Just to distinguish the exact variables used in explaining Q1 and
-Q2 so they are not completely overlapping, the potentially used
-variables are listed here:*
+## Final Note
+
+*Just to distinguish the exact variables used in explaining Q1 and Q2 so
+they are not completely overlapping, the potentially used variables are
+listed here:*
 
   - Q1: year, country (new variable derived from NOC), average number of
     medals per country (new and with appropriate normalization), types
