@@ -334,7 +334,7 @@ variable with a proper country name.
 1.  In a first step, we will construct a time-series plot comparing the
     number of medals won by the United States and the USSR/Russia and
     all other countries. We plot the variable ‘year’ on the x-axis and a
-    newly created variable counting the number of gold medals per
+    newly created variable counting the normalized number of gold medals per
     country on the y axis. Finally, different colors (or facets, to be
     determined) will indicate whether medals were won in the Summer
     Olympics or the Winter Olympics, as well as display cumulative medal
@@ -343,6 +343,31 @@ variable with a proper country name.
     member-states of both NATO and the Warsaw Pact. In order to do so,
     we will create a variable indicating whether a country is part of
     NATO, the Warsaw Pact, or non-aligned.
+    Considering the growing number of events in Olympics over time, we want to 
+    normalize the number of medals to account for changes in number of events.
+    There are multiple ways to normalize the number of medals won. One approach
+    is to divide the number of medals won by a country in a year by the total
+    number of medals available in that particular year. This will ensure that
+    a country winning 10 medals out of 50 in year x, and then winning 20 out of
+    100 medals a few years later doesn't necessarily show an improvement in 
+    their performance in olympics as the success rate in terms of percentage of
+    medals won remains the same. Another approach is to divide a country's gold 
+    medalists in a year by the total number of participants from that country
+    in the same year. This measure shows the success rate of that country and 
+    allows us to anlyze whether increase in number of medals won is indeed due 
+    to improved performance and not just because of increase in number of 
+    participants from that country. A third approach would be to normalize around
+    the mean number of medals won by a country. This measure allows us to see
+    how a country is doing relative to the global average. We can use more than
+    one of these newly created normalized scores in the same plot using different
+    aesthetic shapes for each measure and colors for countries.
+    Alternatively, we can also aggregate the events by discipline to account for
+    the increase/decrease in number of events. To do so we will create a new
+    variable that groups the events by sports category and then aggregates the
+    number of medals won in that discipline for each country. Then we can use
+    this new variable in our time series analysis to facet by discipline to
+    analyze performance of countries across those disciplines.
+    
 
 2.  We will construct two plots to assess the second set of questions.
     Our first plot, a time-series plot, will indicate the proportion of
