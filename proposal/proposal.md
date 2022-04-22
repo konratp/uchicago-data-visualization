@@ -2,60 +2,54 @@ Project 1 Proposal
 ================
 Elated Anura
 
+-   [Dataset](#dataset)
+-   [Questions](#questions)
+-   [Analysis plan](#analysis-plan)
+
 ## Dataset
 
 The dataset we’re analyzing is available on kaggle and contains
-historical data on the modern Olympic game and includes all games
-starting from Athens 1896 till 2016. This data was scraped from
+historical data on the modern Olympic game including all games starting
+from Athens 1896 till 2016. This data was scraped from
 [www.sports-reference.com](www.sports-reference.com) in 2018 and
 wrangled by rgriffin. Until 1992, winter and summer games used to be
 held in the same year. Since 1992, both summer and winter games have
 been taking place in a 4-year cycle (an olympiad!), resulting in winter
 games in 1994, summer in 1996, then again winter in 1998, and so on. The
 data set contains rich information on worldwide participation in Olympic
-Games across yeas. We chose it because we’re interested in the Olympics,
-and we believe we can show political and historical trends influencing
-countries’ performances and contributions to hosting the Games.
+Games across the years. We choose it because we’re interested in the
+Olympics, and we believe that first we can show political and historical
+trends influencing countries’ performances. Second, we narrow down to
+the angle of gender issues to find out female participation and
+performance over the years and across countries.
 
 This data contains 271,116 observations and 15 variables. Each row
 contains data on an individual athlete participating in an individual
-Olympic event. There is data on 66 different sports, 1184 different
-teams, 51 games, 230 different NOCs, 42 different host cities across 35
-different years. The variables are included in the codebook in the
-`readme` file in the data folder in this repository.
+Olympic event.To give a broad view, our data include information on 66
+different sports, 1,184 different teams, 51 games, 230 different NOCs,
+42 different host cities across 35 different years. 222,552 of the
+athletes participated in the summer games, while 48,564 participated in
+the winter season. The description of variables is included in the
+codebook in the `readme` file under the data folder in this repository.
 
-In our data set, 72.5 percent of the participants are male whereas the
-rest are female if we exclude missing values. The average age of the
+    ##                  character  count
+    ## 1               Total obs. 271116
+    ## 2               Total vars     14
+    ## 3            No. of sports     66
+    ## 4             No. of teams   1184
+    ## 5             No. of games     51
+    ## 6              No. of NOCs    230
+    ## 7    No. of hosting cities     42
+    ## 8 No. of athletes (summer) 222552
+    ## 9 No. of athletes (winter)  48564
+
+After excluding missing values, 72.5 percent of the participants in our
+data set are male whereas the rest are female. The average age of the
 athletes is 25.6 years, with the oldest athlete being 97 years old, and
-the youngest being 10 years old. The average athlete height is 175.4cm,
-the maximum height is 226cm, and the minimum height is 127 cm. The
-average weight of an athlete is 70.7 kilograms, with the maximum being
-214kg and the minimum being 25kg. 222,552 of the athletes participated
-in the summer games, while 222,552 participated in the winter season.
-
-``` r
-olympics_data <- read_csv(here("data", "olympics.csv"))
-```
-
-    ## Rows: 271116 Columns: 15
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (10): name, sex, team, noc, games, season, city, sport, event, medal
-    ## dbl  (5): id, age, height, weight, year
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
-#create dummy variables to ease statistical analysis
-olympics_data$sex_dummy <- ifelse(olympics_data$sex=="M", 1,0)
-vars_of_interest <- c("sex_dummy", "age", "height", "weight")
-olympics_data %>%
-  select(vars_of_interest) %>%
-  lapply(., function(i) summary(i, na.rm =TRUE)) %>% 
-  do.call(rbind, .) %>%
-  kable(digits = 3)
-```
+the youngest being 10 years old. The average athlete’s height is
+175.4cm, the maximum height is 226cm, and the minimum height is 127 cm.
+The average weight of an athlete is 70.7 kilograms, with the maximum
+being 214kg and the minimum being 25kg.
 
 <table>
 <thead>
@@ -193,118 +187,6 @@ weight
 </tbody>
 </table>
 
-``` r
-olympics_data %>%
-  group_by(team) %>%
-   summarise(count=n())
-```
-
-    ## # A tibble: 1,184 × 2
-    ##    team                  count
-    ##    <chr>                 <int>
-    ##  1 30. Februar               2
-    ##  2 A North American Team     4
-    ##  3 Acipactli                 3
-    ##  4 Acturus                   2
-    ##  5 Afghanistan             126
-    ##  6 Akatonbo                  3
-    ##  7 Alain IV                  3
-    ##  8 Albania                  70
-    ##  9 Alcaid                    3
-    ## 10 Alcyon-6                  1
-    ## # … with 1,174 more rows
-
-``` r
-olympics_data %>%
-  group_by(sport) %>%
-   summarise(count=n())
-```
-
-    ## # A tibble: 66 × 2
-    ##    sport            count
-    ##    <chr>            <int>
-    ##  1 Aeronautics          1
-    ##  2 Alpine Skiing     8829
-    ##  3 Alpinism            25
-    ##  4 Archery           2334
-    ##  5 Art Competitions  3578
-    ##  6 Athletics        38624
-    ##  7 Badminton         1457
-    ##  8 Baseball           894
-    ##  9 Basketball        4536
-    ## 10 Basque Pelota        2
-    ## # … with 56 more rows
-
-``` r
-olympics_data %>%
-  group_by(city) %>%
-   summarise(count=n())
-```
-
-    ## # A tibble: 42 × 2
-    ##    city        count
-    ##    <chr>       <int>
-    ##  1 Albertville  3436
-    ##  2 Amsterdam    4992
-    ##  3 Antwerpen    4292
-    ##  4 Athina      15556
-    ##  5 Atlanta     13780
-    ##  6 Barcelona   12977
-    ##  7 Beijing     13602
-    ##  8 Berlin       6506
-    ##  9 Calgary      2639
-    ## 10 Chamonix      460
-    ## # … with 32 more rows
-
-``` r
-# this gives the number of participants who participated in the games held in these cities
-olympics_data %>%
-  group_by(season) %>%
-   summarise(count=n())
-```
-
-    ## # A tibble: 2 × 2
-    ##   season  count
-    ##   <chr>   <int>
-    ## 1 Summer 222552
-    ## 2 Winter  48564
-
-``` r
-length(unique(olympics_data$sport))
-```
-
-    ## [1] 66
-
-``` r
-length(unique(olympics_data$team))
-```
-
-    ## [1] 1184
-
-``` r
-length(unique(olympics_data$games))
-```
-
-    ## [1] 51
-
-``` r
-length(unique(olympics_data$year))
-```
-
-    ## [1] 35
-
-``` r
-length(unique(olympics_data$noc))
-```
-
-    ## [1] 230
-
-``` r
-length(unique(olympics_data$city))
-```
-
-    ## [1] 42
-
 ## Questions
 
 We’re planning on creating graphs that will allows us to answer the
@@ -334,7 +216,7 @@ variable with a proper country name.
 1.  In a first step, we will construct a time-series plot comparing the
     number of medals won by the United States and the USSR/Russia and
     all other countries. We plot the variable ‘year’ on the x-axis and a
-    newly created variable counting the normalized number of gold medals per
+    newly created variable counting the number of gold medals per
     country on the y axis. Finally, different colors (or facets, to be
     determined) will indicate whether medals were won in the Summer
     Olympics or the Winter Olympics, as well as display cumulative medal
@@ -343,31 +225,6 @@ variable with a proper country name.
     member-states of both NATO and the Warsaw Pact. In order to do so,
     we will create a variable indicating whether a country is part of
     NATO, the Warsaw Pact, or non-aligned.
-    Considering the growing number of events in Olympics over time, we want to 
-    normalize the number of medals to account for changes in number of events.
-    There are multiple ways to normalize the number of medals won. One approach
-    is to divide the number of medals won by a country in a year by the total
-    number of medals available in that particular year. This will ensure that
-    a country winning 10 medals out of 50 in year x, and then winning 20 out of
-    100 medals a few years later doesn't necessarily show an improvement in 
-    their performance in olympics as the success rate in terms of percentage of
-    medals won remains the same. Another approach is to divide a country's gold 
-    medalists in a year by the total number of participants from that country
-    in the same year. This measure shows the success rate of that country and 
-    allows us to anlyze whether increase in number of medals won is indeed due 
-    to improved performance and not just because of increase in number of 
-    participants from that country. A third approach would be to normalize around
-    the mean number of medals won by a country. This measure allows us to see
-    how a country is doing relative to the global average. We can use more than
-    one of these newly created normalized scores in the same plot using different
-    aesthetic shapes for each measure and colors for countries.
-    Alternatively, we can also aggregate the events by discipline to account for
-    the increase/decrease in number of events. To do so we will create a new
-    variable that groups the events by sports category and then aggregates the
-    number of medals won in that discipline for each country. Then we can use
-    this new variable in our time series analysis to facet by discipline to
-    analyze performance of countries across those disciplines.
-    
 
 2.  We will construct two plots to assess the second set of questions.
     Our first plot, a time-series plot, will indicate the proportion of
@@ -376,7 +233,9 @@ variable with a proper country name.
     to color code different lines by continent. Our second plot will
     replicate the same basic structure, except on the y axis it will map
     the proportion of medals won by female athletes by continent, which
-    is again indicated by the color aesthetic.
+    is again indicated by the color aesthetic. Finally, we will also
+    create a bar chart indicating the 15 countries with the highest
+    number of female Olympic medalists.
 
 Note: Just to distinguish the exact variables used in explaining Q1 and
 Q2 so they are not completely overlapping, the potentially used
