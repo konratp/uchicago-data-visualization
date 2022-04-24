@@ -12,18 +12,18 @@ In our data set, 72.5 percent of the participants are male whereas the rest are 
 
 |variable         |description |
 |:----------------|:-----------|
-|ID               | A unique number for each athlete |
-|Name             | Name of the athlete |
-|Sex              | M or F, M for male, F for Female |
-|Age              | An integer showing the age of athlete in years |
-|Height           | Height of athlete in centimeters |
-|Weight           | Weight of athlete in kilograms |
-|Team             | Team name (note that this is not necessarily the country name) |
-|NOC              | 3-letter country code for each National Olympic Committee (NOC) |
-|Games            | Year and season in which the game occurs |
-|Year             | An integer showing the year in which the event takes place |
-|Season           | Summer or Winter |
-|City             | Name of the hosting city |
-|Sport            | Name of the sport played |
-|Event            | Name of the particular athletic event |
-|Medal            | Gold, Silver, Bronze, or NA |
+|id               | A unique number for each athlete |
+|name             | Name of the athlete |
+|sex              | M or F, M for male, F for Female |
+|age              | An integer showing the age of athlete in years |
+|height           | Height of athlete in centimeters |
+|weight           | Weight of athlete in kilograms |
+|team             | Team name (note that this is not necessarily the country name) |
+|noc              | 3-letter country code for each National Olympic Committee (NOC) |
+|games            | Year and season in which the game occurs |
+|year             | An integer showing the year in which the event takes place |
+|season           | Summer or Winter |
+|city             | Name of the hosting city |
+|sport            | Name of the sport played |
+|event            | Name of the particular athletic event |
+|medal            | Gold, Silver, Bronze, or NA |
