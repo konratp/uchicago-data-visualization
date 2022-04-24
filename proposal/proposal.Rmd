@@ -19,6 +19,7 @@ library(here) # simplifies relative file paths
 ## Dataset
 
 ```{r load-data, message=FALSE, warning=FALSE, echo=FALSE}
+#read in dataset
 olympics_data <- read_csv(here("data", "olympics.csv"))
 ```
 

@@ -1,0 +1,9 @@
+---
+title: "Project 1 Proposal"
+author: "Elated Anura"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
