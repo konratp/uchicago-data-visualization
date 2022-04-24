@@ -1,9 +1,80 @@
 ---
-title: "Project 1 Proposal"
+title: "Visual Analysis of Olympics Performance"
 author: "Elated Anura"
 output: 
   github_document:
     toc: true
     toc_depth: 2
 ---
+
+# Visual Analysis of Olympics Performance
+
+```{r load-packages, message = FALSE, include = FALSE}
+library(tidyverse) # data manipulation
+library(psych) # describe function: statistical summary
+library(broom) # tidy function: statistical outputs into tibbles
+library(kableExtra) # make-up tables
+library(stargazer) # nice regression outputs
+library(here) # simplifies relative file paths
+library(countrycode) #get country names
+```
+
+## Introduction
+
+(1-2 paragraphs): Brief introduction to the dataset. You may repeat some of the information about the dataset provided in the introduction to the dataset on the TidyTuesday repository, paraphrasing on your own terms. Imagine that your project is a standalone document and the grader has no prior knowledge of the dataset.
+
+```{r load-data, message=FALSE, warning=FALSE, echo=FALSE}
+#read in datasets
+olympics_data <- read_csv(here("data", "olympics.csv"))
+countrycode <- codelist_panel %>%
+  rename(noc = ioc,
+         country = country.name.en) %>%
+  select(noc, continent, country)
+
+#add/manipulate variables
+olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
+```
+
+## Question 1
+
+### Introduction
+
+The Olympics served as an outlet for different (city-)states to compete with one another through athletics rather than warfare both in antiquity and modernity. Given that following World War II, there was a bipolar world order with the United States of America (USA) and the Union of Soviet Socialist Republics (USSR) as the world’s greatest superpowers, the Olympics were an outlet for the two players to compete with one another outside of the many proxy wars they fought. In the following, we want to examine the following questions: 
+
+1. How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after? 
+2. Has the amount of medals won either by NATO or Warsaw Pact member-states decreased since the end of the cold war?
+
+In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `usa_ussr_medals` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics.
+
+
+### Approach
+
+### Analysis
+
+### Discussion
+
+## Question 2
+
+### Introduction
+
+Introduction (1-2 paragraphs): (1-2 paragraphs): Introduction to the question and what parts of the dataset are necessary to answer the question. Also discuss why you’re interested in this question.
+
+### Approach
+
+Approach (1-2 paragraphs): Describe what types of plots you are going to make to address your question. For each plot, provide a clear explanation as to why this plot (e.g. boxplot, barplot, histogram, etc.) is best for providing the information you are asking about. The two plots should be of different types, and at least one of the two plots needs to use either color mapping or facets.
+
+### Analysis
+
+Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
+
+### Discussion
+
+Discussion (1-3 paragraphs): In the Discussion section, interpret the results of your analysis. Identify any trends revealed (or not revealed) by the plots. Speculate about why the data looks the way it does.
+
+
+We encourage you to be concise. A paragraph should typically not be longer than 5 sentences. You are not required to perform any statistical tests in this project, but you may do so if you find it helpful to answer your question.
+
+
+
+
 
