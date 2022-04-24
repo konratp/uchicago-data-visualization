@@ -2,9 +2,10 @@ Project 1 Proposal
 ================
 Elated Anura
 
--   [Dataset](#dataset)
--   [Questions](#questions)
--   [Analysis plan](#analysis-plan)
+  - [Dataset](#dataset)
+  - [Questions](#questions)
+  - [Analysis plan](#analysis-plan)
+  - [Final Note](#final-note)
 
 ## Dataset
 
@@ -14,14 +15,16 @@ from Athens 1896 till 2016. This data was scraped from
 [www.sports-reference.com](www.sports-reference.com) in 2018 and
 wrangled by rgriffin. Until 1992, winter and summer games used to be
 held in the same year. Since 1992, both summer and winter games have
-been taking place in a 4-year cycle (an olympiad!), resulting in winter
+been taking place in a 4-year cycle (an olympiad\!), resulting in winter
 games in 1994, summer in 1996, then again winter in 1998, and so on. The
 data set contains rich information on worldwide participation in Olympic
-Games across the years. We choose it because we’re interested in the
-Olympics, and we believe that first we can show political and historical
-trends influencing countries’ performances. Second, we narrow down to
-the angle of gender issues to find out female participation and
-performance over the years and across countries.
+Games across the years.
+
+We choose it because we’re interested in the Olympics, and we believe
+that first we can show political and historical trends influencing
+countries’ performances. Second, we narrow down to the angle of gender
+issues to find out female participation and performance over the years
+and across countries.
 
 This data contains 271,116 observations and 15 variables. Each row
 contains data on an individual athlete participating in an individual
@@ -52,139 +55,273 @@ The average weight of an athlete is 70.7 kilograms, with the maximum
 being 214kg and the minimum being 25kg.
 
 <table>
+
 <thead>
+
 <tr>
+
 <th style="text-align:left;">
+
 </th>
+
 <th style="text-align:right;">
+
 Min.
+
 </th>
+
 <th style="text-align:right;">
+
 1st Qu.
+
 </th>
+
 <th style="text-align:right;">
+
 Median
+
 </th>
+
 <th style="text-align:right;">
+
 Mean
+
 </th>
+
 <th style="text-align:right;">
+
 3rd Qu.
+
 </th>
+
 <th style="text-align:right;">
+
 Max.
+
 </th>
+
 <th style="text-align:right;">
+
 NA’s
+
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:left;">
-sex_dummy
+
+sex\_dummy
+
 </td>
+
 <td style="text-align:right;">
+
 0
+
 </td>
+
 <td style="text-align:right;">
+
 0
+
 </td>
+
 <td style="text-align:right;">
+
 1
+
 </td>
+
 <td style="text-align:right;">
+
 0.725
+
 </td>
+
 <td style="text-align:right;">
+
 1
+
 </td>
+
 <td style="text-align:right;">
+
 1
+
 </td>
+
 <td style="text-align:right;">
+
 0
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 age
+
 </td>
+
 <td style="text-align:right;">
+
 10
+
 </td>
+
 <td style="text-align:right;">
+
 21
+
 </td>
+
 <td style="text-align:right;">
+
 24
+
 </td>
+
 <td style="text-align:right;">
+
 25.557
+
 </td>
+
 <td style="text-align:right;">
+
 28
+
 </td>
+
 <td style="text-align:right;">
+
 97
+
 </td>
+
 <td style="text-align:right;">
+
 9474
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 height
+
 </td>
+
 <td style="text-align:right;">
+
 127
+
 </td>
+
 <td style="text-align:right;">
+
 168
+
 </td>
+
 <td style="text-align:right;">
+
 175
+
 </td>
+
 <td style="text-align:right;">
+
 175.339
+
 </td>
+
 <td style="text-align:right;">
+
 183
+
 </td>
+
 <td style="text-align:right;">
+
 226
+
 </td>
+
 <td style="text-align:right;">
+
 60171
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 weight
+
 </td>
+
 <td style="text-align:right;">
+
 25
+
 </td>
+
 <td style="text-align:right;">
+
 60
+
 </td>
+
 <td style="text-align:right;">
+
 70
+
 </td>
+
 <td style="text-align:right;">
+
 70.702
+
 </td>
+
 <td style="text-align:right;">
+
 79
+
 </td>
+
 <td style="text-align:right;">
+
 214
+
 </td>
+
 <td style="text-align:right;">
+
 62875
+
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 ## Questions
@@ -216,7 +353,7 @@ variable with a proper country name.
 1.  In a first step, we will construct a time-series plot comparing the
     number of medals won by the United States and the USSR/Russia and
     all other countries. We plot the variable ‘year’ on the x-axis and a
-    newly created variable counting the number of gold medals per
+    newly created variable counting the normalized number of medals per
     country on the y axis. Finally, different colors (or facets, to be
     determined) will indicate whether medals were won in the Summer
     Olympics or the Winter Olympics, as well as display cumulative medal
@@ -226,24 +363,60 @@ variable with a proper country name.
     we will create a variable indicating whether a country is part of
     NATO, the Warsaw Pact, or non-aligned.
 
+Considering the growing number of events in Olympics over time, we want
+to normalize the number of medals to account for changes in the number
+of events. There are multiple ways of normalization under consideration,
+all of which we plan to test in our analysis. The one we eventually
+choose will best help us convey a consistent story for this project.
+
+One approach is to divide the number of medals won by a country in a
+year by the total number of medals available in that particular year.
+This will ensure that, for example, a country winning 10 medals out of
+50 in year x, and then winning 20 out of 100 medals a few years later
+doesn’t necessarily show a performance improvement in terms of the
+success rate in Olympics, since the percentage of medals won remains the
+same. Another approach is to divide a country’s medalists in a year by
+the total number of participants from that country in the same year.
+This country-level measure allows us to consider the potentially growing
+number of participants per country. A third approach would be to
+normalize around the average number of medals. This measure allows us to
+see how a country is doing relative to the global average.
+
+In a more detailed way, we can also aggregate the events by disciplines
+to add more information for our time-series analysis, as long as the
+visualization is not overcomplicated. To do so we will create a new
+variable that groups the events by sports categories and summarize the
+number of medals won in each discipline for each country over years.
+This part can be illustrated through either colors or facets.
+
 2.  We will construct two plots to assess the second set of questions.
     Our first plot, a time-series plot, will indicate the proportion of
-    female to male athletes on the y axis and year of the Olympic games
-    on the x axis. Furthermore, we will make use of the color aesthetic
-    to color code different lines by continent. Our second plot will
-    replicate the same basic structure, except on the y axis it will map
-    the proportion of medals won by female athletes by continent, which
-    is again indicated by the color aesthetic. Finally, we will also
-    create a bar chart indicating the 15 countries with the highest
-    number of female Olympic medalists.
+    female athletes on the y axis and year of the Olympic games on the x
+    axis. Furthermore, we will make use of the color aesthetic to color
+    code different lines by continent. Our second plot will replicate
+    the same basic structure, except on the y axis it will map the
+    proportion of medals won by female athletes by continent, which is
+    again indicated by the color aesthetic.
 
-Note: Just to distinguish the exact variables used in explaining Q1 and
-Q2 so they are not completely overlapping, the potentially used
-variables are listed here:
+Finally, we will also create a bar chart indicating the 15 countries
+with the highest number of female Olympic medalists in recent 50 years.
+The range of years ensures that the numbers of events and participating
+countries/athletes are more stabilized. The number of medals is on the x
+axis, and the top-15 countries’ names is on the y axis with a descending
+order. The number of different types of medals (gold, silver or bronze)
+will be shown in different colors. We also consider putting summer
+compared to winter seasons in different facets.
 
-Q1: year/time, country (new variable derived from NOC), average number
-of medals per country (new), types of medals, seasons, NATO/Warsaw Pact
-member states (new)
+## Final Note
 
-Q2: country (new variable derived from NOC), sex, continent (new),
-medal, year
+*Just to distinguish the exact variables used in explaining Q1 and Q2 so
+they are not completely overlapping, the potentially used variables are
+listed here:*
+
+  - Q1: year, country (new variable derived from NOC), average number of
+    medals per country (new and with appropriate normalization), types
+    of medals, seasons, NATO/Warsaw Pact member states (new categorical
+    variable)
+  - Q2: year, country (new variable derived from NOC), continent (new
+    categorical variable), the proportion of female athletes per year
+    and later by continent (new), types of medals, seasons
