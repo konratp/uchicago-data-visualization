@@ -133,6 +133,25 @@ For the second part, “Which countries have the highest numbers of female medal
 
 Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
 
+```{r Q2-1-female participation}
+# Create a summarized table for participation by gender for each season
+participate_sex <- olympics_data %>% 
+  group_by(year, season, sex) %>%
+  summarize(count_sex = n_distinct(id), 
+            count_game = n_distinct(sport), .groups = "drop")%>% 
+  group_by(year, season) %>%
+  mutate(visit = 1:n()) %>%
+  gather("sex", "count_sex", "count_game", key = variable, value = number) %>%
+  unite(combi, variable, visit) %>%
+  spread(combi, number) %>%
+  select(-c("sex_1", "sex_2"))
+participate_sex
+```
+
+```{r Q2-2-country ranking}
+
+```
+
 ### Discussion
 
 Discussion (1-3 paragraphs): In the Discussion section, interpret the results of your analysis. Identify any trends revealed (or not revealed) by the plots. Speculate about why the data looks the way it does.
