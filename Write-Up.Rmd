@@ -42,15 +42,10 @@ countrycode$noc[51] <- "TCH"
 countrycode$continent[51] <- "Europe"
 countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
 
-  mutate(size = as.factor(case_when(seats < 125 ~ "Small",
-                          seats >= 125 & seats < 250 ~ "Medium",
-                          seats >= 250 & seats < 350 ~ "Large",
-                          seats >= 350 ~ "Jumbo")))
-
 #add/manipulate variables
 countrycode <- countrycode %>%
   mutate(nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "Germany" | country == "Spain" ~ "NATO",
-                             country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact",
+                             country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact", #CHANGE THIS to Soviet Union when figured out
                              TRUE ~ "Non-Aligned or not applicable"),
          usa_ussr = case_when(noc == "URS" ~ "USSR",
                               noc == "USA" ~ "USA",
@@ -60,12 +55,14 @@ countrycode <- countrycode %>%
 olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
 
 #add/manipulate variables to merged dataset
-olympics_joined <- olympics_joined %>%
+olympics_joined_test <- olympics_joined %>%
   mutate(medal_binary = ifelse(!is.na(medal), 1, 0),
          medal_weighted = case_when(medal == "Gold" ~ 3,
                                     medal == "Silver" ~ 2,
                                     medal == "Bronze" ~ 1,
-                                    TRUE ~ 0))
+                                    TRUE ~ 0)) %>%
+  group_by(games) %>%
+  summarize(medal_prop = (sum(medal_binary))/nrow(medal_binary))
 ```
 
 ## Question 1
@@ -97,21 +94,8 @@ Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this sec
 
 ```{r q1-analysis}
 #create plot mapping USA/USSR/others medals over time
-test <- olympics_joined %>%
-  group_by(games, usa_ussr) %>%
-  summarize(medal_prop = mean(nrow(medal != NA), na.rm = TRUE))
-
-
-
-library(dplyr)
-mean_data <- group_by(data, gender, week) %>%
-             summarise(motivation = mean(motivation, na.rm = TRUE))
-
-#add later
-  ggplot(mapping = aes(x = year, y = medal, color = usa_ussr, na.rm = TRUE))+
+  ggplot(mapping = aes(x = year, y = medal_prop, color = usa_ussr, na.rm = TRUE))+
   geom_line()
-
-#
 ```
 
 ### Discussion
