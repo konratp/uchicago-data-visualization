@@ -153,14 +153,26 @@ participate_sex <- olympics_data %>%
          f_games_p = count_game_1 / sum(count_game_1, count_game_2))
 participate_sex %>% 
   ggplot(aes(x = year, y = f_athletes_p)) +
-  geom_line(color = "orange") +
-  geom_line(aes(x = year, y = f_games_p), color = "steelblue") + 
+  geom_line(aes(color = "Number of female athletes")) +
+  geom_line(aes(x = year, y = f_games_p, 
+                color = "Games females compete in")) + 
   facet_wrap(vars(season), scales = "free") +
   labs(title = "Female athletes participation in Olympic Games by season",
        subtitle = "From year 1900 to 2016",
        x = "Year",
        y = "Proportion") +
-  theme_minimal()
+ scale_color_manual(name = "Proportion of",
+                    breaks = c("Number of female athletes", 
+                             "Games females compete in"),
+                    values=c("Number of female athletes" = "orange",
+                             "Games females compete in" = "steelblue")) +
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+        axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
+        axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
+        strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
+        legend.title = element_text(face = "bold",size = rel(0.6)),
+        legend.text = element_text(size = rel(0.6)))
 ```
 
 ```{r Q2-2-country ranking}
