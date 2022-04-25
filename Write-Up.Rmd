@@ -40,7 +40,8 @@ countrycode$noc[70] <- "GDR"
 countrycode$continent[70] <- "Europe"
 countrycode$noc[51] <- "TCH"
 countrycode$continent[51] <- "Europe"
-countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
+countrycode[nrow(countrycode) + 1,] <- "URS"
+#countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
 
 #add/manipulate variables
 countrycode <- countrycode %>%
@@ -51,6 +52,8 @@ countrycode <- countrycode %>%
                               noc == "USA" ~ "USA",
                               TRUE ~ "Other"))
 
+unique(countrycode$usa_ussr)
+
 #merge olympics and countrycode datasets
 olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
 
@@ -60,9 +63,14 @@ olympics_joined_test <- olympics_joined %>%
          medal_weighted = case_when(medal == "Gold" ~ 3,
                                     medal == "Silver" ~ 2,
                                     medal == "Bronze" ~ 1,
-                                    TRUE ~ 0)) %>%
-  group_by(games) %>%
-  summarize(medal_prop = (sum(medal_binary))/nrow(medal_binary))
+                                    TRUE ~ 0))
+  
+  
+olympics_joined_test2 <- olympics_joined_test %>%
+  group_by(games, usa_ussr) %>%
+  summarize(medal_prop = (sum(medal_binary, na.rm = TRUE)))
+
+#why does NA show up above? -- I think it has something to do with USSR/USA variable
 ```
 
 ## Question 1
