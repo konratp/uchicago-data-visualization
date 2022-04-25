@@ -133,7 +133,7 @@ For the second part, “Which countries have the highest numbers of female medal
 
 Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
 
-```{r Q2-1-female participation}
+```{r Q2-1-female participation, message=FALSE, warning=FALSE}
 # Create a summarized table for participation by gender for each season
 participate_sex <- olympics_data %>% 
   group_by(year, season, sex) %>%
@@ -149,7 +149,18 @@ participate_sex <- olympics_data %>%
          count_sex_2 = as.numeric(count_sex_2),
          count_game_1 = as.numeric(count_game_1),
          count_game_2 = as.numeric(count_game_2)) %>%
-  mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2))
+  mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2),
+         f_games_p = count_game_1 / sum(count_game_1, count_game_2))
+participate_sex %>% 
+  ggplot(aes(x = year, y = f_athletes_p)) +
+  geom_line(color = "orange") +
+  geom_line(aes(x = year, y = f_games_p), color = "steelblue") + 
+  facet_wrap(vars(season), scales = "free") +
+  labs(title = "Female athletes participation in Olympic Games by season",
+       subtitle = "From year 1900 to 2016",
+       x = "Year",
+       y = "Proportion") +
+  theme_minimal()
 ```
 
 ```{r Q2-2-country ranking}
