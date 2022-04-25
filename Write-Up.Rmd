@@ -9,7 +9,7 @@ output:
 
 # Visual Analysis of Olympics Performance
 
-```{r load-packages, message = FALSE, include = FALSE}
+```{r load-packages}
 library(tidyverse) # data manipulation
 library(psych) # describe function: statistical summary
 library(broom) # tidy function: statistical outputs into tibbles
@@ -23,16 +23,35 @@ library(countrycode) #get country names
 
 (1-2 paragraphs): Brief introduction to the dataset. You may repeat some of the information about the dataset provided in the introduction to the dataset on the TidyTuesday repository, paraphrasing on your own terms. Imagine that your project is a standalone document and the grader has no prior knowledge of the dataset.
 
-```{r load-data, message=FALSE, warning=FALSE, echo=FALSE}
+```{r load-data}
 #read in datasets
 olympics_data <- read_csv(here("data", "olympics.csv"))
 countrycode <- codelist_panel %>%
   rename(noc = ioc,
          country = country.name.en) %>%
-  select(noc, continent, country)
+  select(noc, continent, country) %>%
+  distinct()
+
+#amend datasets to include new variables and fill crucial missing values
+countrycode$noc[70] = "GDR"
+countrycode$continent[70] = "Europe"
+countrycode$noc[51] = "TCH"
+countrycode$continent[51] = "Europe"
+countrycode <- countrycode %>%
+  mutate(nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "Germany" | country == "Spain" ~ "NATO",
+                             country == "Russia" | country == "Poland" | country == "Bulgaria" | country == "Poland" | country == "Poland" | country == "Poland" ~ "Warsaw Pact",
+                             TRUE ~ "Non-Aligned or not applicable"))
+
+  mutate(size = as.factor(case_when(seats < 125 ~ "Small",
+                          seats >= 125 & seats < 250 ~ "Medium",
+                          seats >= 250 & seats < 350 ~ "Large",
+                          seats >= 350 ~ "Jumbo")))
+
+#merge olympics and countrycode datasets
+olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
 
 #add/manipulate variables
-olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
+
 ```
 
 ## Question 1
@@ -42,9 +61,11 @@ olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
 The Olympics served as an outlet for different (city-)states to compete with one another through athletics rather than warfare both in antiquity and modernity. Given that following World War II, there was a bipolar world order with the United States of America (USA) and the Union of Soviet Socialist Republics (USSR) as the world’s greatest superpowers, the Olympics were an outlet for the two players to compete with one another outside of the many proxy wars they fought. In the following, we want to examine the following questions: 
 
 1. How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after? 
-2. Has the amount of medals won either by NATO or Warsaw Pact member-states decreased since the end of the cold war?
+2. How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 
-In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `usa_ussr_medals` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics.
+In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `usa_ussr_medals` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics. 
+
+*add note about only treating NATO countries as such if they were in NATO during the cold war to avoid confusion with cases like Poland, Hungary, etc. -- Also add note that we exclude Albania from the Warsaw Pact due to Soviet-Albanian split in 1968*
 
 
 ### Approach
