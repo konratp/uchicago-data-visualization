@@ -41,21 +41,23 @@ countrycode$continent[70] <- "Europe"
 countrycode$noc[51] <- "TCH"
 countrycode$continent[51] <- "Europe"
 countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
-countrycode <- countrycode %>%
-  mutate(nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "Germany" | country == "Spain" ~ "NATO",
-                             country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact",
-                             TRUE ~ "Non-Aligned or not applicable"))
 
   mutate(size = as.factor(case_when(seats < 125 ~ "Small",
                           seats >= 125 & seats < 250 ~ "Medium",
                           seats >= 250 & seats < 350 ~ "Large",
                           seats >= 350 ~ "Jumbo")))
 
+#add/manipulate variables
+countrycode <- countrycode %>%
+  mutate(nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "Germany" | country == "Spain" ~ "NATO",
+                             country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact",
+                             TRUE ~ "Non-Aligned or not applicable"),
+         usa_ussr = case_when(noc == "URS" ~ "USSR",
+                              noc == "USA" ~ "USA",
+                              TRUE ~ "Other"))
+
 #merge olympics and countrycode datasets
 olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
-
-#add/manipulate variables
-
 ```
 
 ## Question 1
@@ -67,7 +69,7 @@ The Olympics served as an outlet for different (city-)states to compete with one
 1. How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after? 
 2. How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 
-In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `usa_ussr_medals` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics. 
+In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `usa_ussr` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics. 
 
 *add note about only treating NATO countries as such if they were in NATO during the cold war to avoid confusion with cases like Poland, Hungary, etc. -- Also add note that we exclude Albania from the Warsaw Pact due to Soviet-Albanian split in 1968*
 
@@ -76,9 +78,22 @@ In order to answer these questions, we examine the `country` variable (coded bas
 
 Approach (1-2 paragraphs): Describe what types of plots you are going to make to address your question. For each plot, provide a clear explanation as to why this plot (e.g. boxplot, barplot, histogram, etc.) is best for providing the information you are asking about. The two plots should be of different types, and at least one of the two plots needs to use either color mapping or facets.
 
+
+We believe that time-series plots are best-suited to examine changes and trends over periods of time; thus we will construct a time-series plot and line graph to examine how the proportion of medals won by the USA and USSR/Russia have developed over time. On the x-axis, we will plot the `year` variable, and on the y-axis, we will plot the `usa_ussr_medals` variable. Different colors will help us differentiate between medals won by the USA, the USSR/Russia, and other countries. We will facet the plot by the `season` variable to indicate whether medals were won in Summer or Winter Olympics, and add vertical lines to this plot indicating the founding of the Soviet Union (1922), the end of World War II (1945), as well as the end of the cold war as marked by the dissolution of the USSR (1991).
+
+For the second question, we choose to represent the information relevant to answering the question in a stacked bar chart.
+
 ### Analysis
 
 Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
+
+```{r q1-analysis}
+#create plot mapping USA/USSR/others medals over time
+olympics_joined %>%
+  group_by(year) %>%
+  ggplot(mapping = aes(x = year, y = medal, color = usa_ussr, na.rm = TRUE))+
+  geom_line()
+```
 
 ### Discussion
 
