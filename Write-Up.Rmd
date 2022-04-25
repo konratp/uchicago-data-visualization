@@ -127,7 +127,7 @@ Approach (1-2 paragraphs): Describe what types of plots you are going to make to
 
 To answer the first question, “How does female participation in Olympics Games change? ” we construct an overall time-series line plot. This plot comes from a summarized table with the average proportion of female to male athletes and the number of games female athletes participate in over the years. The two measures are positioned on the y-axis and illustrated in different colors. The year for each event is on the x-axis. The season information is demonstrated through two different facets. We choose the line plot format first because it can best visually represent the trend information. Second, it has an advantage in terms of data-ink-ratio for visualization, therefore it to some extent simplifies the complexities in our aggregated data.
 
-For the second part, “Which countries have the highest numbers of female medalists or enjoy the most contributions from female athletes over the recent 50 years?” we construct a stacked bar plot with two facets, both of them rank the top 15 countries with the highest measurements. The y-axis shows the names of countries with the top rankings. The x-axis on one facet illustrates the number of female medalists, and on the other one, it contains the proportion of medals from female athletes relative to the country’s total number of medals. The types of medals are shown in different colors. The stacked bar plot is comparatively the best format to approach this question because it can clearly show the medal distribution and order the countries following their rankings. It can give viewers a sense of quantity through visualization.
+For the second part, “Which countries have the highest numbers of female medalists or enjoy the most contributions from female athletes over the recent years?” we construct a stacked bar plot with two facets, both of them rank the top 15 countries with the highest measurements. The y-axis shows the names of countries with the top rankings. The x-axis on one facet illustrates the number of female medalists, and on the other one, it contains the proportion of medals from female athletes relative to the country’s total number of medals. The types of medals are shown in different colors. The stacked bar plot is comparatively the best format to approach this question because it can clearly show the medal distribution and order the countries following their rankings. It can give viewers a sense of quantity through visualization.
 
 ### Analysis
 
@@ -176,7 +176,18 @@ participate_sex %>%
 ```
 
 ```{r Q2-2-country ranking}
-
+olympics_data %>%
+  filter(year >= 2000) %>% # focusing on  recent years
+  mutate(gold = if_else(medal == "Gold", 1, 0),
+         silver = if_else(medal == "Silver", 1, 0),
+         bronze = if_else(medal == "Bronze", 1, 0)) %>%
+  group_by(noc, sex) %>%
+  summarize(n_gold = sum(gold, na.rm = TRUE), 
+            n_silver = sum(silver, na.rm = TRUE), 
+            n_bronze = sum(bronze, na.rm = TRUE), 
+            .groups = "drop") %>%
+  mutate(n_medal = n_gold + n_silver + n_bronze) %>%
+  arrange(desc(n_medal))
 ```
 
 ### Discussion
