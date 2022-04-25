@@ -58,6 +58,14 @@ countrycode <- countrycode %>%
 
 #merge olympics and countrycode datasets
 olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
+
+#add/manipulate variables to merged dataset
+olympics_joined <- olympics_joined %>%
+  mutate(medal_binary = ifelse(!is.na(medal), 1, 0),
+         medal_weighted = case_when(medal == "Gold" ~ 3,
+                                    medal == "Silver" ~ 2,
+                                    medal == "Bronze" ~ 1,
+                                    TRUE ~ 0))
 ```
 
 ## Question 1
@@ -89,10 +97,21 @@ Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this sec
 
 ```{r q1-analysis}
 #create plot mapping USA/USSR/others medals over time
-olympics_joined %>%
-  group_by(year) %>%
+test <- olympics_joined %>%
+  group_by(games, usa_ussr) %>%
+  summarize(medal_prop = mean(nrow(medal != NA), na.rm = TRUE))
+
+
+
+library(dplyr)
+mean_data <- group_by(data, gender, week) %>%
+             summarise(motivation = mean(motivation, na.rm = TRUE))
+
+#add later
   ggplot(mapping = aes(x = year, y = medal, color = usa_ussr, na.rm = TRUE))+
   geom_line()
+
+#
 ```
 
 ### Discussion
