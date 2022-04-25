@@ -144,8 +144,12 @@ participate_sex <- olympics_data %>%
   gather("sex", "count_sex", "count_game", key = variable, value = number) %>%
   unite(combi, variable, visit) %>%
   spread(combi, number) %>%
-  select(-c("sex_1", "sex_2"))
-participate_sex
+  select(-c("sex_1", "sex_2")) %>% 
+  mutate(count_sex_1 = as.numeric(count_sex_1),
+         count_sex_2 = as.numeric(count_sex_2),
+         count_game_1 = as.numeric(count_game_1),
+         count_game_2 = as.numeric(count_game_2)) %>%
+  mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2))
 ```
 
 ```{r Q2-2-country ranking}
