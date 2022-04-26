@@ -97,8 +97,6 @@ As the second question is more about the overall performance of members of the W
 
 ### Analysis
 
-Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
-
 ```{r q1-analysis-plot-1}
 #create data frame with information relevant to create visualization
 q1_df <- olympics_joined %>%
@@ -116,11 +114,8 @@ q1_df %>%
   geom_vline(xintercept = 1991,
              linetype = "dashed",
              alpha = 0.75) +
-  annotate("text", label = "End of World War II", x = 1945, y = 0.9, size = rel(2), hjust = 0) +
-  annotate("text", label = "Dissolution of the USSR", x = 1991, y = 0.5, size = rel(2), hjust = 1) +
-#annotate("text", label = "Types of medals", x = 600, y = "United Kingdom", size = rel(2.6))
-#  geom_text(mapping = aes(x = 1945, y = 0.9, label= "End of World War II")) +
-#  geom_text(mapping = aes(x = 1991, y = 0.9, label= "Dissolution of the USSR")) +
+  annotate("text", label = "End of World War II", x = 1945, y = 0.9, size = rel(2.3), hjust = 0) +
+  annotate("text", label = "Dissolution of the USSR", x = 1991, y = 0.5, size = rel(2.3), hjust = 1.01) +
   facet_wrap(vars(season)) +
   scale_color_manual(values = c("grey", "blue", "red")) +
   scale_x_continuous(breaks = seq(1920, 2022, 12),
@@ -128,7 +123,7 @@ q1_df %>%
   scale_y_continuous(breaks = seq(0, 1, 0.2),
                      name = "Proportion of Medals Won") +
   bg_theme +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1),
+  theme(axis.text.x = element_text(hjust = 1, angle = 30, size = rel(0.9)),
         panel.spacing = unit(1.5, "lines")) +
   labs(title = "Olympic Performance of USSR/Russia and USA over Time",
        subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
@@ -162,8 +157,9 @@ q2_df %>%
 
 Discussion (1-3 paragraphs): In the Discussion section, interpret the results of your analysis. Identify any trends revealed (or not revealed) by the plots. Speculate about why the data looks the way it does.
 
+The first plot shows that throughout most of the Cold War (visually represented as the space between the dashed lines), the Soviet Union won a higher proportion of medals than the United States did. The difference is particularly stark for the winter Olympics, where the Soviet Union maintained a steady lead over the United States ever since the inception of its Winter Olympics program in the 1950s. While the American performance has remained somewhat stable in the Summer Olympics and even improved in the Winter Olympics in the years following the dissolution of the USSR, the same cannot be said for Russia, the main successor state to the Soviet Union. The percentage of medals won by the USSR/Russia decreased immensely right before the dissolution of the USSR and afterwards, which is likely related to the economic and political upheaval the country went through in the late 1980s and early 1990s. Overall, the performance of both the United States and the Soviet Union during the Cold War was remarkable, which conforms with our expectations that both countries were eager to one-up one another in an effort to prove superiority.
 
-We encourage you to be concise. A paragraph should typically not be longer than 5 sentences. You are not required to perform any statistical tests in this project, but you may do so if you find it helpful to answer your question.
+
 
 ## Question 2
 
