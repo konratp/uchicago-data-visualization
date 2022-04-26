@@ -237,7 +237,20 @@ top_15 <- medalist_rank %>%
 ```
 ---
 
-
+```{r plot-top15countries, echo = FALSE, warning = FALSE}
+# Code hidden with echo = FALSE
+# Uses data set from previous chunk
+# Creates plot for top 15 countries with respect to medals won by females
+top_15 %>%
+  ggplot(aes(x = n_medal_1, y = reorder(noc, n_medal_1))) +
+  geom_emoji(alias = 'trophy', x = top_15$n_medal_1, y = top_15$noc, size = 4, color = "#D6AF36") +
+  geom_emoji(alias = 'trophy', x = top_15$n_bronze_1, y = top_15$noc, size = 4, color = "#824A02") +
+  geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$noc, size = 4, color = "#A7A7AD") +
+  geom_segment(aes(yend = noc), xend = 0, colour = "grey85", size = 0.5) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank())
+# plot_grid(sp, bp, labels = c("A", "B"), ncol = 2, nrow = 1)
+```
 
 ---
 ## Plot and text
