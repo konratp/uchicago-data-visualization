@@ -175,7 +175,8 @@ participate_sex %>%
         legend.text = element_text(size = rel(0.6)))
 ```
 
-```{r Q2-2-country ranking}
+```{r Q2-2-country ranking, dev='ragg_png'}
+library(emojifont)
 medalist_rank <- olympics_data %>%
   filter(year >= 2000) %>% # focusing on  recent years
   mutate(gold = if_else(medal == "Gold", 1, 0),
@@ -196,7 +197,24 @@ medalist_rank <- olympics_data %>%
 medalist_rank[2:9] = lapply(medalist_rank[2:9], FUN = function(y){as.numeric(y)})
 medalist_rank <- medalist_rank %>%
   mutate(fp_medal = n_medal_1 / sum(n_medal_1, n_medal_2))
-
+top_15 <- medalist_rank %>%
+  arrange(desc(n_medal_1)) %>%
+  head(15) %>%
+  mutate(n_b_s = n_bronze_1 + n_silver_1)
+top_15 %>%
+  ggplot(aes(x = n_medal_1, y = reorder(noc, n_medal_1))) +
+  geom_emoji(alias = 'trophy', x = top_15$n_medal_1, y = top_15$noc, size = 4, color = "#D6AF36") +
+  geom_emoji(alias = 'trophy', x = top_15$n_bronze_1, y = top_15$noc, size = 4, color = "#824A02") +
+  geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$noc, size = 4, color = "#A7A7AD") +
+  geom_segment(aes(yend = noc), xend = 0, colour = "grey85", size = 0.5) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank())
+# plot_grid(sp, bp, labels = c("A", "B"), ncol = 2, nrow = 1)
+```
+```{r}
+medalist_rank %>%
+  arrange(desc(n_medal_1)) %>%
+  head(15)
 ```
 
 ### Discussion
