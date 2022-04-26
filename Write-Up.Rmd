@@ -87,16 +87,9 @@ Please note that we categorize countries into the NATO or Warsaw Pact categories
 
 ### Approach
 
-Approach (1-2 paragraphs): Describe what types of plots you are going to make to address your question. For each plot, provide a clear explanation as to why this plot (e.g. boxplot, barplot, histogram, etc.) is best for providing the information you are asking about. The two plots should be of different types, and at least one of the two plots needs to use either color mapping or facets.
-
-
 We believe that time-series plots are best-suited to examine changes and trends over periods of time; thus we construct a time-series plot and line graph to examine how the proportion of medals won by the USA and USSR/Russia have developed over time. On the x-axis, we plot the `year` variable, and on the y-axis, we plot the `medal_prop` variable indicating the proportion of medals won by the United States and the USSR/Russia. The color aesthetic helps us differentiate between medals won by the United States, the USSR/Russia, and other countries. We facet the plot by the `season` variable to indicate whether medals were won in Summer or Winter Olympics, and add vertical lines to this plot indicating the end of World War II (1945), as well as the end of the cold war as marked by the dissolution of the USSR (1991).
 
-As the second question is more about the overall performance of members of the Warsaw PAct and NATO, we choose to represent the type and amount of medals won by each relevant country in a stacked bar chart. The bars itself indicate the amount of medals each country won, and the bars are ordered based on the total amount of medals won in descending order
-
-
-
-2. How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
+As the second question is more about the overall performance of members of the Warsaw PAct and NATO, we choose to represent the type and amount of medals won by each relevant country in a stacked bar chart. The bars itself indicate the amount of medals each country won, and the bars are ordered based on the total amount of medals won in descending order. Further, we use colors to indicate whether a country was aligned with NATO or the Warsaw Pact, and different-colored emojis indicate the amount of gold, silver, and bronze medals each country won. We believe that this is the best way of assessing the question visually, as it represents all relevant information in a simple, straightforward manner.
 
 ### Analysis
 
@@ -134,6 +127,10 @@ q1_df %>%
        subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
        caption = "Source: data from www.sports-reference.com in 2018",
        color = "Country")
+```
+
+```{r q1-analysis-plot-2}
+
 ```
 
 ### Discussion
