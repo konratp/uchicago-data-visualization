@@ -205,6 +205,41 @@ participate_sex <- olympics_data %>%
 ```
 
 ---
+```{r recode-top15countriesfemale, echo = FALSE}
+# In this chunk I'm doing a bunch of analysis that I don't want to present 
+# in my slides. But I need the resulting data frame for a plot I want to present for top 15 countries.
+library(emojifont)
+medalist_rank <- olympics_data %>%
+  filter(year >= 2000) %>% # focusing on  recent years
+  mutate(gold = if_else(medal == "Gold", 1, 0),
+         silver = if_else(medal == "Silver", 1, 0),
+         bronze = if_else(medal == "Bronze", 1, 0)) %>%
+  group_by(noc, sex) %>%
+  summarize(n_gold = sum(gold, na.rm = TRUE), 
+            n_silver = sum(silver, na.rm = TRUE), 
+            n_bronze = sum(bronze, na.rm = TRUE), .groups = "drop") %>%
+  mutate(n_medal = n_gold + n_silver + n_bronze) %>%
+  group_by(noc) %>%
+  mutate(visit = 1:n()) %>%
+  gather("sex", "n_gold", "n_silver", "n_bronze", "n_medal", 
+         key = variable, value = number) %>%
+  unite(combi, variable, visit) %>%
+  spread(combi, number) %>%
+  select(-c("sex_1", "sex_2"))
+medalist_rank[2:9] = lapply(medalist_rank[2:9], FUN = function(y){as.numeric(y)})
+medalist_rank <- medalist_rank %>%
+  mutate(fp_medal = n_medal_1 / sum(n_medal_1, n_medal_2))
+top_15 <- medalist_rank %>%
+  arrange(desc(n_medal_1)) %>%
+  head(15) %>%
+  mutate(n_b_s = n_bronze_1 + n_silver_1)
+
+```
+---
+
+
+
+---
 ## Plot and text
 
 .pull-left[
