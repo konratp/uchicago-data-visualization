@@ -264,7 +264,7 @@ q2_p2_1 <- top_15 %>%
   annotate("text", x = 600, y = "South Korea", label = "Gold", size = rel(2.4), colour = "#D6AF36") +
   annotate("text", x = 600, y = "Norway", label = "Silver", size = rel(2.4), colour = "#824A02") +
   annotate("text", x = 600, y = "France", label = "Bronze", size = rel(2.4), colour = "#A7A7AD") + 
-  labs(x = "Number of medals", y = "Countries",
+  labs(x = "Number of medals won by females", y = "Countries",
        caption = " ") +
   theme_minimal() +
   bg_theme +
@@ -277,7 +277,7 @@ q2_p2_2 <- top_15 %>%
              x = c(top_15$fp_medal[15], top_15$fp_medal[3], top_15$fp_medal[7]), 
              y = c("Romania", "China", "Netherlands"),
              size = 4, color = "#000000") +
-  labs(x = "Proportion of medals won by women", 
+  labs(x = "Proportion of medals won by females", 
        caption = "Source: data from www.sports-reference.com in 2018") + 
   bg_theme +
   theme(axis.title.y = element_blank(),
@@ -288,20 +288,14 @@ q2_p2 <- plot_grid(q2_p2_1, q2_p2_2, rel_widths = c(4.5, 3),
                    labels = c("No Nomalization ", "Nomalization"),
                    ncol = 2, nrow = 1, label_size = 8)
 title <- ggdraw() + 
-  draw_label("Top 15 countries in female contribution in Olympic Games",
-             fontface = 'bold', x = 0, hjust = -0.2) +
+  draw_label("Top 15 countries in female contribution in Olympic Games (2000-2016)",
+             fontface = 'bold', x = 0, hjust = -0.2, size = 12) +
   theme(plot.margin = margin(0, 0, 0, 10))
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```
 
 ### Discussion
 
-Discussion (1-3 paragraphs): In the Discussion section, interpret the results of your analysis. Identify any trends revealed (or not revealed) by the plots. Speculate about why the data looks the way it does.
+The first plot gives a clear upward trend for both the proportion of female athletes and that of games they can compete in. It has gone from nearly 0 to about 0.5 - thus a half - in recent years. This answers our first part of the question that females are having increasing representation in Olympic Games. This happens similarly and concurrently with summer and winter sports seasons.
 
-
-We encourage you to be concise. A paragraph should typically not be longer than 5 sentences. You are not required to perform any statistical tests in this project, but you may do so if you find it helpful to answer your question.
-
-
-
-
-
+The second plot zooms in on the 15 countries with the highest numbers of medals won by females from the year of 2000 to 2016. The descending order allows us to observe that U.S., Russia, and China are positioned in the top 3 in numbers, while Romania, China, and Netherlands have top positions after normalization - higher than 60% of medals are won by females. Although not among the top 3, the U.S. also has over 50% medals contributed by female athletes. The plot answers our second part of the question by illustrating the size and degree of female contributions for top-ranked countries.
