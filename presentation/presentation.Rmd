@@ -144,13 +144,12 @@ penguins_modified <- penguins %>%
   mutate(species = fct_other(species, keep = "Adelie"))
 ```
 
-```{r plot-penguins, echo = FALSE, warning = FALSE, fig.alt = "Body mass vs. flipper lenght of Palmer Penguins for species Adelie and all the others combined together. There is a relatively strong, positive relationship between the two variables. The Adelie penguins are clustered together but they don't exhibit a different trend than the rest of the penguins."}
+```{r plot-penguins, echo = FALSE, warning = FALSE}
 # Code hidden with echo = FALSE
-# Uses modified penguins dataset from previous chunk
-# Play around with height and width until you're happy with the look
-ggplot(penguins_modified, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
-  geom_point() + 
-  theme_minimal()
+# Uses data set from previous chunk
+# Creates plot for medal proportion over time
+  ggplot(mapping = aes(x = year, y = medal_prop, color = usa_ussr, na.rm = TRUE))+
+  geom_line()
 ```
 
 ---
