@@ -28,6 +28,7 @@ library(cowplot)
 ```{r load-data, message=FALSE, warning=FALSE}
 #read in datasets
 olympics_data <- read_csv(here("data", "olympics.csv"))
+
 countrycode <- codelist_panel %>%
   rename(noc = ioc,
          country = country.name.en) %>%
@@ -35,12 +36,13 @@ countrycode <- codelist_panel %>%
   distinct()
 
 #amend datasets to include new variables and fill crucial missing values
-countrycode$noc[70] <- "GDR"
+countrycode$noc[70] <- "GDR" #east germany
 countrycode$continent[70] <- "Europe"
-countrycode$noc[51] <- "TCH"
+countrycode$noc[51] <- "TCH" #czechoslovakia
 countrycode$continent[51] <- "Europe"
-countrycode[nrow(countrycode) + 1,] <- "URS"
-countrycode[nrow(countrycode) +1,] <- "FRG"
+countrycode[nrow(countrycode) + 1,] <- "URS" #soviet union
+countrycode[nrow(countrycode) +1,] <- "FRG" #west germany
+#countrycode[nrow(countrycode) + 1,] <- c("FRG", "Europe", "West Germany", "NATO")
 #countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
 
 #merge olympics and countrycode datasets
