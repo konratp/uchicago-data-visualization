@@ -25,9 +25,6 @@ library(emojifont) # add emoji font
 (1-2 paragraphs): Brief introduction to the dataset. You may repeat some of the information about the dataset provided in the introduction to the dataset on the TidyTuesday repository, paraphrasing on your own terms. Imagine that your project is a standalone document and the grader has no prior knowledge of the dataset.
 
 ```{r load-data, message=FALSE, warning=FALSE,}
-#questions for office hours:
-  #can you fill missing values with tidy approach?
-
 #read in datasets
 olympics_data <- read_csv(here("data", "olympics.csv"))
 countrycode <- codelist_panel %>%
@@ -59,9 +56,20 @@ olympics_joined <- olympics_joined %>%
                              TRUE ~ "Non-Aligned or not applicable"),
          usa_ussr = case_when(noc == "URS" | noc == "RUS" ~ "USSR/Russia",
                               noc == "USA" ~ "USA",
-                              TRUE ~ "Other"))
+                              TRUE ~ "Other")) %>%
+  group_by(games) %>%
+  mutate(medal_sum = sum(medal_binary))
 
-#why does NA show up above? -- I think it has something to do with USSR/USA variable
+#set theme for graphs
+bg_theme <- theme_minimal() +
+  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+        axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
+        axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
+        strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
+        plot.caption = element_text(face = "italic",size = rel(0.8), 
+                                    margin = margin(t = 10)),
+        legend.title = element_text(face = "bold",size = rel(0.6)),
+        legend.text = element_text(size = rel(0.6)))
 ```
 
 ## Question 1
@@ -92,9 +100,26 @@ For the second question, we choose to represent the information relevant to answ
 Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
 
 ```{r q1-analysis}
+#create data frame with information relevant to create visualization
+q1_df <- olympics_joined %>%
+  group_by(year, usa_ussr, season) %>%
+  summarize(medal_prop = (sum(medal_binary)/medal_sum)) %>%
+  filter(year >= 1920)
+
 #create plot mapping USA/USSR/others medals over time
+q1_df %>%
   ggplot(mapping = aes(x = year, y = medal_prop, color = usa_ussr, na.rm = TRUE))+
-  geom_line()
+  geom_line() +
+  facet_wrap(vars(season)) +
+  scale_color_manual(values = c("grey", "blue", "red")) +
+  bg_theme +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+  labs(title = "Olympic Performance of USSR/Russia and USA over Time",
+       subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
+       y = "Proportion of Medals Won",
+       x = "Year",
+       caption = "Source: data from www.sports-reference.com in 2018",
+       color = "Country")
 ```
 
 ### Discussion
@@ -157,16 +182,7 @@ q2_p1 <- participate_sex %>%
                     breaks = c("Number of female athletes", 
                              "Games females compete in"),
                     values=c("Number of female athletes" = "orange",
-                             "Games females compete in" = "steelblue")) +
-  theme_minimal()
-bg_theme <- theme(plot.title = element_text(face = "bold", size = rel(1.2)),
-        axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
-        axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
-        strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
-        plot.caption = element_text(face = "italic",size = rel(0.8), 
-                                    margin = margin(t = 10)),
-        legend.title = element_text(face = "bold",size = rel(0.6)),
-        legend.text = element_text(size = rel(0.6)))
+                             "Games females compete in" = "steelblue"))
 q2_p1 + bg_theme
 ```
 
