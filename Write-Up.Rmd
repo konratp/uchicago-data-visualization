@@ -153,20 +153,20 @@ q2_p1 <- participate_sex %>%
        x = "Year",
        y = "Proportion",
        caption = "Source: data from www.sports-reference.com in 2018") +
- scale_color_manual(name = "Proportion of",
-                    breaks = c("Number of female athletes", 
-                             "Games females compete in"),
-                    values=c("Number of female athletes" = "orange",
-                             "Games females compete in" = "steelblue")) +
+  scale_color_manual(name = "Proportion of",
+                    breaks = c("Games females compete in",
+                               "Number of female athletes"),
+                    values=c("Number of female athletes" = "#F4C300",
+                             "Games females compete in" = "#0085C7")) +
   theme_minimal()
 bg_theme <- theme(plot.title = element_text(face = "bold", size = rel(1.2)),
-        axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
-        axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
-        strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
-        plot.caption = element_text(face = "italic",size = rel(0.8), 
+                  axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
+                  axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
+                  strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
+                  plot.caption = element_text(face = "italic",size = rel(0.8), 
                                     margin = margin(t = 10)),
-        legend.title = element_text(face = "bold",size = rel(0.6)),
-        legend.text = element_text(size = rel(0.6)))
+                  legend.title = element_text(face = "bold",size = rel(0.6)),
+                  legend.text = element_text(size = rel(0.6)))
 q2_p1 + bg_theme
 ```
 
@@ -195,9 +195,6 @@ top_15 <- medalist_rank %>%
   arrange(desc(n_medal_1)) %>%
   head(15) %>%
   mutate(n_b_s = n_bronze_1 + n_silver_1)
-  #scale_color_manual(name='Types of medals',
-   #                  breaks=c('Gold', 'Silver', 'Bronze'),
-    #                 values=c('Gold'='#D6AF36', 'Silver'='#A7A7AD', 'Bronze'='#824A02')) +
 q2_p2 <- top_15 %>%
   ggplot(aes(x = n_medal_1, y = reorder(noc, n_medal_1))) +
   geom_segment(aes(yend = noc), xend = 0, colour = "grey85", size = 0.6) +
@@ -208,7 +205,7 @@ q2_p2 <- top_15 %>%
   geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$noc, 
              size = 4, color = "#A7A7AD") +
   scale_x_continuous(breaks = seq(0, 1000, 200)) +
-  annotate("text", label = "Types of medals", x = 800, y = "GBR", size = rel(2.2)) +
+  annotate("text", label = "Types of medals", x = 800, y = "GBR", size = rel(2.4)) +
   annotate("rect", xmin = 700, xmax = 900, ymin = "ITA", ymax = "JPN", alpha = .1) +
   annotate("point", x = 750, y = "KOR", colour = "#D6AF36", size = 1) +
   annotate("point", x = 750, y = "NOR", colour = "#824A02", size = 1) +
@@ -227,7 +224,8 @@ q2_p2
 # plot_grid(sp, bp, labels = c("A", "B"), ncol = 2, nrow = 1)
 ```
 ```{r}
-top_15
+medalist_rank %>% 
+  mutate(fp)
 ```
 
 ### Discussion
