@@ -114,8 +114,8 @@ q1_df %>%
   geom_vline(xintercept = 1991,
              linetype = "dashed",
              alpha = 0.75) +
-  geom_text(mapping = aes(x = 1945, y = 0.9, label= "End of World War II")) +
-  geom_text(mapping = aes(x = 1991, y = 0.9, label= "Dissolution of the USSR")) +
+#  geom_text(mapping = aes(x = 1945, y = 0.9, label= "End of World War II")) +
+#  geom_text(mapping = aes(x = 1991, y = 0.9, label= "Dissolution of the USSR")) +
   facet_wrap(vars(season)) +
   scale_color_manual(values = c("grey", "blue", "red")) +
   scale_x_continuous(breaks = seq(1920, 2022, 12),
@@ -140,9 +140,17 @@ q2_df <- olympics_joined %>%
 
 #create stacked bar chart mapping amount of medals won by country
 q2_df %>%
-  ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won)) +
+  ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won, fill = nato_wp)) +
   geom_col() +
-  bg_theme
+  scale_fill_manual(values = c("blue", "red")) +
+  bg_theme +
+  labs(title = "Amount of Olympic Medals won by NATO/Warsaw Pact Member-States",
+       subtitle = "During the Cold War, 1945-1991",
+       x = "Number of Olympic Medals Won",
+       y = "Country",
+       fill = "Military Alliance")
+
+#to do: fix ordering of bars, fix germany
 ```
 
 ### Discussion
