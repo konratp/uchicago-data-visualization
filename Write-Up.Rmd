@@ -217,7 +217,7 @@ q2_p2 <- top_15 %>%
   annotate("text", x = 800, y = "NOR", label = "Silver", size = rel(2.2), colour = "#824A02") +
   annotate("text", x = 800, y = "FRA", label = "Bronze", size = rel(2.2), colour = "#A7A7AD") +
   labs(title = "Top 15 countries in female athletes contribution in Olympic Games",
-       subtitle = "From year 1900 to 2016",
+       subtitle = "From year 2000 to 2016",
        x = "Number of medals",
        y = "Countries",
        caption = "Source: data from www.sports-reference.com in 2018") +
