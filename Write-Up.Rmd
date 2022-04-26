@@ -39,6 +39,7 @@ countrycode$continent[70] <- "Europe"
 countrycode$noc[51] <- "TCH"
 countrycode$continent[51] <- "Europe"
 countrycode[nrow(countrycode) + 1,] <- "URS"
+countrycode[nrow(countrycode) +1,] <- "FRG"
 #countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
 
 #merge olympics and countrycode datasets
@@ -51,7 +52,7 @@ olympics_joined <- olympics_joined %>%
                                     medal == "Silver" ~ 2,
                                     medal == "Bronze" ~ 1,
                                     TRUE ~ 0),
-         nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "Germany" | country == "Spain" ~ "NATO",
+         nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "West Germany" | country == "Germany" | country == "Spain" ~ "NATO",
                              country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact", #CHANGE THIS to Soviet Union when figured out
                              TRUE ~ "Non-Aligned or not applicable"),
          usa_ussr = case_when(noc == "URS" | noc == "RUS" ~ "USSR/Russia",
@@ -98,9 +99,9 @@ Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this sec
 ```{r q1-analysis-plot-1}
 #create data frame with information relevant to create visualization
 q1_df <- olympics_joined %>%
+  filter(year >= 1922) %>%
   group_by(year, usa_ussr, season) %>%
-  summarize(medal_prop = (sum(medal_binary)/medal_sum)) %>%
-  filter(year >= 1922)
+  summarize(medal_prop = (sum(medal_binary)/medal_sum))
 
 #create plot mapping USA/USSR/others medals over time
 q1_df %>%
@@ -130,7 +131,17 @@ q1_df %>%
 ```
 
 ```{r q1-analysis-plot-2}
+#create data frame with information relevant to create visualization
+q2_df <- olympics_joined %>%
+  filter((nato_wp == "NATO" | nato_wp == "Warsaw Pact") & (year >= 1945 & year <= 1991)) %>%
+  group_by(country, nato_wp, year) %>%
+  summarize(medals_won = sum(medal_binary))
 
+#create stacked bar chart mapping amount of medals won by country
+q2_df %>%
+  ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won)) +
+  geom_col() +
+  bg_theme
 ```
 
 ### Discussion
