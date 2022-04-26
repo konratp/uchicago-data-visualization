@@ -25,7 +25,7 @@ library(cowplot)
 
 (1-2 paragraphs): Brief introduction to the dataset. You may repeat some of the information about the dataset provided in the introduction to the dataset on the TidyTuesday repository, paraphrasing on your own terms. Imagine that your project is a standalone document and the grader has no prior knowledge of the dataset.
 
-```{r load-data, message=FALSE, warning=FALSE,}
+```{r load-data, message=FALSE, warning=FALSE}
 #read in datasets
 olympics_data <- read_csv(here("data", "olympics.csv"))
 countrycode <- codelist_panel %>%
@@ -166,11 +166,9 @@ We encourage you to be concise. A paragraph should typically not be longer than 
 
 Women started to participate in the Olympic Games from the year of 1900 in Paris. Among a total of around 1,000 athletes, only 22 women competed in five sports, according to International Olympic Committee. Since then, the number of female participants and that of sports females can compete has increased and is expected to keep increasing in the near future. Given persisting gender inequalities in many countries, we are interested in analyzing gender representation in the sports’ world. From a historical perspective, first, we are curious about how female participation has changed in Olympic Games. Second, we also look into the female athletes performance on the country level and plan to spotlight countries with top female contribution. Our following approach, analysis, and visualization will further demonstrate these two issues of interest.
 
-To illustrate gender difference in Olympic, our dataset provides rich information on individual athletes with their `name`, `sex`, `noc`, `sports`, `year`, `medal`, etc. It allows us to create new variables for summarized tables and time-series analysis. For example, it is feasible to compute the proportion of female athletes and the count of sports for each Game and season over the years. Grouping by the `noc` code, the dataset aids us in creating a new geographical categorical variable `continent`, and generating summarized tables for ranking and comparing females medalists across countries. More rigorously, since countries may differ greatly in the number of female participants, we can normalize the measure of female medalists by calculating the proportion of medals that comes from female athletes for a given country. 
+To illustrate gender difference in Olympic, our dataset provides rich information on individual athletes with their `name`, `sex`, `noc`, `sports`, `year`, `medal`, etc. It allows us to create new variables for summarized tables and time-series analysis. For example, it is feasible to compute the proportion of female athletes and the count of sports for each Game and season over the years. Grouping by the `noc` code, the dataset aids us in generating summarized tables for ranking and comparing females medalists across countries. More rigorously, since countries may differ greatly in the number of female participants, we can normalize the measure of female medalists by calculating the proportion of medals that comes from female athletes among all medals for a given country. 
 
 ### Approach
-
-Approach (1-2 paragraphs): Describe what types of plots you are going to make to address your question. For each plot, provide a clear explanation as to why this plot (e.g. boxplot, barplot, histogram, etc.) is best for providing the information you are asking about. The two plots should be of different types, and at least one of the two plots needs to use either color mapping or facets.
 
 To answer the first question, “How does female participation in Olympics Games change? ” we construct an overall time-series line plot. This plot comes from a summarized table with the average proportion of female athletes and the proportion of games female athletes participate in over the years. The two measures are positioned on the y-axis and illustrated in different colors - and they are manually set to be in Olympic-logo colors! The year for each event is on the x-axis. The season information is demonstrated through two different facets. We choose the line plot format first because it can best visually represent the trend information. Second, it has an advantage in terms of data-ink-ratio for visualization, therefore it helps simplify the complexities in our aggregated data.
 
