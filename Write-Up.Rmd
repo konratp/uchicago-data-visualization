@@ -9,7 +9,7 @@ output:
 
 # Visual Analysis of Olympics Performance
 
-```{r load-packages, message=FALSE, warning=FALSE}
+```{r load-packages, message=FALSE, warning=FALSE, echo=FALSE}
 library(tidyverse) # data manipulation
 library(psych) # describe function: statistical summary
 library(broom) # tidy function: statistical outputs into tibbles
@@ -17,13 +17,14 @@ library(kableExtra) # make-up tables
 library(stargazer) # nice regression outputs
 library(here) # simplifies relative file paths
 library(countrycode) #get country names
+library(emojifont) # add emoji font
 ```
 
 ## Introduction
 
 (1-2 paragraphs): Brief introduction to the dataset. You may repeat some of the information about the dataset provided in the introduction to the dataset on the TidyTuesday repository, paraphrasing on your own terms. Imagine that your project is a standalone document and the grader has no prior knowledge of the dataset.
 
-```{r load-data}
+```{r load-data, message=FALSE, warning=FALSE,}
 #questions for office hours:
   #can you fill missing values with tidy approach?
 
@@ -141,7 +142,7 @@ participate_sex <- olympics_data %>%
          count_game_2 = as.numeric(count_game_2)) %>%
   mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2),
          f_games_p = count_game_1 / sum(count_game_1, count_game_2))
-participate_sex %>% 
+q2_p1 <- participate_sex %>% 
   ggplot(aes(x = year, y = f_athletes_p)) +
   geom_line(aes(color = "Number of female athletes")) +
   geom_line(aes(x = year, y = f_games_p, 
@@ -150,23 +151,26 @@ participate_sex %>%
   labs(title = "Female athletes participation in Olympic Games by season",
        subtitle = "From year 1900 to 2016",
        x = "Year",
-       y = "Proportion") +
+       y = "Proportion",
+       caption = "Source: data from www.sports-reference.com in 2018") +
  scale_color_manual(name = "Proportion of",
                     breaks = c("Number of female athletes", 
                              "Games females compete in"),
                     values=c("Number of female athletes" = "orange",
                              "Games females compete in" = "steelblue")) +
-  theme_minimal() + 
-  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+  theme_minimal()
+bg_theme <- theme(plot.title = element_text(face = "bold", size = rel(1.2)),
         axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
         axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
         strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
+        plot.caption = element_text(face = "italic",size = rel(0.8), 
+                                    margin = margin(t = 10)),
         legend.title = element_text(face = "bold",size = rel(0.6)),
         legend.text = element_text(size = rel(0.6)))
+q2_p1 + bg_theme
 ```
 
 ```{r Q2-2-country ranking, dev='ragg_png'}
-library(emojifont)
 medalist_rank <- olympics_data %>%
   filter(year >= 2000) %>% # focusing on  recent years
   mutate(gold = if_else(medal == "Gold", 1, 0),
@@ -191,20 +195,39 @@ top_15 <- medalist_rank %>%
   arrange(desc(n_medal_1)) %>%
   head(15) %>%
   mutate(n_b_s = n_bronze_1 + n_silver_1)
-top_15 %>%
+  #scale_color_manual(name='Types of medals',
+   #                  breaks=c('Gold', 'Silver', 'Bronze'),
+    #                 values=c('Gold'='#D6AF36', 'Silver'='#A7A7AD', 'Bronze'='#824A02')) +
+q2_p2 <- top_15 %>%
   ggplot(aes(x = n_medal_1, y = reorder(noc, n_medal_1))) +
-  geom_emoji(alias = 'trophy', x = top_15$n_medal_1, y = top_15$noc, size = 4, color = "#D6AF36") +
-  geom_emoji(alias = 'trophy', x = top_15$n_bronze_1, y = top_15$noc, size = 4, color = "#824A02") +
-  geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$noc, size = 4, color = "#A7A7AD") +
-  geom_segment(aes(yend = noc), xend = 0, colour = "grey85", size = 0.5) +
+  geom_segment(aes(yend = noc), xend = 0, colour = "grey85", size = 0.6) +
+  geom_emoji(alias = 'trophy', x = top_15$n_medal_1, y = top_15$noc, 
+             size = 4, color = "#D6AF36") +
+  geom_emoji(alias = 'trophy', x = top_15$n_bronze_1, y = top_15$noc, 
+             size = 4, color = "#824A02") +
+  geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$noc, 
+             size = 4, color = "#A7A7AD") +
+  scale_x_continuous(breaks = seq(0, 1000, 200)) +
+  annotate("text", label = "Types of medals", x = 800, y = "GBR", size = rel(2.2)) +
+  annotate("rect", xmin = 700, xmax = 900, ymin = "ITA", ymax = "JPN", alpha = .1) +
+  annotate("point", x = 750, y = "KOR", colour = "#D6AF36", size = 1) +
+  annotate("point", x = 750, y = "NOR", colour = "#824A02", size = 1) +
+  annotate("point", x = 750, y = "FRA", colour = "#A7A7AD", size = 1) +
+  annotate("text", x = 800, y = "KOR", label = "Gold", size = rel(2.2), colour = "#D6AF36") +
+  annotate("text", x = 800, y = "NOR", label = "Silver", size = rel(2.2), colour = "#824A02") +
+  annotate("text", x = 800, y = "FRA", label = "Bronze", size = rel(2.2), colour = "#A7A7AD") +
+  labs(title = "Top 15 countries in female athletes contribution in Olympic Games",
+       subtitle = "From year 1900 to 2016",
+       x = "Number of medals",
+       y = "Countries",
+       caption = "Source: data from www.sports-reference.com in 2018") +
   theme_minimal() +
-  theme(panel.grid.major.y = element_blank())
+  theme(panel.grid.major.y = element_blank()) + bg_theme
+q2_p2
 # plot_grid(sp, bp, labels = c("A", "B"), ncol = 2, nrow = 1)
 ```
 ```{r}
-medalist_rank %>%
-  arrange(desc(n_medal_1)) %>%
-  head(15)
+top_15
 ```
 
 ### Discussion
