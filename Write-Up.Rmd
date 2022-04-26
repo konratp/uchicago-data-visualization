@@ -114,6 +114,9 @@ q1_df %>%
   geom_vline(xintercept = 1991,
              linetype = "dashed",
              alpha = 0.75) +
+  annotate("text", label = "End of World War II", x = 1945, y = 0.9, size = rel(2), hjust = 0) +
+  annotate("text", label = "Dissolution of the USSR", x = 1991, y = 0.5, size = rel(2), hjust = 1) +
+#annotate("text", label = "Types of medals", x = 600, y = "United Kingdom", size = rel(2.6))
 #  geom_text(mapping = aes(x = 1945, y = 0.9, label= "End of World War II")) +
 #  geom_text(mapping = aes(x = 1991, y = 0.9, label= "Dissolution of the USSR")) +
   facet_wrap(vars(season)) +
