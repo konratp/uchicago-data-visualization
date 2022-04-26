@@ -18,6 +18,7 @@ library(stargazer) # nice regression outputs
 library(here) # simplifies relative file paths
 library(countrycode) #get country names
 library(emojifont) # add emoji font
+library(cowplot)
 ```
 
 ## Introduction
@@ -163,7 +164,7 @@ To illustrate gender difference in Olympic, our dataset provides rich informatio
 
 Approach (1-2 paragraphs): Describe what types of plots you are going to make to address your question. For each plot, provide a clear explanation as to why this plot (e.g. boxplot, barplot, histogram, etc.) is best for providing the information you are asking about. The two plots should be of different types, and at least one of the two plots needs to use either color mapping or facets.
 
-To answer the first question, “How does female participation in Olympics Games change? ” we construct an overall time-series line plot. This plot comes from a summarized table with the average proportion of female to male athletes and the number of games female athletes participate in over the years. The two measures are positioned on the y-axis and illustrated in different colors. The year for each event is on the x-axis. The season information is demonstrated through two different facets. We choose the line plot format first because it can best visually represent the trend information. Second, it has an advantage in terms of data-ink-ratio for visualization, therefore it to some extent simplifies the complexities in our aggregated data.
+To answer the first question, “How does female participation in Olympics Games change? ” we construct an overall time-series line plot. This plot comes from a summarized table with the average proportion of female to male athletes and the proportion of games female athletes participate in over the years. The two measures are positioned on the y-axis and illustrated in different colors - and they are manually set to be Olympic logos and symbols colors! The year for each event is on the x-axis. The season information is demonstrated through two different facets. We choose the line plot format first because it can best visually represent the trend information. Second, it has an advantage in terms of data-ink-ratio for visualization, therefore it to some extent simplifies the complexities in our aggregated data.
 
 For the second part, “Which countries have the highest numbers of female medalists or enjoy the most contributions from female athletes over the recent years?” we construct a stacked bar plot with two facets, both of them rank the top 15 countries with the highest measurements. The y-axis shows the names of countries with the top rankings. The x-axis on one facet illustrates the number of female medalists, and on the other one, it contains the proportion of medals from female athletes relative to the country’s total number of medals. The types of medals are shown in different colors. The stacked bar plot is comparatively the best format to approach this question because it can clearly show the medal distribution and order the countries following their rankings. It can give viewers a sense of quantity through visualization.
 
@@ -173,7 +174,7 @@ Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this sec
 
 ```{r Q2-1-female participation, message=FALSE, warning=FALSE}
 # Create a summarized table for participation by gender for each season
-participate_sex <- olympics_data %>% 
+participate_sex <- olympics_joined %>% 
   group_by(year, season, sex) %>%
   summarize(count_sex = n_distinct(id), 
             count_game = n_distinct(sport), .groups = "drop")%>% 
@@ -201,30 +202,28 @@ q2_p1 <- participate_sex %>%
        y = "Proportion",
        caption = "Source: data from www.sports-reference.com in 2018") +
   scale_color_manual(name = "Proportion of",
-                    breaks = c("Number of female athletes", 
-                             "Games females compete in"),
-                    values=c("Number of female athletes" = "orange",
-                             "Games females compete in" = "steelblue")) +
+                     breaks = c("Number of female athletes",  "Games females compete in"),
+                     values=c("Number of female athletes" = "orange",
+                              "Games females compete in" = "steelblue")) +
   scale_color_manual(name = "Proportion of",
-                    breaks = c("Games females compete in",
-                               "Number of female athletes"),
+                    breaks = c("Games females compete in", "Number of female athletes"),
                     values=c("Number of female athletes" = "#F4C300",
                              "Games females compete in" = "#0085C7"))
 q2_p1 + bg_theme
 ```
 
 ```{r Q2-2-country ranking, dev='ragg_png'}
-medalist_rank <- olympics_data %>%
+medalist_rank <- olympics_joined %>%
   filter(year >= 2000) %>% # focusing on  recent years
   mutate(gold = if_else(medal == "Gold", 1, 0),
          silver = if_else(medal == "Silver", 1, 0),
          bronze = if_else(medal == "Bronze", 1, 0)) %>%
-  group_by(noc, sex) %>%
+  group_by(country, sex) %>%
   summarize(n_gold = sum(gold, na.rm = TRUE), 
             n_silver = sum(silver, na.rm = TRUE), 
             n_bronze = sum(bronze, na.rm = TRUE), .groups = "drop") %>%
   mutate(n_medal = n_gold + n_silver + n_bronze) %>%
-  group_by(noc) %>%
+  group_by(country) %>%
   mutate(visit = 1:n()) %>%
   gather("sex", "n_gold", "n_silver", "n_bronze", "n_medal", 
          key = variable, value = number) %>%
@@ -238,36 +237,47 @@ top_15 <- medalist_rank %>%
   arrange(desc(n_medal_1)) %>%
   head(15) %>%
   mutate(n_b_s = n_bronze_1 + n_silver_1)
-q2_p2 <- top_15 %>%
-  ggplot(aes(x = n_medal_1, y = reorder(noc, n_medal_1))) +
-  geom_segment(aes(yend = noc), xend = 0, colour = "grey85", size = 0.6) +
-  geom_emoji(alias = 'trophy', x = top_15$n_medal_1, y = top_15$noc, 
-             size = 4, color = "#D6AF36") +
-  geom_emoji(alias = 'trophy', x = top_15$n_bronze_1, y = top_15$noc, 
-             size = 4, color = "#824A02") +
-  geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$noc, 
-             size = 4, color = "#A7A7AD") +
+q2_p2_1 <- top_15 %>%
+  ggplot(aes(x = n_medal_1, y = reorder(country, n_medal_1))) +
+  geom_segment(aes(yend = country), xend = 0, colour = "#F4C300", size = 0.5, alpha = 0.6) +
+  geom_emoji(alias = 'trophy', x = top_15$n_medal_1, y = top_15$country, 
+             size = 3.5, color = "#D6AF36") +
+  geom_emoji(alias = 'trophy', x = top_15$n_bronze_1, y = top_15$country, 
+             size = 3.5, color = "#824A02") +
+  geom_emoji(alias = 'trophy', x = top_15$n_b_s, y = top_15$country, 
+             size = 3.5, color = "#A7A7AD") +
   scale_x_continuous(breaks = seq(0, 1000, 200)) +
-  annotate("text", label = "Types of medals", x = 800, y = "GBR", size = rel(2.4)) +
-  annotate("rect", xmin = 700, xmax = 900, ymin = "ITA", ymax = "JPN", alpha = .1) +
-  annotate("point", x = 750, y = "KOR", colour = "#D6AF36", size = 1) +
-  annotate("point", x = 750, y = "NOR", colour = "#824A02", size = 1) +
-  annotate("point", x = 750, y = "FRA", colour = "#A7A7AD", size = 1) +
-  annotate("text", x = 800, y = "KOR", label = "Gold", size = rel(2.2), colour = "#D6AF36") +
-  annotate("text", x = 800, y = "NOR", label = "Silver", size = rel(2.2), colour = "#824A02") +
-  annotate("text", x = 800, y = "FRA", label = "Bronze", size = rel(2.2), colour = "#A7A7AD") +
-  labs(title = "Top 15 countries in female athletes contribution in Olympic Games",
-       subtitle = "From year 2000 to 2016",
-       x = "Number of medals",
-       y = "Countries",
-       caption = "Source: data from www.sports-reference.com in 2018") +
+  annotate("text", label = "Types of medals", x = 600, y = "United Kingdom", size = rel(2.6)) +
+  annotate("rect", xmin = 400, xmax = 800, ymin = "Italy", ymax = "Japan", alpha = .1) +
+  annotate("point", x = 500, y = "South Korea", colour = "#D6AF36", size = 1) +
+  annotate("point", x = 500, y = "Norway", colour = "#824A02", size = 1) +
+  annotate("point", x = 500, y = "France", colour = "#A7A7AD", size = 1) +
+  annotate("text", x = 600, y = "South Korea", label = "Gold", size = rel(2.4), colour = "#D6AF36") +
+  annotate("text", x = 600, y = "Norway", label = "Silver", size = rel(2.4), colour = "#824A02") +
+  annotate("text", x = 600, y = "France", label = "Bronze", size = rel(2.4), colour = "#A7A7AD") + 
+  labs(x = "Number of medals", y = "Countries",
+       caption = " ") +
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank()) + bg_theme
-q2_p2
-# plot_grid(sp, bp, labels = c("A", "B"), ncol = 2, nrow = 1)
-```
-```{r}
-medalist_rank %>% 
-  mutate(fp)
+q2_p2_2 <- top_15 %>% 
+  ggplot(aes(x = fp_medal, y = reorder(country, n_medal_1))) +
+  geom_segment(aes(yend = country), xend = 0, colour = "#009F3D", size = 0.5, alpha = 0.6) +
+  geom_emoji(alias = 'trophy', 
+             x = c(top_15$fp_medal[15], top_15$fp_medal[3], top_15$fp_medal[7]), 
+             y = c("Romania", "China", "Netherlands"),
+             size = 4, color = "#000000") +
+  labs(x = "Proportion of medals won by women", 
+       caption = "Source: data from www.sports-reference.com in 2018") + 
+  bg_theme +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank()) 
+q2_p2 <- plot_grid(q2_p2_1, q2_p2_2, rel_widths = c(4.5, 3),
+                   ncol = 2, nrow = 1, label_size = 8)
+title <- ggdraw() + 
+  draw_label("Top 15 countries in female contribution in Olympic Games",
+             fontface = 'bold', x = 0, hjust = 0) +
+  theme(plot.margin = margin(0, 0, 0, 10))
+plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```
 
 ### Discussion
