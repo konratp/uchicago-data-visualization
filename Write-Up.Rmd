@@ -81,25 +81,28 @@ The Olympics served as an outlet for different (city-)states to compete with one
 1. How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
 2. How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 
-In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `usa_ussr` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics. 
+In order to answer these questions, we examine the `country` variable (coded based on the `noc` variable) and, relatedly, the `nato_wp` variable which indicates whether a country was a member of NATO, the Warsaw Pact, or non-aligned (also coded based on the `noc` variable). To measure their success in the Olympics, we calculate the proportion of medals won by the USSR/Russia or the USA and all other countries (stored in the `medal_prop` variable), and examine the total amount of medals won by NATO/Warsaw Pact members. Finally, we also assess the `season` variable in order to differentiate between Summer and Winter Olympics.
 
-*add note about only treating NATO countries as such if they were in NATO during the cold war to avoid confusion with cases like Poland, Hungary, etc. -- Also add note that we exclude Albania from the Warsaw Pact due to Soviet-Albanian split in 1968*
-
+Please note that we categorize countries into the NATO or Warsaw Pact categories based on their allegiances during the Cold War. Countries like Poland or the Baltic countries which were part of the Warsaw Pact during the Cold War and joined NATO after it ended are still coded as Warsaw Pact members. Moreover, we decided not to include Albania as a Warsaw Pact member due to the Soviet-Albanian split of 1968.
 
 ### Approach
 
 Approach (1-2 paragraphs): Describe what types of plots you are going to make to address your question. For each plot, provide a clear explanation as to why this plot (e.g. boxplot, barplot, histogram, etc.) is best for providing the information you are asking about. The two plots should be of different types, and at least one of the two plots needs to use either color mapping or facets.
 
 
-We believe that time-series plots are best-suited to examine changes and trends over periods of time; thus we will construct a time-series plot and line graph to examine how the proportion of medals won by the USA and USSR/Russia have developed over time. On the x-axis, we will plot the `year` variable, and on the y-axis, we will plot the `usa_ussr_medals` variable. Different colors will help us differentiate between medals won by the USA, the USSR/Russia, and other countries. We will facet the plot by the `season` variable to indicate whether medals were won in Summer or Winter Olympics, and add vertical lines to this plot indicating the end of World War II (1945), as well as the end of the cold war as marked by the dissolution of the USSR (1991).
+We believe that time-series plots are best-suited to examine changes and trends over periods of time; thus we construct a time-series plot and line graph to examine how the proportion of medals won by the USA and USSR/Russia have developed over time. On the x-axis, we plot the `year` variable, and on the y-axis, we plot the `medal_prop` variable indicating the proportion of medals won by the United States and the USSR/Russia. The color aesthetic helps us differentiate between medals won by the United States, the USSR/Russia, and other countries. We facet the plot by the `season` variable to indicate whether medals were won in Summer or Winter Olympics, and add vertical lines to this plot indicating the end of World War II (1945), as well as the end of the cold war as marked by the dissolution of the USSR (1991).
 
-For the second question, we choose to represent the information relevant to answering the question in a stacked bar chart.
+As the second question is more about the overall performance of members of the Warsaw PAct and NATO, we choose to represent the type and amount of medals won by each relevant country in a stacked bar chart. The bars itself indicate the amount of medals each country won, and the bars are ordered based on the total amount of medals won in descending order
+
+
+
+2. How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 
 ### Analysis
 
 Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
 
-```{r q1-analysis}
+```{r q1-analysis-plot-1}
 #create data frame with information relevant to create visualization
 q1_df <- olympics_joined %>%
   group_by(year, usa_ussr, season) %>%
@@ -113,24 +116,22 @@ q1_df %>%
   geom_vline(xintercept = 1945,
              linetype = "dashed",
              alpha = 0.75) +
-  geom_text(mapping = aes(x = 1945, y = 0.9, label="End of World War II"),
-            text = element_text(size=11)) +
   geom_vline(xintercept = 1991,
              linetype = "dashed",
              alpha = 0.75) +
-  geom_text(mapping = aes(x = 1991, y = 0.9, label="Dissolution of the USSR"),
-            text = element_text(size=11)) +
+  geom_text(mapping = aes(x = 1945, y = 0.9, label= "End of World War II")) +
+  geom_text(mapping = aes(x = 1991, y = 0.9, label= "Dissolution of the USSR")) +
   facet_wrap(vars(season)) +
   scale_color_manual(values = c("grey", "blue", "red")) +
-  scale_x_continuous(breaks = seq(1920, 2022, 12)) +
-  scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+  scale_x_continuous(breaks = seq(1920, 2022, 12),
+                     name = "Year") +
+  scale_y_continuous(breaks = seq(0, 1, 0.2),
+                     name = "Proportion of Medals Won") +
   bg_theme +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
         panel.spacing = unit(1.5, "lines")) +
   labs(title = "Olympic Performance of USSR/Russia and USA over Time",
        subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
-       y = "Proportion of Medals Won",
-       x = "Year",
        caption = "Source: data from www.sports-reference.com in 2018",
        color = "Country")
 ```
