@@ -152,6 +152,30 @@ olympics_joined_test2 <- olympics_joined_test %>%
 ```
 
 ---
+```{r recode-olympics, echo = FALSE}
+# In this chunk I'm doing a bunch of analysis that I don't want to present 
+# in my slides. But I need the resulting data frame for a plot I want to present.
+participate_sex <- olympics_data %>% 
+  group_by(year, season, sex) %>%
+  summarize(count_sex = n_distinct(id), 
+            count_game = n_distinct(sport), .groups = "drop")%>% 
+  group_by(year, season) %>%
+  mutate(visit = 1:n()) %>%
+  gather("sex", "count_sex", "count_game", key = variable, value = number) %>%
+  unite(combi, variable, visit) %>%
+  spread(combi, number) %>%
+  select(-c("sex_1", "sex_2")) %>% 
+  mutate(count_sex_1 = as.numeric(count_sex_1),
+         count_sex_2 = as.numeric(count_sex_2),
+         count_game_1 = as.numeric(count_game_1),
+         count_game_2 = as.numeric(count_game_2)) %>%
+  mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2),
+         f_games_p = count_game_1 / sum(count_game_1, count_game_2))
+
+
+
+```
+---
 
 ## Plot and text
 
