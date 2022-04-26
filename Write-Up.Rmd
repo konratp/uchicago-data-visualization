@@ -239,7 +239,6 @@ q2_p2 <- top_15 %>%
        x = "Number of medals",
        y = "Countries",
        caption = "Source: data from www.sports-reference.com in 2018") +
-  theme_minimal() +
   theme(panel.grid.major.y = element_blank()) + bg_theme
 q2_p2
 # plot_grid(sp, bp, labels = c("A", "B"), ncol = 2, nrow = 1)
