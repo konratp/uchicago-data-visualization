@@ -258,7 +258,9 @@ q2_p2_1 <- top_15 %>%
   labs(x = "Number of medals", y = "Countries",
        caption = " ") +
   theme_minimal() +
-  theme(panel.grid.major.y = element_blank()) + bg_theme
+  bg_theme +
+  theme(panel.grid.major.y = element_blank(),
+        axis.text.y = element_text(size = rel(0.8))) 
 q2_p2_2 <- top_15 %>% 
   ggplot(aes(x = fp_medal, y = reorder(country, n_medal_1))) +
   geom_segment(aes(yend = country), xend = 0, colour = "#009F3D", size = 0.5, alpha = 0.6) +
@@ -270,12 +272,14 @@ q2_p2_2 <- top_15 %>%
        caption = "Source: data from www.sports-reference.com in 2018") + 
   bg_theme +
   theme(axis.title.y = element_blank(),
-        axis.text.y = element_blank()) 
+        axis.text.y = element_blank(),
+        panel.grid.major.y = element_blank()) 
 q2_p2 <- plot_grid(q2_p2_1, q2_p2_2, rel_widths = c(4.5, 3),
+                   labels = c("No Nomalization ", "Nomalization"),
                    ncol = 2, nrow = 1, label_size = 8)
 title <- ggdraw() + 
   draw_label("Top 15 countries in female contribution in Olympic Games",
-             fontface = 'bold', x = 0, hjust = 0) +
+             fontface = 'bold', x = 0, hjust = -0.2) +
   theme(plot.margin = margin(0, 0, 0, 10))
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```
