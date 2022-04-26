@@ -170,8 +170,6 @@ For the second part, “Which countries have the highest numbers of female medal
 
 ### Analysis
 
-Analysis (2-3 code blocks, 2 figures, text/code comments as needed): In this section, provide the code that generates your plots. Use scale functions to provide nice axis labels and guides. You are welcome to use theme functions to customize the appearance of your plot, but you are not required to do so. All plots must be made with ggplot2. Do not use base R or lattice plotting functions.
-
 ```{r Q2-1-female participation, message=FALSE, warning=FALSE}
 # Create a summarized table for participation by gender for each season
 participate_sex <- olympics_joined %>% 
@@ -190,6 +188,7 @@ participate_sex <- olympics_joined %>%
          count_game_2 = as.numeric(count_game_2)) %>%
   mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2),
          f_games_p = count_game_1 / sum(count_game_1, count_game_2))
+# Plot the time series plot for female participation
 q2_p1 <- participate_sex %>% 
   ggplot(aes(x = year, y = f_athletes_p)) +
   geom_line(aes(color = "Number of female athletes")) +
@@ -208,11 +207,13 @@ q2_p1 <- participate_sex %>%
   scale_color_manual(name = "Proportion of",
                     breaks = c("Games females compete in", "Number of female athletes"),
                     values=c("Number of female athletes" = "#F4C300",
-                             "Games females compete in" = "#0085C7"))
-q2_p1 + bg_theme
+                             "Games females compete in" = "#0085C7")) +
+  bg_theme
+q2_p1 
 ```
 
 ```{r Q2-2-country ranking, dev='ragg_png'}
+# create the sum table for a wide table of each country and its' medals.
 medalist_rank <- olympics_joined %>%
   filter(year >= 2000) %>% # focusing on  recent years
   mutate(gold = if_else(medal == "Gold", 1, 0),
@@ -233,10 +234,12 @@ medalist_rank <- olympics_joined %>%
 medalist_rank[2:9] = lapply(medalist_rank[2:9], FUN = function(y){as.numeric(y)})
 medalist_rank <- medalist_rank %>%
   mutate(fp_medal = n_medal_1 / sum(n_medal_1, n_medal_2))
+# rank and use only the top 15 countries for plotting
 top_15 <- medalist_rank %>%
   arrange(desc(n_medal_1)) %>%
   head(15) %>%
   mutate(n_b_s = n_bronze_1 + n_silver_1)
+# create two plots with normalized and non-normalized two versions.
 q2_p2_1 <- top_15 %>%
   ggplot(aes(x = n_medal_1, y = reorder(country, n_medal_1))) +
   geom_segment(aes(yend = country), xend = 0, colour = "#F4C300", size = 0.5, alpha = 0.6) +
@@ -274,6 +277,7 @@ q2_p2_2 <- top_15 %>%
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         panel.grid.major.y = element_blank()) 
+# Adding two plots together for comparison
 q2_p2 <- plot_grid(q2_p2_1, q2_p2_2, rel_widths = c(4.5, 3),
                    labels = c("No Nomalization ", "Nomalization"),
                    ncol = 2, nrow = 1, label_size = 8)
