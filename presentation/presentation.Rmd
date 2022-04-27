@@ -105,7 +105,7 @@ glance(model)
 
 ## Plots
 
-```{r recode-olympics, echo = FALSE}
+```{r recode-olympics, include=FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
 # in my slides. But I need the resulting data frame for a plot I want to present.
 countrycode <- codelist_panel %>%
@@ -115,40 +115,60 @@ countrycode <- codelist_panel %>%
   distinct()
 
 #amend datasets to include new variables and fill crucial missing values
-countrycode$noc[70] <- "GDR"
+countrycode$noc[70] <- "GDR" #east germany
 countrycode$continent[70] <- "Europe"
-countrycode$noc[51] <- "TCH"
+countrycode$noc[51] <- "TCH" #czechoslovakia
 countrycode$continent[51] <- "Europe"
-countrycode[nrow(countrycode) + 1,] <- "URS"
-#countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
-
-#add/manipulate variables
-countrycode <- countrycode %>%
-  mutate(nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "Germany" | country == "Spain" ~ "NATO",
-                             country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact", #CHANGE THIS to Soviet Union when figured out
-                             TRUE ~ "Non-Aligned or not applicable"),
-         usa_ussr = case_when(noc == "URS" ~ "USSR",
-                              noc == "USA" ~ "USA",
-                              TRUE ~ "Other"))
-
-unique(countrycode$usa_ussr)
+countrycode <- rbind(countrycode, c("URS", "Europe", "Soviet Union"))
+countrycode <- rbind(countrycode, c("FRG", "Europe", "West Germany"))
 
 #merge olympics and countrycode datasets
 olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
 
 #add/manipulate variables to merged dataset
-olympics_joined_test <- olympics_joined %>%
+nato <- c("Belgium", "Canada", "Denmark", "France", "Iceland", "Italy", "Luxembourg", 
+          "Netherlands", "Norway", "Portugal", "United Kingdom", "United States",
+          "Greece", "Turkey", "West Germany", "Germany", "Spain")
+wp <- c("Russia", "Hungary", "Bulgaria", "Poland", "German Democratic Republic", 
+        "Romania", "Czechoslovakia", "URS", "Soviet Union")
+olympics_joined <- olympics_joined %>%
   mutate(medal_binary = ifelse(!is.na(medal), 1, 0),
          medal_weighted = case_when(medal == "Gold" ~ 3,
                                     medal == "Silver" ~ 2,
                                     medal == "Bronze" ~ 1,
-                                    TRUE ~ 0))
-  
-  
-olympics_joined_test2 <- olympics_joined_test %>%
-  group_by(games, usa_ussr) %>%
-  summarize(medal_prop = (sum(medal_binary, na.rm = TRUE)))
+                                    TRUE ~ 0),
+         nato_wp = case_when(country %in% nato ~ "NATO",
+                             country %in% wp ~ "Warsaw Pact",
+                             TRUE ~ "Non-Aligned or not applicable"),
+         usa_ussr = case_when(noc == "URS" | noc == "RUS" ~ "USSR/Russia",
+                              noc == "USA" ~ "USA",
+                              TRUE ~ "Other")) %>%
+  group_by(games) %>%
+  mutate(medal_sum = sum(medal_binary))
+
+#set theme for graphs
+bg_theme <- theme_minimal() +
+  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+        axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
+        axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
+        strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
+        plot.caption = element_text(face = "italic",size = rel(0.8), 
+                                    margin = margin(t = 10)),
+        legend.title = element_text(face = "bold",size = rel(0.6)),
+        legend.text = element_text(size = rel(0.6)))
+
 ```
+#
+```{r recode-olympics, include=FALSE}
+# In this chunk I'm creating data frame with information relevant to create visualization that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
+
+
+q1_df <- olympics_joined %>%
+  filter(year >= 1922) %>%
+  group_by(year, usa_ussr, season) %>%
+  summarize(medal_prop = (sum(medal_binary)/medal_sum))
+```
+
 
 ```{r plot-olympicstimeseries, echo = FALSE, warning = FALSE}
 # Code hidden with echo = FALSE
