@@ -18,7 +18,7 @@ library(stargazer) # nice regression outputs
 library(here) # simplifies relative file paths
 library(countrycode) #get country names
 library(emojifont) # add emoji font
-library(cowplot)
+library(cowplot) # combine plot
 ```
 
 ## Introduction
@@ -40,23 +40,26 @@ countrycode$noc[70] <- "GDR" #east germany
 countrycode$continent[70] <- "Europe"
 countrycode$noc[51] <- "TCH" #czechoslovakia
 countrycode$continent[51] <- "Europe"
-countrycode[nrow(countrycode) + 1,] <- "URS" #soviet union
-countrycode[nrow(countrycode) +1,] <- "FRG" #west germany
-#countrycode[nrow(countrycode) + 1,] <- c("FRG", "Europe", "West Germany", "NATO")
-#countrycode[nrow(countrycode) + 1,] <- c("URS", "Europe", "Soviet Union", "Warsaw Pact")
+countrycode <- rbind(countrycode, c("URS", "Europe", "Soviet Union"))
+countrycode <- rbind(countrycode, c("FRG", "Europe", "West Germany"))
 
 #merge olympics and countrycode datasets
 olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
 
 #add/manipulate variables to merged dataset
+nato <- c("Belgium", "Canada", "Denmark", "France", "Iceland", "Italy", "Luxembourg", 
+          "Netherlands", "Norway", "Portugal", "United Kingdom", "United States",
+          "Greece", "Turkey", "West Germany", "Germany", "Spain")
+wp <- c("Russia", "Hungary", "Bulgaria", "Poland", "German Democratic Republic", 
+        "Romania", "Czechoslovakia", "URS", "Soviet Union")
 olympics_joined <- olympics_joined %>%
   mutate(medal_binary = ifelse(!is.na(medal), 1, 0),
          medal_weighted = case_when(medal == "Gold" ~ 3,
                                     medal == "Silver" ~ 2,
                                     medal == "Bronze" ~ 1,
                                     TRUE ~ 0),
-         nato_wp = case_when(country == "Belgium" | country == "Canada" | country == "Denmark" | country == "France" | country == "Iceland" | country == "Italy" | country == "Luxembourg" | country == "Netherlands" | country == "Norway" | country == "Portugal" | country == "United Kingdom" | country == "United States" | country == "Greece" | country == "Turkey" | country == "West Germany" | country == "Germany" | country == "Spain" ~ "NATO",
-                             country == "Russia" | country == "Hungary" | country == "Bulgaria" | country == "Poland" | country == "German Democratic Republic" | country == "Romania" | country == "Czechoslovakia" | country == "URS"~ "Warsaw Pact", #CHANGE THIS to Soviet Union when figured out
+         nato_wp = case_when(country %in% nato ~ "NATO",
+                             country %in% wp ~ "Warsaw Pact", #CHANGE THIS to Soviet Union when figured out
                              TRUE ~ "Non-Aligned or not applicable"),
          usa_ussr = case_when(noc == "URS" | noc == "RUS" ~ "USSR/Russia",
                               noc == "USA" ~ "USA",
