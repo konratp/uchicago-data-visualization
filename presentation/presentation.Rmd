@@ -30,6 +30,7 @@ library(here) # simplifies relative file paths
 library(countrycode) #get country names
 library(emojifont) # add emoji font
 library(cowplot) # combine plot
+library(ragg)
 ```
 
 ```{r setup, include=FALSE}
@@ -94,14 +95,6 @@ or text in two columns $^*$
 
 ## Code
 
-```{r boring-regression}
-# a boring regression
-model <- lm(dist ~ speed, data = cars)
-tidy(model)
-glance(model)
-```
-
----
 
 ## Plots
 
@@ -256,8 +249,8 @@ participate_sex <- olympics_joined %>%
 
 
 ```
----
-```{r plot-participationbysex, echo = FALSE, warning = FALSE}
+
+```{r female participation, echo = FALSE, warning = FALSE, message=FALSE}
 # Code hidden with echo = FALSE
 # Uses data set from previous chunk
 # Plots the time series plot for female participation
@@ -284,8 +277,9 @@ q2_p1 <- participate_sex %>%
 q2_p1 
 ```
 
----
-```{r Q2-2-countryranking_dataframe, dev='ragg_png', include=FALSE}
+
+
+```{r Q2-2-countryranking_dataframe, dev='ragg_png', include=FALSE, warning=FALSE}
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
 # create the sum table for a wide table of each country and its' medals.
 medalist_rank <- olympics_joined %>%
@@ -315,7 +309,7 @@ top_15 <- medalist_rank %>%
   mutate(n_b_s = n_bronze_1 + n_silver_1)
 
 ```
----
+
 
 ```{r plot-top15countries, echo = FALSE, warning = FALSE}
 # Code hidden with echo = FALSE
