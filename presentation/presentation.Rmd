@@ -219,7 +219,7 @@ q2_df <- olympics_joined %>%
 
 ```{r q1-plot-2, echo=FALSE, warning=FALSE}
 
-#create stacked bar chart mapping amount of medals won by country
+#create stacked bar chart mapping amount of medals won by country, only the plot will appear in the slides
 q2_df %>%
   ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won, fill = nato_wp)) +
   geom_col() +
@@ -233,10 +233,10 @@ q2_df %>%
 ```
 
 ---
-```{r recode-olympics, echo = FALSE}
-# In this chunk I'm doing a bunch of analysis that I don't want to present 
-# in my slides. But I need the resulting data frame for a plot I want to present.
-participate_sex <- olympics_data %>% 
+```{r Q2-1-female participation, include=FALSE, message=FALSE, warning=FALSE}
+# In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
+# Create a summarized table for participation by gender for each season
+participate_sex <- olympics_joined %>% 
   group_by(year, season, sex) %>%
   summarize(count_sex = n_distinct(id), 
             count_game = n_distinct(sport), .groups = "drop")%>% 
