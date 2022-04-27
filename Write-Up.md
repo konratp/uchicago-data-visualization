@@ -410,11 +410,11 @@ q2_p2_1 <- top_15 %>%
   annotate("text", label = "Types of medals", x = 600, y = "United Kingdom", size = rel(2.6)) +
   annotate("rect", xmin = 400, xmax = 800, ymin = "Italy", ymax = "Japan", alpha = .1) +
   annotate("point", x = 500, y = "South Korea", colour = "#D6AF36", size = 1) +
-  annotate("point", x = 500, y = "Norway", colour = "#824A02", size = 1) +
-  annotate("point", x = 500, y = "France", colour = "#A7A7AD", size = 1) +
+  annotate("point", x = 500, y = "Norway", colour = "#A7A7AD", size = 1) +
+  annotate("point", x = 500, y = "France", colour = "#824A02", size = 1) +
   annotate("text", x = 600, y = "South Korea", label = "Gold", size = rel(2.4), colour = "#D6AF36") +
-  annotate("text", x = 600, y = "Norway", label = "Silver", size = rel(2.4), colour = "#824A02") +
-  annotate("text", x = 600, y = "France", label = "Bronze", size = rel(2.4), colour = "#A7A7AD") + 
+  annotate("text", x = 600, y = "Norway", label = "Silver", size = rel(2.4), colour = "#A7A7AD") +
+  annotate("text", x = 600, y = "France", label = "Bronze", size = rel(2.4), colour = "#824A02") + 
   labs(x = "Number of Medals Won by Women", y = "Countries",
        caption = " ") +
   theme_minimal() +
