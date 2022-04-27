@@ -217,6 +217,21 @@ q2_df <- olympics_joined %>%
 
 ```
 
+```{r q1-plot-2, echo=FALSE, warning=FALSE}
+
+#create stacked bar chart mapping amount of medals won by country
+q2_df %>%
+  ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won, fill = nato_wp)) +
+  geom_col() +
+  scale_fill_manual(values = c("blue", "red", "violet")) +
+  bg_theme +
+  labs(title = "Medals Won by NATO and Warsaw Pact Countries",
+       subtitle = "In Olympics during the Cold War, 1945-1991",
+       x = "Number of Olympic Medals Won",
+       y = "Country",
+       fill = "Military Alliance")
+```
+
 ---
 ```{r recode-olympics, echo = FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
