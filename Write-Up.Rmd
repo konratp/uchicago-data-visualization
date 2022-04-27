@@ -23,8 +23,6 @@ library(cowplot) # combine plot
 
 ## Introduction
 
-(1-2 paragraphs): Brief introduction to the dataset. You may repeat some of the information about the dataset provided in the introduction to the dataset on the TidyTuesday repository, paraphrasing on your own terms. Imagine that your project is a standalone document and the grader has no prior knowledge of the dataset.
-
 The dataset we have picked, `olympics_data`, is available on kaggle and contains historical data on all modern Olympic games starting from Athens 1896 until 2016. The data was scraped from [www.sports-reference.com](www.sports-reference.com) in 2018 and wrangled by rgriffin. The dataset in its original form contains 271,116 observations and 15 variables. Each row contains data on an individual athlete participating in an individual Olympic event.To give a broad overview, our data includes information on 66 different sports, 1,184 different teams, 51 games, 230 different National Olympic Committees (NOCs), 42 different host cities across 35 different years. 222,552 of the athletes participated in the summer games, while 48,564 participated in the winter season. The description of variables is included in the codebook in the readme file under the data folder in this repository. Unfortunately, the dataset does not contain information about the countries represented in the Olympics, though it does provide the three-letter code of each NOC. Using the `countrycode` package and the `codelist_panel` contained in it, we add valuable information about the participating countries to the Olympics data and use this merged dataset, `olympics_joined`, to perform our analyses below.
 
 Accounting for missing values, 72.5 percent of the participants in our data set are male and the rest are female. The average age of the competitors is 25.6 years, with the oldest competitor being 97, and the youngest being 10. The average athlete’s height is 175.4cm, the maximum height is 226cm, and the minimum height is 127 cm. The average weight of an athlete is 70.7 kilograms, with the maximum being 214kg and the minimum being 25kg. This richness of data on worldwide participation and achievements in Olympic Games across the years allows us to show political and historical trends influencing countries’ performances and to explore differences in participation and performance across genders over the years and across countries. We match the NOCs with countries and merge the resulting data frame with our base data. In the code chunk immediately below this, we read in the datasets and manipulate/add relevant variables.
@@ -110,7 +108,7 @@ As the second question is more about the overall performance of members of the W
 q1_df <- olympics_joined %>%
   filter(year >= 1922) %>%
   group_by(year, usa_ussr, season) %>%
-  summarize(medal_prop = (sum(medal_binary)/medal_sum))
+  summarize(medal_prop = (sum(medal_binary)/medal_sum), .groups = "drop")
 
 #create plot mapping USA/USSR/others medals over time
 q1_df %>%
@@ -151,8 +149,8 @@ q2_df <- olympics_joined %>%
   mutate(country = recode(country, "Germany" = "United Team of Germany (1956-1964)"),
          country = recode(country, "German Democratic Republic" = "East Germany"),
          nato_wp = as.factor(recode_if(nato_wp, country == "United Team of Germany (1956-1964)", "NATO" = "Both"))) %>%
-  group_by(country, nato_wp, year) %>%
-  summarize(medals_won = sum(medal_binary))
+  group_by(country, nato_wp) %>%
+  summarize(medals_won = sum(medal_binary), .groups = "drop")
 
 #create stacked bar chart mapping amount of medals won by country
 q2_df %>%
