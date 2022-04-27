@@ -70,7 +70,8 @@ class: inverse, middle, center
 --
 
 - Like this
-
+- How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
+- How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 ---
 
 ## Layouts
