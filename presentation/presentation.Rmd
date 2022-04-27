@@ -18,11 +18,18 @@ output:
 ```{r load-packages, include = FALSE}
 # Add any additional packages you need to this chunk
 # Remove any packages from this list that you're not using
-library(tidyverse)
 library(tidymodels)
-library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(tidyverse) # data manipulation
+library(psych) # describe function: statistical summary
+library(broom) # tidy function: statistical outputs into tibbles
+library(kableExtra) # make-up tables
+library(stargazer) # nice regression outputs
+library(here) # simplifies relative file paths
+library(countrycode) #get country names
+library(emojifont) # add emoji font
+library(cowplot) # combine plot
 ```
 
 ```{r setup, include=FALSE}
