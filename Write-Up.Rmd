@@ -59,7 +59,7 @@ olympics_joined <- olympics_joined %>%
                                     medal == "Bronze" ~ 1,
                                     TRUE ~ 0),
          nato_wp = case_when(country %in% nato ~ "NATO",
-                             country %in% wp ~ "Warsaw Pact", #CHANGE THIS to Soviet Union when figured out
+                             country %in% wp ~ "Warsaw Pact",
                              TRUE ~ "Non-Aligned or not applicable"),
          usa_ussr = case_when(noc == "URS" | noc == "RUS" ~ "USSR/Russia",
                               noc == "USA" ~ "USA",
@@ -126,7 +126,7 @@ q1_df %>%
   scale_y_continuous(breaks = seq(0, 1, 0.2),
                      name = "Proportion of Medals Won") +
   bg_theme +
-  theme(axis.text.x = element_text(hjust = 1, angle = 30, size = rel(0.9)),
+  theme(axis.text.x = element_text(hjust = 1, size = rel(0.9)),
         panel.spacing = unit(1.5, "lines")) +
   labs(title = "Olympic Performance of USSR/Russia and USA over Time",
        subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
@@ -135,9 +135,17 @@ q1_df %>%
 ```
 
 ```{r q1-analysis-plot-2}
+#create function to help recode necessary variables
+recode_if <- function(x, condition, ...) {
+  if_else(condition, recode(x, ...), x)
+}
+
 #create data frame with information relevant to create visualization
 q2_df <- olympics_joined %>%
   filter((nato_wp == "NATO" | nato_wp == "Warsaw Pact") & (year >= 1945 & year <= 1991)) %>%
+  mutate(country = recode(country, "Germany" = "United Team of Germany (1956-1964)"),
+         country = recode(country, "German Democratic Republic" = "East Germany"),
+         nato_wp = as.factor(recode_if(nato_wp, country == "United Team of Germany (1956-1964)", "NATO" = "Both"))) %>%
   group_by(country, nato_wp, year) %>%
   summarize(medals_won = sum(medal_binary))
 
@@ -145,24 +153,20 @@ q2_df <- olympics_joined %>%
 q2_df %>%
   ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won, fill = nato_wp)) +
   geom_col() +
-  scale_fill_manual(values = c("blue", "red")) +
+  scale_fill_manual(values = c("blue", "red", "violet")) +
   bg_theme +
-  labs(title = "Amount of Olympic Medals won by NATO/Warsaw Pact Member-States",
-       subtitle = "During the Cold War, 1945-1991",
+  labs(title = "Medals Won by NATO and Warsaw Pact Countries",
+       subtitle = "In Olympics during the Cold War, 1945-1991",
        x = "Number of Olympic Medals Won",
        y = "Country",
        fill = "Military Alliance")
-
-#to do: fix ordering of bars, fix germany
 ```
 
 ### Discussion
 
-Discussion (1-3 paragraphs): In the Discussion section, interpret the results of your analysis. Identify any trends revealed (or not revealed) by the plots. Speculate about why the data looks the way it does.
-
 The first plot shows that throughout most of the Cold War (visually represented as the space between the dashed lines), the Soviet Union won a higher proportion of medals than the United States did. The difference is particularly stark for the winter Olympics, where the Soviet Union maintained a steady lead over the United States ever since the inception of its Winter Olympics program in the 1950s. While the American performance has remained somewhat stable in the Summer Olympics and even improved in the Winter Olympics in the years following the dissolution of the USSR, the same cannot be said for Russia, the main successor state to the Soviet Union. The percentage of medals won by the USSR/Russia decreased immensely right before the dissolution of the USSR and afterwards, which is likely related to the economic and political upheaval the country went through in the late 1980s and early 1990s. Overall, the performance of both the United States and the Soviet Union during the Cold War was remarkable, which conforms with our expectations that both countries were eager to one-up one another in an effort to prove superiority.
 
-
+The second plot provides more context to the previous finding that the United States and the Soviet Union dominated the medal counts in the Olympic Games during the Cold War. East Germany and Hungary both earned a remarkable amount of medals, especially considering that only those East German medals were counted that were not won by the United Team of Germany that competed in the Olympics between 1956 and 1964. The only definitive conclusion we want to draw from this graph is that neither NATO nor the Warsaw Pact, that is to say, neither the capitalist nor the communist system produced a clear "winner" in terms of outperforming the other at the Olympics. While the Soviet Union won more medals than the United States, Italy and France won more medals than, for example, Romania and Poland. We speculate that the Olympics mattered more in some national contexts than others: for example, the high number of Olympic medals won by East and West Germany might reflect the direct competition the two were in and the high salience of the systemic differences between the two countries.
 
 ## Question 2
 
@@ -203,7 +207,7 @@ q2_p1 <- participate_sex %>%
   ggplot(aes(x = year, y = f_athletes_p)) +
   geom_line(aes(color = "Number of female athletes")) +
   geom_line(aes(x = year, y = f_games_p, 
-                color = "Games females compete in")) + 
+                color = "Disciplines females compete in")) + 
   facet_wrap(vars(season), scales = "free") +
   labs(title = "Female athletes participation in Olympic Games by season",
        subtitle = "From year 1900 to 2016",
@@ -213,11 +217,11 @@ q2_p1 <- participate_sex %>%
   scale_color_manual(name = "Proportion of",
                      breaks = c("Number of female athletes",  "Games females compete in"),
                      values=c("Number of female athletes" = "orange",
-                              "Games females compete in" = "steelblue")) +
+                              "Disciplines females compete in" = "steelblue")) +
   scale_color_manual(name = "Proportion of",
-                    breaks = c("Games females compete in", "Number of female athletes"),
+                    breaks = c("Disciplines females compete in", "Number of female athletes"),
                     values=c("Number of female athletes" = "#F4C300",
-                             "Games females compete in" = "#0085C7")) +
+                             "Disciplines females compete in" = "#0085C7")) +
   bg_theme
 q2_p1 
 ```
