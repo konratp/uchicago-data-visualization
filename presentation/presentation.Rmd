@@ -200,6 +200,23 @@ q1_df %>%
        color = "Country")
 ```
 
+```{r q1-dataframe-plot-2, include=FALSE}
+#create function to help recode necessary variables
+recode_if <- function(x, condition, ...) {
+  if_else(condition, recode(x, ...), x)
+}
+
+#create data frame with information relevant to create visualization
+q2_df <- olympics_joined %>%
+  filter((nato_wp == "NATO" | nato_wp == "Warsaw Pact") & (year >= 1945 & year <= 1991)) %>%
+  mutate(country = recode(country, "Germany" = "United Team of Germany (1956-1964)"),
+         country = recode(country, "German Democratic Republic" = "East Germany"),
+         nato_wp = as.factor(recode_if(nato_wp, country == "United Team of Germany (1956-1964)", "NATO" = "Both"))) %>%
+  group_by(country, nato_wp, year) %>%
+  summarize(medals_won = sum(medal_binary))
+
+```
+
 ---
 ```{r recode-olympics, echo = FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
