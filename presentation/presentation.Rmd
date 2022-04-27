@@ -159,7 +159,7 @@ bg_theme <- theme_minimal() +
 
 ```
 #
-```{r recode-olympics, include=FALSE}
+```{r dataframeq1plot1, include=FALSE}
 # In this chunk I'm creating data frame with information relevant to create visualization that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
 
 
@@ -170,12 +170,34 @@ q1_df <- olympics_joined %>%
 ```
 
 
-```{r plot-olympicstimeseries, echo = FALSE, warning = FALSE}
+```{r pq1-analysis-plot-1, echo = FALSE, warning = FALSE}
 # Code hidden with echo = FALSE
-# Uses data set from previous chunk
-# Creates plot for medal proportion over time
+# Uses data frame from previous chunk
+#create plot mapping USA/USSR/others medals over time
+q1_df %>%
   ggplot(mapping = aes(x = year, y = medal_prop, color = usa_ussr, na.rm = TRUE))+
-  geom_line()
+  geom_line() +
+  geom_vline(xintercept = 1945,
+             linetype = "dashed",
+             alpha = 0.75) +
+  geom_vline(xintercept = 1991,
+             linetype = "dashed",
+             alpha = 0.75) +
+  annotate("text", label = "End of World War II", x = 1945, y = 0.9, size = rel(2.3), hjust = 0) +
+  annotate("text", label = "Dissolution of the USSR", x = 1991, y = 0.5, size = rel(2.3), hjust = 1.01) +
+  facet_wrap(vars(season)) +
+  scale_color_manual(values = c("grey", "blue", "red")) +
+  scale_x_continuous(breaks = seq(1920, 2022, 12),
+                     name = "Year") +
+  scale_y_continuous(breaks = seq(0, 1, 0.2),
+                     name = "Proportion of Medals Won") +
+  bg_theme +
+  theme(axis.text.x = element_text(hjust = 1, size = rel(0.9)),
+        panel.spacing = unit(1.5, "lines")) +
+  labs(title = "Olympic Performance of USSR/Russia and USA over Time",
+       subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
+       caption = "Source: data from www.sports-reference.com in 2018",
+       color = "Country")
 ```
 
 ---
