@@ -14,40 +14,27 @@ Elated Anura
 
 ## Introduction
 
-The dataset we have picked, `olympics_data`, is available on kaggle and
-contains historical data on all modern Olympic games starting from
-Athens 1896 until 2016. The data was scraped from
-[www.sports-reference.com](www.sports-reference.com) in 2018 and
-wrangled by rgriffin. The dataset in its original form contains 271,116
-observations and 15 variables. Each row contains data on an individual
-athlete participating in an individual Olympic event.To give a broad
-overview, our data includes information on 66 different sports, 1,184
-different teams, 51 games, 230 different National Olympic Committees
-(NOCs), 42 different host cities across 35 different years. 222,552 of
-the athletes participated in the summer games, while 48,564 participated
-in the winter season. The description of variables is included in the
-codebook in the readme file under the data folder in this repository.
-Unfortunately, the dataset does not contain information about the
-countries represented in the Olympics, though it does provide the
-three-letter code of each NOC. Using the `countrycode` package and the
-`codelist_panel` contained in it, we add valuable information about the
-participating countries to the Olympics data and use this merged
-dataset, `olympics_joined`, to perform our analyses below.
+The Olympics have always been about politics as much as sports. The
+history of the Olympics mirrors the progress of many international and
+social activities. In this project, we name two broad topics - the
+across-state competition in the bipolar world after WWII and a long
+consisting issue around gender equity in the sports world. Our goal is
+to conduct data analysis and visualization to illustrate, first, before
+and after the cold war, how the Soviet Union compared to the United
+States (or, NATO to Warsaw Pact) competed in the Games; second, how
+female participation has changed over the years and which countries have
+seen highest contributions from females.
 
-Accounting for missing values, 72.5 percent of the participants in our
-data set are male and the rest are female. The average age of the
-competitors is 25.6 years, with the oldest competitor being 97, and the
-youngest being 10. The average athlete’s height is 175.4cm, the maximum
-height is 226cm, and the minimum height is 127 cm. The average weight of
-an athlete is 70.7 kilograms, with the maximum being 214kg and the
-minimum being 25kg. This richness of data on worldwide participation and
-achievements in Olympic Games across the years allows us to show
-political and historical trends influencing countries’ performances and
-to explore differences in participation and performance across genders
-over the years and across countries. We match the NOCs with countries
-and merge the resulting data frame with our base data. In the code chunk
-immediately below this, we read in the datasets and manipulate/add
-relevant variables.
+To answer the questions, we use a historical dataset, `olympics_data`,
+on the TidyTuesday repository, originally from
+[www.sports-reference.com](www.sports-reference.com). It has recorded
+the background and participation of each athlete in the summer and
+winter Olympics from 1896 until 2016. It contains a total of 271,116
+observations and 15 variables. We also combine the dataset from the
+`countrycode` package, to add in official country names. The variables
+under heavy usage include `noc` or `country`, `year`, `season`, `medal`,
+`sex`, `sport`, etc. For a more detailed codebook and data description,
+please refer to the `data` folder.
 
 ``` r
 #read in datasets
