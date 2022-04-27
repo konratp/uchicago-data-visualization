@@ -2,23 +2,17 @@ Visual Analysis of Olympics Performance
 ================
 Elated Anura
 
--   [Visual Analysis of Olympics
+  - [Visual Analysis of Olympics
     Performance](#visual-analysis-of-olympics-performance)
-    -   [Introduction](#introduction)
-    -   [Question 1 – The Olympics and the Cold
+      - [Introduction](#introduction)
+      - [Question 1 – The Olympics and the Cold
         War](#question-1--the-olympics-and-the-cold-war)
-    -   [Question 2 – Women in the
+      - [Question 2 – Women in the
         Olympics](#question-2--women-in-the-olympics)
 
 # Visual Analysis of Olympics Performance
 
 ## Introduction
-
-(1-2 paragraphs): Brief introduction to the dataset. You may repeat some
-of the information about the dataset provided in the introduction to the
-dataset on the TidyTuesday repository, paraphrasing on your own terms.
-Imagine that your project is a standalone document and the grader has no
-prior knowledge of the dataset.
 
 The dataset we have picked, `olympics_data`, is available on kaggle and
 contains historical data on all modern Olympic games starting from
@@ -181,13 +175,8 @@ and Warsaw Pact countries below.
 q1_df <- olympics_joined %>%
   filter(year >= 1922) %>%
   group_by(year, usa_ussr, season) %>%
-  summarize(medal_prop = (sum(medal_binary)/medal_sum))
-```
+  summarize(medal_prop = (sum(medal_binary)/medal_sum), .groups = "drop")
 
-    ## `summarise()` has grouped output by 'year', 'usa_ussr', 'season'. You can
-    ## override using the `.groups` argument.
-
-``` r
 #create plot mapping USA/USSR/others medals over time
 q1_df %>%
   ggplot(mapping = aes(x = year, y = medal_prop, color = usa_ussr, na.rm = TRUE))+
@@ -229,14 +218,9 @@ q2_df <- olympics_joined %>%
   mutate(country = recode(country, "Germany" = "United Team of Germany (1956-1964)"),
          country = recode(country, "German Democratic Republic" = "East Germany"),
          nato_wp = as.factor(recode_if(nato_wp, country == "United Team of Germany (1956-1964)", "NATO" = "Both"))) %>%
-  group_by(country, nato_wp, year) %>%
-  summarize(medals_won = sum(medal_binary))
-```
+  group_by(country, nato_wp) %>%
+  summarize(medals_won = sum(medal_binary), .groups = "drop")
 
-    ## `summarise()` has grouped output by 'country', 'nato_wp'. You can override
-    ## using the `.groups` argument.
-
-``` r
 #create stacked bar chart mapping amount of medals won by country
 q2_df %>%
   ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won, fill = nato_wp)) +
@@ -328,12 +312,12 @@ plot. This plot comes from a summarized table with the average
 proportion of female athletes and the proportion of games female
 athletes participate in over the years. The two measures are positioned
 on the y-axis and illustrated in different colors - and they are
-manually set to be in Olympic-logo colors! The year for each event is on
-the x-axis. The season information is demonstrated through two different
-facets. We choose the line plot format first because it can best
-visually represent the trend information. Second, it has an advantage in
-terms of data-ink-ratio for visualization, therefore it helps simplify
-the complexities in our aggregated data.
+manually set to be in Olympic-logo colors\! The year for each event is
+on the x-axis. The season information is demonstrated through two
+different facets. We choose the line plot format first because it can
+best visually represent the trend information. Second, it has an
+advantage in terms of data-ink-ratio for visualization, therefore it
+helps simplify the complexities in our aggregated data.
 
 For the second part, “Which countries have the highest numbers of female
 medalists or enjoy the most contributions from female athletes over the
@@ -461,14 +445,16 @@ q2_p2_2 <- top_15 %>%
        caption = "Source: data from www.sports-reference.com in 2018") + 
   bg_theme +
   theme(axis.title.y = element_blank(),
-        axis.text.y = element_text(size = rel(0.7)),
+        axis.text.y = element_blank(),
         panel.grid.major.y = element_blank()) 
 # Adding two plots together for comparison
-q2_p2 <- plot_grid(q2_p2_1, q2_p2_2, rel_widths = c(4, 3), nrow = 1,
-                   align = "hv", labels = c("Number", "Proportion"), label_size = 9)
+
+q2_p2 <- plot_grid(q2_p2_1, NULL, q2_p2_2, rel_widths = c(3.2, -0.7, 3), nrow = 1,
+                   align = "hv", labels = c(str_pad("Number", 22, "left", " "), "", 
+                                            str_pad("Percent", 23, "left", " ")), label_size = 9)
 title <- ggdraw() + 
   draw_label("Countries with the Highest Number of Female Olympic Medalists, 2000-2016",
-             fontface = 'bold', x = 0, hjust = -0.2, size = 12) +
+             fontface = 'bold', x = 0, hjust = -0.1, size = 12) +
   theme(plot.margin = margin(b = 10))
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```

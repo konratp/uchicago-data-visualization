@@ -296,7 +296,7 @@ q2_p2_2 <- top_15 %>%
         panel.grid.major.y = element_blank()) 
 # Adding two plots together for comparison
 
-q2_p2 <- plot_grid(q2_p2_1, NULL, q2_p2_2, rel_widths = c(3.2, -0.5, 3), nrow = 1,
+q2_p2 <- plot_grid(q2_p2_1, NULL, q2_p2_2, rel_widths = c(3.2, -0.7, 3), nrow = 1,
                    align = "hv", labels = c(str_pad("Number", 22, "left", " "), "", 
                                             str_pad("Percent", 23, "left", " ")), label_size = 9)
 title <- ggdraw() + 
