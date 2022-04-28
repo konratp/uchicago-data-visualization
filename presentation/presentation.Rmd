@@ -53,10 +53,10 @@ olympics_data <- read_csv(here("data", "olympics.csv"))
 style_mono_light(base_color = "#800000")
 ```
 
-Introduction
+# Introduction
 --
-- 
-1. Cold War Politics
+
+## 1. Cold War Politics
 
 
 --
@@ -76,7 +76,7 @@ Introduction
 
 
 
-2. Gender Equality
+## 2. Gender Equality
 --
 
 
