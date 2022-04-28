@@ -160,7 +160,7 @@ q1_df %>%
   bg_theme +
   theme(axis.text.x = element_text(hjust = 1, size = rel(0.9)),
         panel.spacing = unit(1.5, "lines")) +
-  labs(title = "Olympic Performance of USSR/Russia and USA over Time",
+  labs(title = str_wrap("Olympic Performance of USSR/Russia and USA over Time"),
        subtitle = "Proportion of Medals Won by Each Country in Summer and Winter Olympics",
        caption = "Source: data from www.sports-reference.com in 2018",
        color = "Country")
@@ -193,7 +193,7 @@ q2_df %>%
   geom_col() +
   scale_fill_manual(values = c("blue", "red", "magenta")) +
   bg_theme +
-  labs(title = "Medals Won by NATO and Warsaw Pact Countries",
+  labs(title = str_wrap("Medals Won by NATO and Warsaw Pact Countries"),
        subtitle = "In Olympics during the Cold War, 1945-1991",
        x = "Number of Olympic Medals Won",
        y = "Country",
@@ -235,7 +235,7 @@ q2_p1 <- participate_sex %>%
   geom_line(aes(x = year, y = f_games_p, 
                 color = "Disciplines females compete in")) + 
   facet_wrap(vars(season), scales = "free") +
-  labs(title = "Female Athletes Participation in the Olympic Games by Season",
+  labs(title = str_wrap("Female Athletes Participation in the Olympic Games by Season"),
        subtitle = "From 1900 to 2016",
        x = "Year",
        y = "Proportion",
