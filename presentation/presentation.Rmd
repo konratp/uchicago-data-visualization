@@ -96,6 +96,11 @@ style_mono_light(base_color = "#800000")
 - Data set source: [www.sports-reference.com](www.sports-reference.com)
 
 ---
+###The Olympics and the Cold War
+--
+
+####How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
+--
 
 ```{r recode-olympics, include=FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
@@ -193,6 +198,11 @@ q1_df %>%
 ```
 
 ---
+###The Olympics and the Cold War
+--
+
+####How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
+--
 
 ```{r q1-dataframe-plot-2, include=FALSE}
 #create function to help recode necessary variables
@@ -228,6 +238,11 @@ q2_df %>%
 ```
 
 ---
+###Gender Equality
+--
+
+####How has female participation changed in Olympic Games from 1900 to 2016?
+--
 ```{r Q2-1-female participation, include=FALSE, message=FALSE, warning=FALSE}
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
 # Create a summarized table for participation by gender for each season
@@ -281,7 +296,11 @@ q2_p1
 
 
 ---
+###Gender Equality
+--
 
+####Which countries have seen highest contributions from females?
+--
 ```{r Q2-2-countryranking_dataframe, dev='ragg_png', include=FALSE, warning=FALSE}
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
 # create the sum table for a wide table of each country and its' medals.
