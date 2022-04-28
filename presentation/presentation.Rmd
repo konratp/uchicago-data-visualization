@@ -56,7 +56,7 @@ style_mono_light(base_color = "#800000")
 # Introduction
 --
 
-## 1. Cold War Politics
+### 1. Cold War Politics
 
 
 --
@@ -76,7 +76,7 @@ style_mono_light(base_color = "#800000")
 
 
 
-## 2. Gender Equality
+### 2. Gender Equality
 --
 
 
