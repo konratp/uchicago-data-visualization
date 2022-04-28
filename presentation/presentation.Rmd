@@ -63,12 +63,12 @@ style_mono_light(base_color = "#800000")
 
 - How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
 --
--
+
 
 
 - How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 --
--
+
 
 
 
@@ -83,13 +83,13 @@ style_mono_light(base_color = "#800000")
 
 - How has female participation changed in Olympic Games from 1900 to 2016?
 --
--
+
 
 
 - Which countries have seen highest contributions from females?
 
 --
--
+
 
 
 
