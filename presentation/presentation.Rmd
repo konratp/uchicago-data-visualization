@@ -1,6 +1,6 @@
 ---
-title: "Olympics and Society -- Cold War Politics and Gender Equality in the Arena"
-subtitle: "US vs USSR, Females relative to Males"
+title: "Olympics and Society"
+subtitle: "Cold War Politics and Gender Equality in the Arena"
 author: "Elated Anura <br> Xinyu, Kamran, Konrat"
 institute: "University of Chicago"
 date: "`r Sys.Date()`"
