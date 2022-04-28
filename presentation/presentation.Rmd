@@ -1,7 +1,7 @@
 ---
 title: "Olympics and Society -- Cold War Politics and Gender Equality in the Arena"
 subtitle: "US vs USSR, Females relative to Males"
-author: "Elated Anura <br> Xinyue, Kamran, Konrat"
+author: "Elated Anura <br> Xinyu, Kamran, Konrat"
 institute: "University of Chicago"
 date: "`r Sys.Date()`"
 output:
@@ -39,7 +39,7 @@ knitr::opts_chunk$set(
   fig.retina = 3, 
   dpi = 300, 
   fig.width = 6, 
-  fig.asp = 0.618, 
+  fig.asp = 0.714, 
   out.width = "70%"
   )
 ```
@@ -47,8 +47,6 @@ knitr::opts_chunk$set(
 ```{r load-data, include=FALSE}
 #read in datasets
 olympics_data <- read_csv(here("data", "olympics.csv"))
-
-
 ```
 
 ```{r style-slides, echo = FALSE}
@@ -67,8 +65,6 @@ Introduction
 
 
 ---
-
-
 
 ```{r recode-olympics, include=FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
@@ -114,7 +110,7 @@ olympics_joined <- olympics_joined %>%
 
 #set theme for graphs
 bg_theme <- theme_minimal() +
-  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+  theme(plot.title = element_text(face = "bold", size = rel(1)),
         axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
         axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
         strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
@@ -133,7 +129,6 @@ q1_df <- olympics_joined %>%
   group_by(year, usa_ussr, season) %>%
   summarize(medal_prop = (sum(medal_binary)/medal_sum), .groups = "drop")
 ```
-
 
 
 ```{r pq1-analysis-plot-1, echo = FALSE, warning = FALSE}
@@ -197,7 +192,8 @@ q2_df %>%
        subtitle = "In Olympics during the Cold War, 1945-1991",
        x = "Number of Olympic Medals Won",
        y = "Country",
-       fill = "Military Alliance")
+       fill = "Military Alliance") +
+  theme(axis.text.y = element_text(size = rel(0.7)))
 ```
 
 ---
@@ -330,13 +326,12 @@ q2_p2_2 <- top_15 %>%
         axis.text.y = element_blank(),
         panel.grid.major.y = element_blank()) 
 # Adding two plots together for comparison
-
 q2_p2 <- plot_grid(q2_p2_1, NULL, q2_p2_2, rel_widths = c(3.2, -0.7, 3), nrow = 1,
                    align = "hv", labels = c(str_pad("Number", 22, "left", " "), "", 
-                                            str_pad("Percent", 23, "left", " ")), label_size = 9)
+                                            str_pad("Percent", 23, "left", " ")), label_size = 8)
 title <- ggdraw() + 
   draw_label("Countries with the Highest Number of Female Olympic Medalists, 2000-2016",
-             fontface = 'bold', x = 0, hjust = -0.1, size = 12) +
+             fontface = 'bold', x = 0, hjust = -0.1, size = 10) +
   theme(plot.margin = margin(b = 10))
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```
