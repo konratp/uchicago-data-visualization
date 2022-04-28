@@ -1,5 +1,5 @@
 ---
-title: "Olympic Games: Trends and Cross-Group Comparisons"
+title: "Olympics and Society -- Cold War Politics and Gender Equality in the Arena"
 subtitle: "US vs USSR, Females relative to Males"
 author: "Elated Anura <br> Xinyue, Kamran, Konrat"
 institute: "University of Chicago"
@@ -55,49 +55,20 @@ olympics_data <- read_csv(here("data", "olympics.csv"))
 style_mono_light(base_color = "#800000")
 ```
 
-class: inverse, middle, center
-
-# Using xaringan
-
----
-
-## xaringan
-
-- The presentation is created using the `xaringan` package
-
-- Use `---` to separate slides and `--` for incremental builds
-
+Introduction
 --
 
-- Like this
 - How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
+--
+-
+
+
 - How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
----
 
-## Layouts
-
-You can use plain text
-
-- or bullet points
-
-.pull-left[
-or text in two columns $^*$
-]
-.pull-right[
-- like
-- this
-]
-
-.footnote[
-[*] And add footnotes
-]
 
 ---
 
-## Code
 
-
-## Plots
 
 ```{r recode-olympics, include=FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
@@ -152,7 +123,8 @@ bg_theme <- theme_minimal() +
         legend.title = element_text(face = "bold",size = rel(0.6)),
         legend.text = element_text(size = rel(0.6)))
 ```
-#
+
+
 ```{r dataframeq1plot1, include=FALSE}
 
 #create data frame with information relevant to create visualization
@@ -161,6 +133,7 @@ q1_df <- olympics_joined %>%
   group_by(year, usa_ussr, season) %>%
   summarize(medal_prop = (sum(medal_binary)/medal_sum), .groups = "drop")
 ```
+
 
 
 ```{r pq1-analysis-plot-1, echo = FALSE, warning = FALSE}
@@ -192,6 +165,8 @@ q1_df %>%
        caption = "Source: data from www.sports-reference.com in 2018",
        color = "Country")
 ```
+
+---
 
 ```{r q1-dataframe-plot-2, include=FALSE}
 #create function to help recode necessary variables
@@ -278,6 +253,7 @@ q2_p1
 ```
 
 
+---
 
 ```{r Q2-2-countryranking_dataframe, dev='ragg_png', include=FALSE, warning=FALSE}
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
@@ -365,6 +341,5 @@ title <- ggdraw() +
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```
 
----
 
 
