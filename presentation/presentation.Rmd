@@ -96,10 +96,10 @@ style_mono_light(base_color = "#800000")
 - Data set source: [www.sports-reference.com](www.sports-reference.com)
 
 ---
-###The Olympics and the Cold War
+####The Olympics and the Cold War
 --
 
-####How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
+#####How has the dominance of the Soviet Union (/Russia as its main successor) and the United States changed throughout the cold war and after?
 --
 
 ```{r recode-olympics, include=FALSE}
@@ -198,10 +198,10 @@ q1_df %>%
 ```
 
 ---
-###The Olympics and the Cold War
+####The Olympics and the Cold War
 --
 
-####How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
+#####How do NATO and Warsaw Pact member-states compare in terms of medals won at the Olympics?
 --
 
 ```{r q1-dataframe-plot-2, include=FALSE}
@@ -238,10 +238,10 @@ q2_df %>%
 ```
 
 ---
-###Gender Equality
+####Gender Equality
 --
 
-####How has female participation changed in Olympic Games from 1900 to 2016?
+#####How has female participation changed in Olympic Games from 1900 to 2016?
 --
 ```{r Q2-1-female participation, include=FALSE, message=FALSE, warning=FALSE}
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
@@ -296,10 +296,10 @@ q2_p1
 
 
 ---
-###Gender Equality
+####Gender Equality
 --
 
-####Which countries have seen highest contributions from females?
+#####Which countries have seen highest contributions from females?
 --
 ```{r Q2-2-countryranking_dataframe, dev='ragg_png', include=FALSE, warning=FALSE}
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
@@ -384,6 +384,7 @@ title <- ggdraw() +
              fontface = 'bold', x = 0, hjust = -0.1, size = 10) +
   theme(plot.margin = margin(b = 10))
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
+
 ```
 
 
