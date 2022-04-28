@@ -102,13 +102,14 @@ or text in two columns $^*$
 ```{r recode-olympics, include=FALSE}
 # In this chunk I'm doing a bunch of analysis that I don't want to present 
 # in my slides. But I need the resulting data frame for a plot I want to present.
+
 countrycode <- codelist_panel %>%
   rename(noc = ioc,
          country = country.name.en) %>%
   select(noc, continent, country) %>%
   distinct()
 
-#amend datasets to include new variables and fill crucial missing values
+#amend countrycode dataset to  fill crucial missing values
 countrycode$noc[70] <- "GDR" #east germany
 countrycode$continent[70] <- "Europe"
 countrycode$noc[51] <- "TCH" #czechoslovakia
@@ -150,17 +151,15 @@ bg_theme <- theme_minimal() +
                                     margin = margin(t = 10)),
         legend.title = element_text(face = "bold",size = rel(0.6)),
         legend.text = element_text(size = rel(0.6)))
-
 ```
 #
 ```{r dataframeq1plot1, include=FALSE}
-# In this chunk I'm creating data frame with information relevant to create visualization that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
 
-
+#create data frame with information relevant to create visualization
 q1_df <- olympics_joined %>%
   filter(year >= 1922) %>%
   group_by(year, usa_ussr, season) %>%
-  summarize(medal_prop = (sum(medal_binary)/medal_sum))
+  summarize(medal_prop = (sum(medal_binary)/medal_sum), .groups = "drop")
 ```
 
 
@@ -206,18 +205,18 @@ q2_df <- olympics_joined %>%
   mutate(country = recode(country, "Germany" = "United Team of Germany (1956-1964)"),
          country = recode(country, "German Democratic Republic" = "East Germany"),
          nato_wp = as.factor(recode_if(nato_wp, country == "United Team of Germany (1956-1964)", "NATO" = "Both"))) %>%
-  group_by(country, nato_wp, year) %>%
-  summarize(medals_won = sum(medal_binary))
+  group_by(country, nato_wp) %>%
+  summarize(medals_won = sum(medal_binary), .groups = "drop")
 
 ```
 
 ```{r q1-plot-2, echo=FALSE, warning=FALSE}
 
-#create stacked bar chart mapping amount of medals won by country, only the plot will appear in the slides
+#create stacked bar chart mapping amount of medals won by country
 q2_df %>%
   ggplot(mapping = aes(y = reorder(country, medals_won), x = medals_won, fill = nato_wp)) +
   geom_col() +
-  scale_fill_manual(values = c("blue", "red", "violet")) +
+  scale_fill_manual(values = c("blue", "red", "magenta")) +
   bg_theme +
   labs(title = "Medals Won by NATO and Warsaw Pact Countries",
        subtitle = "In Olympics during the Cold War, 1945-1991",
@@ -254,15 +253,15 @@ participate_sex <- olympics_joined %>%
 ```{r female participation, echo = FALSE, warning = FALSE, message=FALSE}
 # Code hidden with echo = FALSE
 # Uses data set from previous chunk
-# Plots the time series plot for female participation
+# Plot the time series plot for female participation
 q2_p1 <- participate_sex %>% 
   ggplot(aes(x = year, y = f_athletes_p)) +
   geom_line(aes(color = "Number of female athletes")) +
   geom_line(aes(x = year, y = f_games_p, 
                 color = "Disciplines females compete in")) + 
   facet_wrap(vars(season), scales = "free") +
-  labs(title = "Female athletes participation in Olympic Games by season",
-       subtitle = "From year 1900 to 2016",
+  labs(title = "Female Athletes Participation in the Olympic Games by Season",
+       subtitle = "From 1900 to 2016",
        x = "Year",
        y = "Proportion",
        caption = "Source: data from www.sports-reference.com in 2018") +
@@ -330,12 +329,12 @@ q2_p2_1 <- top_15 %>%
   annotate("text", label = "Types of medals", x = 600, y = "United Kingdom", size = rel(2.6)) +
   annotate("rect", xmin = 400, xmax = 800, ymin = "Italy", ymax = "Japan", alpha = .1) +
   annotate("point", x = 500, y = "South Korea", colour = "#D6AF36", size = 1) +
-  annotate("point", x = 500, y = "Norway", colour = "#824A02", size = 1) +
-  annotate("point", x = 500, y = "France", colour = "#A7A7AD", size = 1) +
+  annotate("point", x = 500, y = "Norway", colour = "#A7A7AD", size = 1) +
+  annotate("point", x = 500, y = "France", colour = "#824A02", size = 1) +
   annotate("text", x = 600, y = "South Korea", label = "Gold", size = rel(2.4), colour = "#D6AF36") +
-  annotate("text", x = 600, y = "Norway", label = "Silver", size = rel(2.4), colour = "#824A02") +
-  annotate("text", x = 600, y = "France", label = "Bronze", size = rel(2.4), colour = "#A7A7AD") + 
-  labs(x = "Number of medals won by females ", y = "Countries",
+  annotate("text", x = 600, y = "Norway", label = "Silver", size = rel(2.4), colour = "#A7A7AD") +
+  annotate("text", x = 600, y = "France", label = "Bronze", size = rel(2.4), colour = "#824A02") + 
+  labs(x = "Number of Medals Won by Women", y = "Countries",
        caption = " ") +
   theme_minimal() +
   bg_theme +
@@ -348,18 +347,20 @@ q2_p2_2 <- top_15 %>%
              x = c(top_15$fp_medal[15], top_15$fp_medal[3], top_15$fp_medal[7]), 
              y = c("Romania", "China", "Netherlands"),
              size = 4, color = "#009F3D") +
-  labs(x = "Proportion of medals won by females", 
+  labs(x = "Proportion of Medals Won by Women", 
        caption = "Source: data from www.sports-reference.com in 2018") + 
   bg_theme +
   theme(axis.title.y = element_blank(),
-        axis.text.y = element_text(size = rel(0.7)),
+        axis.text.y = element_blank(),
         panel.grid.major.y = element_blank()) 
 # Adding two plots together for comparison
-q2_p2 <- plot_grid(q2_p2_1, q2_p2_2, rel_widths = c(4, 3), nrow = 1,
-                   align = "hv", labels = c("Number", "Percent"), label_size = 9)
+
+q2_p2 <- plot_grid(q2_p2_1, NULL, q2_p2_2, rel_widths = c(3.2, -0.7, 3), nrow = 1,
+                   align = "hv", labels = c(str_pad("Number", 22, "left", " "), "", 
+                                            str_pad("Percent", 23, "left", " ")), label_size = 9)
 title <- ggdraw() + 
-  draw_label("Top 15 countries in female contribution in Olympic Games (2000-2016)",
-             fontface = 'bold', x = 0, hjust = -0.2, size = 12) +
+  draw_label("Countries with the Highest Number of Female Olympic Medalists, 2000-2016",
+             fontface = 'bold', x = 0, hjust = -0.1, size = 12) +
   theme(plot.margin = margin(b = 10))
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 ```
