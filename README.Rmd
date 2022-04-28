@@ -185,6 +185,7 @@ For the second part, “Which countries have the highest numbers of female medal
 ```{r Q2-1-female participation, message=FALSE, warning=FALSE}
 # Create a summarized table for participation by gender for each season
 participate_sex <- olympics_joined %>% 
+  filter(year >= 1900) %>%
   group_by(year, season, sex) %>%
   summarize(count_sex = n_distinct(id), 
             count_game = n_distinct(sport), .groups = "drop")%>% 

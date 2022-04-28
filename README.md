@@ -303,12 +303,12 @@ plot. This plot comes from a summarized table with the average
 proportion of female athletes and the proportion of games female
 athletes participate in over the years. The two measures are positioned
 on the y-axis and illustrated in different colors - and they are
-manually set to be in Olympic-logo colors! The year for each event is on
-the x-axis. The season information is demonstrated through two different
-facets. We choose the line plot format first because it can best
-visually represent the trend information. Second, it has an advantage in
-terms of data-ink-ratio for visualization, therefore it helps simplify
-the complexities in our aggregated data.
+manually set to be in Olympic-logo colors\! The year for each event is
+on the x-axis. The season information is demonstrated through two
+different facets. We choose the line plot format first because it can
+best visually represent the trend information. Second, it has an
+advantage in terms of data-ink-ratio for visualization, therefore it
+helps simplify the complexities in our aggregated data.
 
 For the second part, “Which countries have the highest numbers of female
 medalists or enjoy the most contributions from female athletes over the
@@ -332,6 +332,7 @@ quantity through visualization.
 ``` r
 # Create a summarized table for participation by gender for each season
 participate_sex <- olympics_joined %>% 
+  filter(year >= 1900) %>%
   group_by(year, season, sex) %>%
   summarize(count_sex = n_distinct(id), 
             count_game = n_distinct(sport), .groups = "drop")%>% 
@@ -488,7 +489,7 @@ Our presentation can be found [here](presentation/presentation.html).
 ## Data
 
 rgriffin, 2018, `olympics.csv` from
-[Kaggle](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results?select=noc_regions.csv)
+[Kaggle](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results?select=noc_regions.csv).
 
 Vincent Arel-Bundock, 2022, `countrycode` package version 1.3.1 – [See
 documentation

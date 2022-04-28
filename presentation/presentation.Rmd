@@ -247,6 +247,7 @@ q2_df %>%
 # In this chunk I'm creating a data frame that I don't want to present in my slides. But I need the resulting data frame for a plot I want to present.
 # Create a summarized table for participation by gender for each season
 participate_sex <- olympics_joined %>% 
+  filter(year >= 1900) %>%
   group_by(year, season, sex) %>%
   summarize(count_sex = n_distinct(id), 
             count_game = n_distinct(sport), .groups = "drop")%>% 
@@ -262,9 +263,6 @@ participate_sex <- olympics_joined %>%
          count_game_2 = as.numeric(count_game_2)) %>%
   mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2),
          f_games_p = count_game_1 / sum(count_game_1, count_game_2))
-
-
-
 ```
 
 ```{r female participation, echo = FALSE, warning = FALSE, message=FALSE}
