@@ -4,7 +4,7 @@ author: by Elated Anura (Xinyu Wei, Kamran Ahmed, Konrat Pekkip)
 output: github_document
 ---
 
-```{r load-packages, echo = FALSE, message=FALSE, warning=FALSE}
+```{r load-packages, message=FALSE, warning=FALSE}
 #load relevant packages
 library(tidyverse) # data manipulation
 library(psych) # describe function: statistical summary
@@ -17,7 +17,7 @@ library(emojifont) # add emoji font
 library(cowplot) # combine plots
 ```
 
-```{r load-data, echo = FALSE}
+```{r load-data, message=FALSE, warning=FALSE}
 #read in datasets
 olympics_data <- read_csv(here("data", "olympics.csv"))
 
@@ -98,7 +98,7 @@ As the second question is more about the overall performance of members of the W
 
 ### Analysis
 
-```{r q1-analysis-plot-1}
+```{r q1-analysis-plot-1, message=FALSE, warning=FALSE}
 #create data frame with information relevant to create visualization
 q1_df <- olympics_joined %>%
   filter(year >= 1922) %>%
@@ -132,7 +132,7 @@ q1_df %>%
        color = "Country")
 ```
 
-```{r q1-analysis-plot-2}
+```{r q1-analysis-plot-2, message=FALSE, warning=FALSE}
 #create function to help recode necessary variables
 recode_if <- function(x, condition, ...) {
   if_else(condition, recode(x, ...), x)
@@ -313,10 +313,10 @@ Our presentation can be found [here](presentation/presentation.html).
 
 ## Data 
 
-Include a citation for your data here. 
-See http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840 for guidance on proper citation for datasets. 
-If you got your data off the web, make sure to note the retrieval date.
+rgriffin, 2018, `olympics.csv` from [Kaggle](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results?select=noc_regions.csv)
 
 ## References
-
-List any references here. You should, at a minimum, list your data source.
+Ellis Hughes (2022). tidytuesdayR: Access the Weekly 'TidyTuesday' Project Dataset. R package version
+  1.0.2. https://CRAN.R-project.org/package=tidytuesdayR
+  
+International Olympic Committee. October 28, 2013. Archived from the original [(PDF)](https://web.archive.org/web/20200422134610/https://stillmed.olympic.org/Documents/Reference_documents_Factsheets/The_Olympic_Summer_Games.pdf) on April 22, 2020. Retrieved March 17, 2017.

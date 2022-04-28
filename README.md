@@ -3,14 +3,72 @@ Arena
 ================
 by Elated Anura (Xinyu Wei, Kamran Ahmed, Konrat Pekkip)
 
-    ## Rows: 271116 Columns: 15
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (10): name, sex, team, noc, games, season, city, sport, event, medal
-    ## dbl  (5): id, age, height, weight, year
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+``` r
+#load relevant packages
+library(tidyverse) # data manipulation
+library(psych) # describe function: statistical summary
+library(broom) # tidy function: statistical outputs into tibbles
+library(kableExtra) # make-up tables
+library(stargazer) # nice regression outputs
+library(here) # simplifies relative file paths
+library(countrycode) #get country names
+library(emojifont) # add emoji font
+library(cowplot) # combine plots
+```
+
+``` r
+#read in datasets
+olympics_data <- read_csv(here("data", "olympics.csv"))
+
+countrycode <- codelist_panel %>%
+  rename(noc = ioc,
+         country = country.name.en) %>%
+  select(noc, continent, country) %>%
+  distinct()
+
+#amend countrycode dataset to  fill crucial missing values
+countrycode$noc[70] <- "GDR" #east germany
+countrycode$continent[70] <- "Europe"
+countrycode$noc[51] <- "TCH" #czechoslovakia
+countrycode$continent[51] <- "Europe"
+countrycode <- rbind(countrycode, c("URS", "Europe", "Soviet Union"))
+countrycode <- rbind(countrycode, c("FRG", "Europe", "West Germany"))
+
+#merge olympics and countrycode datasets
+olympics_joined <- left_join(olympics_data, unique(countrycode), by = "noc")
+
+#add/manipulate variables to merged dataset
+nato <- c("Belgium", "Canada", "Denmark", "France", "Iceland", "Italy", "Luxembourg", 
+          "Netherlands", "Norway", "Portugal", "United Kingdom", "United States",
+          "Greece", "Turkey", "West Germany", "Germany", "Spain")
+wp <- c("Russia", "Hungary", "Bulgaria", "Poland", "German Democratic Republic", 
+        "Romania", "Czechoslovakia", "URS", "Soviet Union")
+olympics_joined <- olympics_joined %>%
+  mutate(medal_binary = ifelse(!is.na(medal), 1, 0),
+         medal_weighted = case_when(medal == "Gold" ~ 3,
+                                    medal == "Silver" ~ 2,
+                                    medal == "Bronze" ~ 1,
+                                    TRUE ~ 0),
+         nato_wp = case_when(country %in% nato ~ "NATO",
+                             country %in% wp ~ "Warsaw Pact",
+                             TRUE ~ "Non-Aligned or not applicable"),
+         usa_ussr = case_when(noc == "URS" | noc == "RUS" ~ "USSR/Russia",
+                              noc == "USA" ~ "USA",
+                              TRUE ~ "Other")) %>%
+  group_by(games) %>%
+  mutate(medal_sum = sum(medal_binary))
+
+#set theme for graphs
+bg_theme <- theme_minimal() +
+  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+        axis.title.x = element_text(margin = margin(t = 10), size = rel(0.8)),
+        axis.title.y = element_text(margin = margin(r = 10),size = rel(0.8)),
+        strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0.5),
+        plot.caption = element_text(face = "italic",size = rel(0.8), 
+                                    margin = margin(t = 10)),
+        legend.title = element_text(face = "bold",size = rel(0.6)),
+        legend.text = element_text(size = rel(0.6)))
+```
 
 ## Introduction
 
@@ -245,12 +303,12 @@ plot. This plot comes from a summarized table with the average
 proportion of female athletes and the proportion of games female
 athletes participate in over the years. The two measures are positioned
 on the y-axis and illustrated in different colors - and they are
-manually set to be in Olympic-logo colors! The year for each event is on
-the x-axis. The season information is demonstrated through two different
-facets. We choose the line plot format first because it can best
-visually represent the trend information. Second, it has an advantage in
-terms of data-ink-ratio for visualization, therefore it helps simplify
-the complexities in our aggregated data.
+manually set to be in Olympic-logo colors\! The year for each event is
+on the x-axis. The season information is demonstrated through two
+different facets. We choose the line plot format first because it can
+best visually represent the trend information. Second, it has an
+advantage in terms of data-ink-ratio for visualization, therefore it
+helps simplify the complexities in our aggregated data.
 
 For the second part, “Which countries have the highest numbers of female
 medalists or enjoy the most contributions from female athletes over the
@@ -429,12 +487,16 @@ Our presentation can be found [here](presentation/presentation.html).
 
 ## Data
 
-Include a citation for your data here. See
-<http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840> for guidance
-on proper citation for datasets. If you got your data off the web, make
-sure to note the retrieval date.
+rgriffin, 2018, `olympics.csv` from
+[Kaggle](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results?select=noc_regions.csv)
 
 ## References
 
-List any references here. You should, at a minimum, list your data
-source.
+Ellis Hughes (2022). tidytuesdayR: Access the Weekly ‘TidyTuesday’
+Project Dataset. R package version 1.0.2.
+<https://CRAN.R-project.org/package=tidytuesdayR>
+
+International Olympic Committee. October 28, 2013. Archived from the
+original
+[(PDF)](https://web.archive.org/web/20200422134610/https://stillmed.olympic.org/Documents/Reference_documents_Factsheets/The_Olympic_Summer_Games.pdf)
+on April 22, 2020. Retrieved March 17, 2017.
