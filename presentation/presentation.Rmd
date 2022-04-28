@@ -15,6 +15,19 @@ output:
       countIncrementalSlides: false
 ---
 
+<style>
+
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+</style>
+
 ```{r load-packages, include = FALSE}
 # Add any additional packages you need to this chunk
 # Remove any packages from this list that you're not using
@@ -40,7 +53,7 @@ knitr::opts_chunk$set(
   dpi = 300, 
   fig.width = 6, 
   fig.asp = 0.714, 
-  out.width = "60%"
+  out.width = "100%"
   )
 ```
 
@@ -166,7 +179,7 @@ q1_df <- olympics_joined %>%
   summarize(medal_prop = (sum(medal_binary)/medal_sum), .groups = "drop")
 ```
 
-
+.center2[
 ```{r pq1-analysis-plot-1, echo = FALSE, warning = FALSE}
 # Code hidden with echo = FALSE
 # Uses data frame from previous chunk
@@ -196,7 +209,7 @@ q1_df %>%
        caption = "Source: data from www.sports-reference.com in 2018",
        color = "Country")
 ```
-
+]
 ---
 ####The Olympics and the Cold War
 --
@@ -221,6 +234,7 @@ q2_df <- olympics_joined %>%
 
 ```
 
+.center2[
 ```{r q1-plot-2, echo=FALSE, warning=FALSE}
 
 #create stacked bar chart mapping amount of medals won by country
@@ -236,7 +250,7 @@ q2_df %>%
        fill = "Military Alliance") +
   theme(axis.text.y = element_text(size = rel(0.7)))
 ```
-
+]
 ---
 ####Gender Equality
 --
@@ -264,7 +278,7 @@ participate_sex <- olympics_joined %>%
   mutate(f_athletes_p = count_sex_1 / sum(count_sex_1, count_sex_2),
          f_games_p = count_game_1 / sum(count_game_1, count_game_2))
 ```
-
+.center2[
 ```{r female participation, echo = FALSE, warning = FALSE, message=FALSE}
 # Code hidden with echo = FALSE
 # Uses data set from previous chunk
@@ -291,7 +305,7 @@ q2_p1 <- participate_sex %>%
   bg_theme
 q2_p1 
 ```
-
+]
 
 ---
 ####Gender Equality
@@ -330,7 +344,7 @@ top_15 <- medalist_rank %>%
 
 ```
 
-
+.center2[
 ```{r plot-top15countries, echo = FALSE, warning = FALSE}
 # Code hidden with echo = FALSE
 # Uses data frame from previous chunk
@@ -384,6 +398,6 @@ title <- ggdraw() +
 plot_grid(title, q2_p2, ncol = 1, rel_heights = c(0.1, 1))
 
 ```
-
+]
 
 
