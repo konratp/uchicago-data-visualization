@@ -1,6 +1,48 @@
-Proposal
+Data Visualization Project 2 Proposal
 ================
-Peewee Marten
-2022-05-10
+Peewee Marten (Anshuman Pal, Konrat Pekkip)
 
-This is where the proposal will go.
+-   [Comparing Fluctuations in Performances among Men and Women in
+    Professional
+    Tennis](#comparing-fluctuations-in-performances-among-men-and-women-in-professional-tennis)
+    -   [Goals](#goals)
+    -   [Plan of Attack](#plan-of-attack)
+    -   [Repository Organization](#repository-organization)
+
+# Comparing Fluctuations in Performances among Men and Women in Professional Tennis
+
+\[Introduction to the topic and one-sentence description of high-level
+goals\]
+
+A one sentence description of your high-level goal (such as the ones
+listed under Ideas above.
+
+## Goals
+
+A one to two paragraph description of your goals, including your
+motivation. Depending on the focus of your project, the following might
+go in here.
+
+### Data
+
+If using particular dataset(s), a brief description of each dataset
+including the reason why you chose the particular dataset, its dataset,
+its dimensions and any other relevant metadata. (Make sure to load the
+data and use inline code for some of this information.)
+
+### Research Question(s)
+
+If answering a particular research question, the question itself and the
+reason why you chose this question.
+
+## Plan of Attack
+
+A weekly “plan of attack” outlining your steps to complete your project
+and including the team member(s) assigned to that task.
+
+## Repository Organization
+
+The final organization of your project repository. This means describing
+the project organization in your proposal as well as implementing that
+organization in your repo. Create any folders needed and place a
+README.md in each folder explaining what goes in there.
