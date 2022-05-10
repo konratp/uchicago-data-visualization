@@ -1,0 +1,21 @@
+---
+title: "Proposal"
+author: "Peewee Marten (Anshuman Pal, Konrat Pekkip)"
+output: github_document
+---
+
+This is where the proposal will go.
+
+components:
+
+one-sentence description of high-level goals
+
+one to two paragraph description of our goals
+
+  If using particular dataset(s), a brief description of each dataset including the reason why you chose the particular dataset, its dataset, its dimensions and any other relevant metadata. (Make sure to load the data and use inline code for some of this information.)
+  
+  If answering a particular research question, the question itself and the reason why you chose this question.
+  
+A weekly “plan of attack” outlining your steps to complete your project and including the team member(s) assigned to that task.
+
+The final organization of your project repository. This means describing the project organization in your proposal as well as implementing that organization in your repo. Create any folders needed and place a README.md in each folder explaining what goes in there.

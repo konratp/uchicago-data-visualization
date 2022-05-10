@@ -1,6 +1,6 @@
 ---
-title: Project 2
-author: Peewee Marten (Anshuman Pal, Konrat Pekkip)
+title: "Project 2"
+author: "Peewee Marten (Anshuman Pal, Konrat Pekkip)"
 output: github_document
 ---
 
