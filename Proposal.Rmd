@@ -1,0 +1,8 @@
+---
+title: "Proposal"
+author: "Peewee Marten"
+date: '2022-05-10'
+output: github_document
+---
+
+This is where the proposal will go.
