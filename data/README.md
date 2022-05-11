@@ -9,6 +9,6 @@ https://github.com/JeffSackmann/tennis_wta
 and  
 https://github.com/JeffSackmann/tennis_atp .
 
-Each folder contains its separate `readme.md` file describing the variables contained in the data files. 
-There are two kinds of data files in each folder -- there is one file for rankings (called `rankings.csv`), 
-and then several files tracking match statistics in a calendar year (one file for each year).
+Each folder contains its separate `readme.md` file, written by the original data curator Jeff Sackmann, describing the variables contained in the data files. 
+There are two kinds of data files in each folder -- there are files for player rankings (one file for each decade), 
+and then also files tracking match statistics in a calendar year (one file for each year).
