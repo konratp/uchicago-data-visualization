@@ -1,0 +1,6 @@
+- `dog_travel.csv`: https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-12-17
+- `state-list.csv`: Created using `state.abb` and `state.name`
+- `country-pop.csv`: https://data.worldbank.org/indicator/SP.POP.TOTL
+- Newspaper headlines: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/HSZ2QL
+	- `baltimore_sun_2019.csv`
+	- `chicago_sun_times_2019.csv`

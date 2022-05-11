@@ -1,0 +1,39 @@
+---
+title: "Homework 03"
+author: "INSERT YOUR NAME HERE"
+output: github_document
+---
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+# add any other packages you use here
+```
+
+1.  **Adopt, don’t shop.**
+
+```{r label-me-1}
+
+```
+
+2.  **Country populations**
+
+```{r label-me-2}
+
+```
+
+3.  **Battle of the newspapers**
+
+```{r label-me-3}
+
+```
+
+4.  **Brexit**
+
+```{r label-me-4}
+
+```
+
+
+
+
+
