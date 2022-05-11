@@ -9,26 +9,44 @@ output:
 
 # Comparing Fluctuations in Performances among Men and Women in Professional Tennis
 
-[Introduction to the topic and one-sentence description of high-level goals]
-
-A one sentence description of your high-level goal (such as the ones listed under Ideas above.
+In this data visualization project, we are interested in gaining a better understanding of trends and fluctuations in professional Tennis over the years. To accomplish this, we plan on building a shiny app that lets users interactively explore the statistics and historical trajectories of professional Tennis.
 
 ## Goals
 
-A one to two paragraph description of your goals, including your motivation. Depending on the focus of your project, the following might go in here.
+While neither Anshuman nor Konrat are particularly talented Tennis players, we are intrigued by the sport and the extensive data collection that followers and organizers of professional Tennis events have engaged in the last century. There is a vast amount of data available on ATP and WTA tournaments which we seek to make accessible by building a shiny app that lets users explore different dynamics underlying the data.
 
 ### Data
+
+TO BE FILLED IN -- BOTH HERE AND ALSO DESCRIBE THE DATASET IN THE [README FILE](Data/README.Rmd) OF THE DATA FOLDER
 
 If using particular dataset(s), a brief description of each dataset including the reason why you chose the particular dataset, its dataset, its dimensions and any other relevant metadata. (Make sure to load the data and use inline code for some of this information.)
 
 ### Research Question(s)
 
-If answering a particular research question, the question itself and the reason why you chose this question.
+Question 1: Does the (long-term) fluctuation in rankings differ significantly between men and women?
+
+Question 2: Does the (short-term) fluctuation in matches (measured by tracking average number of service breaks per match in a season) differ significantly between men and women?
+
+The first question concerns long-term fluctuation in professional Tennis. A lot of Tennis players experience highs and lows, and very few constantly remain successul at the same level throughout their career. Based on our perception of the sport, we believe that such long-term fluctuation might be more pronounced in women's Tennis than men's Tennis.
+
+The second question concerns short-term fluctuations. By measuring the average number of service breaks per match in a season, we hope to see if there are significant differences in how men and women perform within given matches.
+
+For both of these questions, we want to restrict our analysis to matches played since the year 2000, and focus on players who at some point entered the top-20 of their respective rankings.
 
 ## Plan of Attack
 
-A weekly “plan of attack” outlining your steps to complete your project and including the team member(s) assigned to that task.
+Week 1 (beginning May 2nd): Meet to brainstorm topics and potential visualization strategies.
+
+Week 2: (beginning May 9th): Finalize the proposal and begin peer-review process.
+
+Week 3: (beginning May 16th): Finalize peer-review process and incorporate peer-review edits into the project.
+
+Week 4: (beginning May 23rd): Do the bulk of the coding work and finalize the write-up.
+
+Week 5: (beginning May 30th): Finalize the coding work and the presentation.
 
 ## Repository Organization
+
+As it stands now, this repository contains several files and folders. This proposal exists in the [Proposal folder](Proposal), and our data can be found in the [Data folder](Data). Eventually, the [Presentation folder](Presentation) will contain our presentation, while the [README file](README.md) in the main repository will contain the write-up of our results. Furthermore, depending on whether or not we will go through with the plan to build a shiny app, we might create another folder to store .Rmd files and R scripts relevant for our analysis.
 
 The final organization of your project repository. This means describing the project organization in your proposal as well as implementing that organization in your repo. Create any folders needed and place a README.md in each folder explaining what goes in there.

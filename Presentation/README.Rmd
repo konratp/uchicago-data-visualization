@@ -1,0 +1,12 @@
+---
+title: "README"
+author: "Peewee Marten (Anshuman Pal, Konrat Pekkip)"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
+## Description of the Presentation Folder
+
+Currently, this folder is empty. Eventually, it will contain our presentation slides.
