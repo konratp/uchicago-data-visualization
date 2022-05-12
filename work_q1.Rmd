@@ -1,0 +1,151 @@
+---
+title: "analysis - ATP and WTA rankings"
+output: html_document
+date: '2022-05-11'
+---
+
+```{r setup, include=FALSE}
+# load packages
+library(tidyverse)
+library(colorspace)
+library(scales)
+library(lubridate)
+library(readr)
+
+# set default theme for ggplot2
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 16))
+# set default figure parameters for knitr
+knitr::opts_chunk$set(
+  fig.width = 8, fig.asp = 0.618, fig.retina = 3,
+  dpi = 300, out.width = "60%"
+)
+# dplyr print min and max
+options(dplyr.print_max = 6, dplyr.print_min = 6)
+```
+
+## Import data
+
+```{r import_data}
+rankings <- read_csv("data/atp/atp_rankings_80s.csv") # NB: ranking points are given from 90s onwards.
+
+rankings %>%  str
+rankings %>% head
+
+# keep top 20 or 50 or 100 ranked players only. Rankings go up to 1300.
+rankings = rankings %>% filter(rank < 20)
+
+```
+
+```{r load_all_files, echo=FALSE}
+# read in all ranking csv files
+
+mydir = "./data/atp/"
+myfiles = list.files(path=mydir, pattern="atp_rankings*", full.names=TRUE)
+myfiles 
+
+rankings_all =  
+  myfiles %>% 
+  map_df(~read_csv(.))
+
+rankings_all = rankings_all %>% filter(rank < 20)
+rankings_all
+```
+
+
+```{r date_column}
+# convert ranking_date to a Date object -------------------------------------
+rankings = rankings %>% 
+  mutate(rankingDate = ymd(ranking_date) ) %>% 
+  select(-ranking_date)
+# rankings
+
+```
+## Plot sample trajectories
+```{r sample_trajectories}
+rankings$player %>%  unique
+
+# rankings %>%  filter(player %in% c(101736, 102338, 101948)) %>% 
+rankings %>%  filter(player %in% c(100437, 100284, 100428)) %>% 
+  ggplot(aes( x= rankingDate, y = rank, colour= as.factor(player) )) +
+  geom_line(alpha=0.2) +
+  geom_point() +
+  scale_colour_discrete_qualitative("Dark 3")
+```
+## Note: We could collect statistics for ranking *points* instead of the rank itself. However, points are only awarded from the 90s onwards, so to be able to treat previous decades, we look at the rank itself.
+## Note 2: This means that the fluctuations will have objectively small values. 
+
+```{r collect_statistics}
+rankingStats = rankings %>%  
+  group_by(player) %>% 
+  summarise(
+    meanRanking = mean(rank, na.rm = TRUE),
+    spreadRanking = sd(rank, na.rm = TRUE)
+  ) %>% 
+  na.omit()
+rankingStats 
+
+sum(rankingStats$spreadRanking)/nrow(rankingStats)
+
+```
+
+```{r create_function}
+calculate_fluctuations_rankings <- function(rankings_df, NPLAYERS) {
+  
+  # keep top NPLAYERS players only -------------------------------------
+  # Suggest NPLAYERS=20, 50 or 100. Rankings go up to 1300.
+  rankings = rankings_df %>% filter(rank < NPLAYERS)
+  
+  # convert ranking_date to a Date object -------------------------------------
+  rankings = rankings %>% 
+    mutate(rankingDate = ymd(ranking_date) ) %>% 
+    select(-ranking_date)
+  
+  # summarise and collect statistics -------------------------------------
+  rankingStats = rankings %>%  
+    group_by(player) %>% 
+    summarise(
+      meanRanking = mean(rank, na.rm = TRUE),
+      spreadRanking = sd(rank, na.rm = TRUE),
+      # meanPoints = mean(points),
+      # spreadPoints = sd(points)
+    ) %>% 
+    na.omit() 
+  
+  # get fluctuations averaging over all players -------------------------------------
+  avgSpread_ranking = sum(rankingStats$spreadRanking, na.rm = TRUE)/nrow(rankingStats)
+  # avgSpread_points = sum(rankingStats$spreadPoints, na.rm = TRUE)/nrow(rankingStats)
+  
+  # return(list(rankingStats = rankingStats, avgSpread_rankings = avgSpread_ranking))
+  return(avgSpread_ranking)
+}
+
+
+rankings80 <- read_csv("data/atp/atp_rankings_80s.csv") # NB: ranking points are given from 90s onwards.
+stats_top20_80 = calculate_fluctuations_rankings(rankings80, 20)
+
+rankings90 <- read_csv("data/atp/atp_rankings_90s.csv") # NB: ranking points are given from 90s onwards.
+stats_top20_90 = calculate_fluctuations_rankings(rankings90, 20)
+
+rankings00 <- read_csv("data/atp/atp_rankings_00s.csv") # NB: ranking points are given from 90s onwards.
+stats_top20_00 = calculate_fluctuations_rankings(rankings00, 20)
+
+rankings10 <- read_csv("data/atp/atp_rankings_10s.csv") # NB: ranking points are given from 90s onwards.
+stats_top20_10 = calculate_fluctuations_rankings(rankings10, 20)
+
+rankings20 <- read_csv("data/atp/atp_rankings_20s.csv") # NB: ranking points are given from 90s onwards.
+stats_top20_20 = calculate_fluctuations_rankings(rankings20, 20)
+```
+```{r}
+
+list_dfs = list(rankings80,rankings90,rankings00,rankings10,rankings20)
+fluctuations_top20 = lapply(list_dfs, calculate_fluctuations_rankings, 20)
+
+as.numeric(unlist(fluctuations_top20))
+
+# stats_top20_80$avgSpread_rankings
+# stats_top20_90$avgSpread_rankings
+# stats_top20_00$avgSpread_rankings
+# stats_top20_10$avgSpread_rankings
+# stats_top20_20$avgSpread_rankings
+```
+
