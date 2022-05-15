@@ -1,19 +1,76 @@
 ---
 title: "Homework 03"
-author: "INSERT YOUR NAME HERE"
+author: "Konrat Pekkip"
 output: github_document
 ---
 
+## Questions
+
+For question 1, how do you set the sequences/breaks for the x axis based on values in the data? e.g. sequence between xmin and xmax by arbitrary number?
+
+For question 1 map part, I get the following error: "old-style crs object detected; please recreate object with a recent sf::st_crs()" -- Is that ok?
+
 ```{r load-packages, message = FALSE}
+#load required packages
 library(tidyverse)
-# add any other packages you use here
+library(sf)
+library(ggmap)
+library(geofacet)
+library(urbnmapr)
+library(colorspace)
 ```
 
 1.  **Adopt, don’t shop.**
 
-```{r label-me-1}
+```{r exercise-1-distribution}
+#read data
+dogs <- read_csv("data/dog_travel.csv")
 
+#calculate number of dogs available for adoption per state
+dogs_count <- dogs %>%
+  filter(contact_state != "17325") %>%
+  group_by(contact_state) %>%
+  summarize(count = n())
+
+#create histogram showing the distribution of dogs up for adoption by state
+ggplot(data = dogs_count,
+       mapping = aes(x = count)) +
+  geom_histogram(binwidth = 25, fill = "deepskyblue", color = "black") +
+  theme_minimal() +
+  scale_y_continuous(breaks = seq(0, 10, by = 2)) +
+  scale_x_continuous(breaks = seq(0, 1000, by = 200)) +
+  labs(title = "Distribution of Number of Dogs Up for Adoption by U.S. State",
+       subtitle = "Observations Includes Data for 44 U.S. States",
+       x = "Number of Dogs up for Adoption",
+       y = "Number of States",
+       caption = "Source: The Tidy Tuesday Project / The Pudding")
 ```
+
+Based on the histogram printed above, one can see that in a majority of states, less than 200 dogs were up for adoption, and a significant number of states had less than 100 dogs up for adoption. There is one outlier state that stands out in particular, at over 1000 dogs up for adoption. Overall, the distribution appears right-skewed, indicating that the median number of dogs up for adoption is lesser than the mean number of dogs up for adoption.
+
+```{r exercise-1-map}
+#create a map indicating number of dogs available for adoption per state
+states_sf <- get_urbn_map("states", sf = TRUE)
+
+dogs_map <- dogs_count %>%
+  rename(state_abbv = contact_state)
+
+dogs_states <- full_join(dogs_map, states_sf, by = "state_abbv")
+
+ggplot(data = dogs_states) +
+  geom_sf(mapping = aes(fill= log10(count), geometry = geometry)) +
+  theme_void() +
+  theme(axis.text = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  scale_fill_viridis_b() +
+  labs(title = "Number of Dogs Up for Adoption by U.S. State",
+       subtitle = "Logarithmically Transformed, Including Data for 44 U.S. States",
+       caption = "Source: The Tidy Tuesday Project / The Pudding",
+       fill = "Number of Dogs,\nTransformed with Log10")
+```
+
+The map above indicates the number of dogs up for adoption by U.S. state, logarithmically transformed. One can discern some regional patterns: It appears as though many East Coast states have higher numbers of dogs up for adoption, while states on the West Coast boast lower numbers. The states with the least dogs up for adoption appear to be in the U.S. South, specifically Texas and its neighbors to the East, as well as Kansas. The state with the highest number of dogs up for adoption is Virginia. Finally, there is a range of states that do not have any reported data on the matter, most of which are clustered in the Pacific Northwest of the country, as well as Alaska and Hawai'i.
 
 2.  **Country populations**
 
