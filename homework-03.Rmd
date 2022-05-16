@@ -14,6 +14,12 @@ For question 2, can you switch between M and T suffix once specific number is re
 
 For question 2, how do you set the year for which factors are reordered? How can you make them shift based on highest population?
 
+For question 3, why does faceted plot not order words in descending order?
+
+for question 3, is there a way to reorder facets?
+
+Why does the document not knit?
+
 ```{r load-packages, message = FALSE}
 #load required packages
 library(tidyverse)
@@ -26,6 +32,7 @@ library(gganimate)
 library(scales)
 library(tidytext)
 library(knitr)
+library(patchwork)
 ```
 
 1.  **Adopt, don’t shop.**
@@ -100,30 +107,49 @@ pop_subset <- population %>%
   group_by(date) %>%
   mutate(ranked_pop = rank(-SP.POP.TOTL, ties.method = "first"))
 
-#create a racing bar chart animating the population change in the 10 countries subsetted previously
-ggplot(data = pop_subset,
-       mapping = aes(y = fct_reorder(country, SP.POP.TOTL, .desc = FALSE), x = SP.POP.TOTL, fill = country)) +
-  geom_col(show.legend = FALSE) +
-  scale_fill_discrete_qualitative(palette = "Pastel 1") +
-  scale_x_continuous(labels = label_number(suffix = "M",
-                                           scale = 1e-6),
-                     breaks = seq(0, 1500000000, by = 150000000)) +
+#create static bar chart with facets for each year
+pop_static <- ggplot(data = pop_subset,
+       mapping = aes(y = fct_reorder(as.factor(ranked_pop), SP.POP.TOTL, .desc = FALSE), x = SP.POP.TOTL, fill = country)) + 
+  geom_col(show.legend = FALSE) + 
+  geom_text(
+    hjust = "right",
+    aes(label = country),
+    x = -10000000
+  ) +
+  facet_wrap(vars(date)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
-        panel.grid.minor = element_blank()) +
+        panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        axis.text.y = element_blank()) +
   aes(group = country) +
-  transition_states(date, 3, 1) +
+  scale_fill_discrete_qualitative(palette = "Pastel 1") +
+  scale_x_continuous(limits = c(-500000000, 1500000000),
+                     labels = label_number(suffix = "M",
+                                           scale = 1e-6),
+                     breaks = seq(0, 1500000000, by = 150000000))
+
+#animate static bar chart
+pop_static +
+  facet_null() +
+  aes(group = country) +
+  transition_time(as.integer(date)) +
   labs(title = "Population Change over Time\nfor 10 Most Populous Countries as of 2020",
-     subtitle = "Year: {closest_state}",
+     subtitle = "Year: {frame_time}",
      y = "Country",
      x = "Population Size")
+
+
+
+{frame_along}
+{closest_state}
 ```
 
 In this racing animation, one can see that China and India have been the most populous countries since the 1970s, with the United States in a distant third place. One can also see tremendous population growth throughout for almost all of these countries over time, with the exception of Russia, where population growth, if present at all, is more subdued.
 
 3.  **Battle of the newspapers**
 
-```{r exercise-3}
+```{r exercise-3-table}
 #load data
 chicago <- read_csv("data/chicago_sun_times_2019.csv")
 baltimore <- read_csv("data/baltimore_sun_2019.csv")
@@ -155,10 +181,81 @@ kable(x = baltimore_words,
 
 Comparing the 20 most common words in headlines from the Chicago Sun Times and the Baltimore Sun in 2019, it appears as though words related to criminal activity occur more often in the Chicago Sun Times. For instance, the words "police", "shot", "killed", "charged", and "shooting" are all among the 20 most used for the Chicago Sun Times, while the only apparently crime-related words among the 20 most used words for the Baltimore Sun is "police". The words most commonly occuring in headlines in the Baltimore Sun instead seem more related to politics: for example, the words "trump", "state", "county", and "school" may all be related to political topics. Another observation is that the Chicago Sun Times covers local sports teams as well, as indicated by the words "bears", "cubs", "white", and "sox" all showing up among the 20 most used in headlines of the Chicago Sun Times. No Baltimore sports team name, as far as I'm informed, shows up in the 20 most used words in headlines of the Baltimore Sun.
 
+```{r exercise-3-barchart}
+#barplot for chicago sun times
+chicago_plot <- chicago_words %>%
+  ggplot(mapping = aes(y = fct_reorder(word, n), x = n)) +
+  geom_col(fill = "pink") +
+  theme_minimal() +
+  labs(title = "20 Most Common Words in\nNewspaper Headlines",
+       subtitle = "for the Chicago Sun Times in 2019",
+       x = "Count",
+       y = NULL)
+
+baltimore_plot <- baltimore_words %>%
+  ggplot(mapping = aes(y = fct_reorder(word, n), x = n)) +
+  geom_col(fill = "lightblue") +
+  theme_minimal() +
+  labs(title = "20 Most Common Words in\nNewspaper Headlines",
+       subtitle = "for the Baltimore Sun in 2019",
+       x = "Count",
+       y = NULL)
+
+chicago_plot + baltimore_plot
+
+#rowbind datasets
+chicago_prebind <- chicago_words %>%
+  mutate(city = "Chicago Sun Times")
+
+baltimore_prebind <- baltimore_words %>%
+  mutate(city = "Baltimore Sun")
+
+balt_chi <- bind_rows(baltimore_prebind, chicago_prebind)
+
+#present bar charts side by side
+balt_chi %>%
+  group_by(city) %>%
+  ggplot(mapping = aes(y = reorder(word, n), x = n, fill = city)) +
+  facet_wrap(vars(city), scales = "free") +
+  scale_fill_manual(values = c("lightblue", "pink")) +
+  geom_col(show.legend = FALSE) +
+  theme_minimal() +
+  labs(title = "20 Most Common Words in Newspaper Headlines",
+       subtitle = "For Newspaper Headlines in 2019",
+       x = "Number of Occurences",
+       y = "Word")
+```
+
 4.  **Brexit**
 
-```{r label-me-4}
+```{r exercise-4}
+#load data
+brexit <- read_csv("data/brexit.csv") %>%
+#  filter(opinion != "Don't know") %>%
+  mutate(region_name = case_when(region == "scot" ~ "Scotland",
+                                 region == "north" ~ "North",
+                                 region == "midlands_wales" ~ "Midlands / Wales",
+                                 region == "rest_of_south" ~ "Rest of South",
+                                 region == "london" ~ "London")) %>%
+  mutate(opinion_score = case_when(opinion == "Very badly" ~ 1,
+                                   opinion == "Faily badly" ~ 2,
+                                   opinion == "Don't know" ~ 3,
+                                   opinion == "Fairly well" ~ 4,
+                                   opinion == "Very well" ~ 5))
 
+#calculate variables
+brexit_regions <- brexit %>%
+  group_by(region_name, opinion) %>%
+  summarize(count = n()) %>%
+  ungroup()
+
+#create percentage bar chart (A)
+brexit_regions %>%
+  fct_reorder(opinion, opinion_score, .desc = TRUE) %>%
+  ggplot(mapping = aes(x = count, y = region_name, fill = opinion)) +
+  geom_col() +
+  scale_fill_discrete_diverging(palette = "Blue-Red") +
+  theme_minimal()
 ```
 
 
