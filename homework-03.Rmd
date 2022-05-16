@@ -10,6 +10,10 @@ For question 1, how do you set the sequences/breaks for the x axis based on valu
 
 For question 1 map part, I get the following error: "old-style crs object detected; please recreate object with a recent sf::st_crs()" -- Is that ok?
 
+For question 2, can you switch between M and T suffix once specific number is reached?
+
+For question 2, how do you set the year for which factors are reordered? How can you make them shift based on highest population?
+
 ```{r load-packages, message = FALSE}
 #load required packages
 library(tidyverse)
@@ -18,6 +22,10 @@ library(ggmap)
 library(geofacet)
 library(urbnmapr)
 library(colorspace)
+library(gganimate)
+library(scales)
+library(tidytext)
+library(knitr)
 ```
 
 1.  **Adopt, don’t shop.**
@@ -49,14 +57,17 @@ ggplot(data = dogs_count,
 Based on the histogram printed above, one can see that in a majority of states, less than 200 dogs were up for adoption, and a significant number of states had less than 100 dogs up for adoption. There is one outlier state that stands out in particular, at over 1000 dogs up for adoption. Overall, the distribution appears right-skewed, indicating that the median number of dogs up for adoption is lesser than the mean number of dogs up for adoption.
 
 ```{r exercise-1-map}
-#create a map indicating number of dogs available for adoption per state
+#load geometric data corresponding with US states for mapping purposes
 states_sf <- get_urbn_map("states", sf = TRUE)
 
+#rename state variable in dogs dataset
 dogs_map <- dogs_count %>%
   rename(state_abbv = contact_state)
 
+#merge dogs dataset and states geometry dataset
 dogs_states <- full_join(dogs_map, states_sf, by = "state_abbv")
 
+#create a map indicating number of dogs available for adoption per state
 ggplot(data = dogs_states) +
   geom_sf(mapping = aes(fill= log10(count), geometry = geometry)) +
   theme_void() +
@@ -74,15 +85,75 @@ The map above indicates the number of dogs up for adoption by U.S. state, logari
 
 2.  **Country populations**
 
-```{r label-me-2}
+```{r exercise-2-animation}
+#load data
+population <- read_csv("data/country-pop.csv")
 
+#identify and subset data for countries with the top-10 highest population count in 2020
+top_pop_2020 <- population %>%
+  filter(date == 2020) %>%
+  arrange(desc(SP.POP.TOTL)) %>%
+  slice(1:10)
+
+pop_subset <- population %>%
+  filter(iso3c %in% top_pop_2020$iso3c) %>%
+  group_by(date) %>%
+  mutate(ranked_pop = rank(-SP.POP.TOTL, ties.method = "first"))
+
+#create a racing bar chart animating the population change in the 10 countries subsetted previously
+ggplot(data = pop_subset,
+       mapping = aes(y = fct_reorder(country, SP.POP.TOTL, .desc = FALSE), x = SP.POP.TOTL, fill = country)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_discrete_qualitative(palette = "Pastel 1") +
+  scale_x_continuous(labels = label_number(suffix = "M",
+                                           scale = 1e-6),
+                     breaks = seq(0, 1500000000, by = 150000000)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.minor = element_blank()) +
+  aes(group = country) +
+  transition_states(date, 3, 1) +
+  labs(title = "Population Change over Time\nfor 10 Most Populous Countries as of 2020",
+     subtitle = "Year: {closest_state}",
+     y = "Country",
+     x = "Population Size")
 ```
+
+In this racing animation, one can see that China and India have been the most populous countries since the 1970s, with the United States in a distant third place. One can also see tremendous population growth throughout for almost all of these countries over time, with the exception of Russia, where population growth, if present at all, is more subdued.
 
 3.  **Battle of the newspapers**
 
-```{r label-me-3}
+```{r exercise-3}
+#load data
+chicago <- read_csv("data/chicago_sun_times_2019.csv")
+baltimore <- read_csv("data/baltimore_sun_2019.csv")
 
+#find 20 most common words in headlines for the two newspapers
+stopwords <- get_stopwords("en")
+
+chicago_words <- unnest_tokens(tbl = chicago, output = word, input = title) %>%
+  anti_join(stopwords) %>%
+  count(word, sort = TRUE) %>%
+  slice(1:20) %>%
+  as.tibble()
+
+baltimore_words <- unnest_tokens(tbl = baltimore, output = word, input = title) %>%
+  anti_join(stopwords) %>%
+  count(word, sort = TRUE) %>%
+  slice(1:20) %>%
+  as.tibble()
+
+#print two tables and compare results
+kable(x = chicago_words,
+      col.names = c("Word", "Count"),
+      caption = "20 Most Common Words in Chicago Sun Times Titles in 2019")
+
+kable(x = baltimore_words,
+      col.names = c("Word", "Count"),
+      caption = "20 Most Common Words in Baltimore Sun Titles in 2019")
 ```
+
+Comparing the 20 most common words in headlines from the Chicago Sun Times and the Baltimore Sun in 2019, it appears as though words related to criminal activity occur more often in the Chicago Sun Times. For instance, the words "police", "shot", "killed", "charged", and "shooting" are all among the 20 most used for the Chicago Sun Times, while the only apparently crime-related words among the 20 most used words for the Baltimore Sun is "police". The words most commonly occuring in headlines in the Baltimore Sun instead seem more related to politics: for example, the words "trump", "state", "county", and "school" may all be related to political topics. Another observation is that the Chicago Sun Times covers local sports teams as well, as indicated by the words "bears", "cubs", "white", and "sox" all showing up among the 20 most used in headlines of the Chicago Sun Times. No Baltimore sports team name, as far as I'm informed, shows up in the 20 most used words in headlines of the Baltimore Sun.
 
 4.  **Brexit**
 
@@ -92,5 +163,21 @@ The map above indicates the number of dogs up for adoption by U.S. state, logari
 
 
 
+
+```{r discarded-code}
+
+# test animation
+pop_subset %>%
+  group_by(date) %>%  
+  arrange(date, ranked_pop) %>%
+  ggplot(mapping = aes(y = ranked_pop,
+                       group = country, 
+                       fill = as.factor(country), color = as.factor(country))) +
+  geom_tile(aes(y = SP.POP.TOTL/2,
+                height = SP.POP.TOTL,
+                width = 0.9), alpha = 0.8, color = NA) +
+  facet_wrap(vars(date))
+
+```
 
 
