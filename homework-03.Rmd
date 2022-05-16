@@ -12,7 +12,7 @@ For question 1 map part, I get the following error: "old-style crs object detect
 
 For question 2, can you switch between M and T suffix once specific number is reached?
 
-For question 2, how do you set the year for which factors are reordered? How can you make them shift based on highest population?
+For question 2, how do you do smoother transitions and longer pause in the end?
 
 For question 3, why does faceted plot not order words in descending order?
 
@@ -119,6 +119,7 @@ pop_static <- ggplot(data = pop_subset,
   facet_wrap(vars(date)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.25),
         panel.grid.minor = element_blank(),
         panel.grid.major.y = element_blank(),
         axis.text.y = element_blank()) +
@@ -127,10 +128,14 @@ pop_static <- ggplot(data = pop_subset,
   scale_x_continuous(limits = c(-500000000, 1500000000),
                      labels = label_number(suffix = "M",
                                            scale = 1e-6),
-                     breaks = seq(0, 1500000000, by = 150000000))
+                     breaks = seq(0, 1500000000, by = 150000000))+
+  labs(title = "Population Change over Time\nfor 10 Most Populous Countries as of 2020",
+     subtitle = "Year: {frame_time}",
+     y = "Country",
+     x = "Population Size")
 
 #animate static bar chart
-pop_static +
+pop_animated <- pop_static +
   facet_null() +
   aes(group = country) +
   transition_time(as.integer(date)) +
@@ -139,10 +144,7 @@ pop_static +
      y = "Country",
      x = "Population Size")
 
-
-
-{frame_along}
-{closest_state}
+pop_animated
 ```
 
 In this racing animation, one can see that China and India have been the most populous countries since the 1970s, with the United States in a distant third place. One can also see tremendous population growth throughout for almost all of these countries over time, with the exception of Russia, where population growth, if present at all, is more subdued.
@@ -251,30 +253,9 @@ brexit_regions <- brexit %>%
 
 #create percentage bar chart (A)
 brexit_regions %>%
-  fct_reorder(opinion, opinion_score, .desc = TRUE) %>%
   ggplot(mapping = aes(x = count, y = region_name, fill = opinion)) +
   geom_col() +
   scale_fill_discrete_diverging(palette = "Blue-Red") +
   theme_minimal()
 ```
-
-
-
-
-```{r discarded-code}
-
-# test animation
-pop_subset %>%
-  group_by(date) %>%  
-  arrange(date, ranked_pop) %>%
-  ggplot(mapping = aes(y = ranked_pop,
-                       group = country, 
-                       fill = as.factor(country), color = as.factor(country))) +
-  geom_tile(aes(y = SP.POP.TOTL/2,
-                height = SP.POP.TOTL,
-                width = 0.9), alpha = 0.8, color = NA) +
-  facet_wrap(vars(date))
-
-```
-
 
