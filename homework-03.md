@@ -21,10 +21,6 @@ the end?
 For question 3, why does faceted plot not order words in descending
 order?
 
-for question 3, is there a way to reorder facets?
-
-Why does the document not knit?
-
 ``` r
 #load required packages
 library(tidyverse)
@@ -368,7 +364,7 @@ baltimore_plot <- baltimore_words %>%
        x = "Count",
        y = NULL)
 
-chicago_plot + baltimore_plot
+baltimore_plot + chicago_plot
 ```
 
 ![](homework-03_files/figure-gfm/exercise-3-barchart-1.png)<!-- -->
@@ -385,10 +381,12 @@ balt_chi <- bind_rows(baltimore_prebind, chicago_prebind)
 
 #present bar charts side by side
 balt_chi %>%
+  mutate(word = reorder_within(word, n, city)) %>%
   group_by(city) %>%
-  ggplot(mapping = aes(y = reorder(word, n), x = n, fill = city)) +
+  ggplot(mapping = aes(y = word, x = n, fill = city)) +
   facet_wrap(vars(city), scales = "free") +
   scale_fill_manual(values = c("lightblue", "pink")) +
+  scale_y_reordered() +
   geom_col(show.legend = FALSE) +
   theme_minimal() +
   labs(title = "20 Most Common Words in Newspaper Headlines",
@@ -404,17 +402,12 @@ balt_chi %>%
 ``` r
 #load data
 brexit <- read_csv("data/brexit.csv") %>%
-#  filter(opinion != "Don't know") %>%
+  filter(opinion != "Don't know") %>%
   mutate(region_name = case_when(region == "scot" ~ "Scotland",
                                  region == "north" ~ "North",
                                  region == "midlands_wales" ~ "Midlands / Wales",
                                  region == "rest_of_south" ~ "Rest of South",
-                                 region == "london" ~ "London")) %>%
-  mutate(opinion_score = case_when(opinion == "Very badly" ~ 1,
-                                   opinion == "Faily badly" ~ 2,
-                                   opinion == "Don't know" ~ 3,
-                                   opinion == "Fairly well" ~ 4,
-                                   opinion == "Very well" ~ 5))
+                                 region == "london" ~ "London"))
 ```
 
     ## Rows: 1643 Columns: 2
@@ -430,6 +423,9 @@ brexit <- read_csv("data/brexit.csv") %>%
 brexit_regions <- brexit %>%
   group_by(region_name, opinion) %>%
   summarize(count = n()) %>%
+  mutate(percentage = (count/sum(count))*100) %>%
+  mutate(opinion = fct_rev(fct_relevel(opinion, "Very badly", after = 0))) %>%
+  rename(Opinion = opinion) %>%
   ungroup()
 ```
 
@@ -438,11 +434,58 @@ brexit_regions <- brexit %>%
 
 ``` r
 #create percentage bar chart (A)
-brexit_regions %>%
-  ggplot(mapping = aes(x = count, y = region_name, fill = opinion)) +
-  geom_col() +
-  scale_fill_discrete_diverging(palette = "Blue-Red") +
-  theme_minimal()
+A <- brexit_regions %>%
+  ggplot(mapping = aes(x = percentage, y = fct_relevel(region_name, "Rest of South", after = 1), fill = Opinion)) +
+  geom_bar(stat = "identity",
+           position = "fill") +
+  scale_fill_discrete_diverging(palette = "Blue-Red",
+                                guide = guide_legend(reverse = TRUE)) +
+  scale_x_continuous(labels = label_number(suffix = "%",
+                                           scale = 100)) +
+  theme_minimal() +
+  theme(legend.position = "top",
+        aspect.ratio = 1/3) +
+  labs(title = NULL,
+       subtitle = NULL,
+       x = "Percent",
+       y = NULL,
+       caption = NULL)
+
+#create count bar chart (B)
+B <- brexit_regions %>%
+  ggplot(mapping = aes(x = count, y = fct_relevel(region_name, "Rest of South", after = 1), fill = Opinion)) +
+  geom_bar(stat = "identity") +
+  scale_fill_discrete_diverging(palette = "Blue-Red",
+                                guide = guide_legend(reverse = TRUE)) +
+  theme_minimal() +
+  theme(legend.position = "top",
+        aspect.ratio = 1/3) +
+  labs(title = NULL,
+       subtitle = NULL,
+       x = "Count",
+       y = NULL,
+       caption = NULL)
+
+#create faceted bar chart (C)
+C <- brexit_regions %>%
+  ggplot(mapping = aes(x = count, y = Opinion, fill = Opinion)) +
+  geom_bar(stat = "identity",
+           show.legend = FALSE) +
+  facet_wrap(facets = vars(fct_relevel(region_name, "Rest of South", after = 1)),
+             ncol = 5) +
+  scale_fill_discrete_diverging(palette = "Blue-Red",
+                                guide = guide_legend(reverse = TRUE)) +
+  scale_x_continuous(breaks = seq(0, 200, by = 100)) +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs(title = "How well or badly do you think the government are doing\nat handling Britain's exit from the European Union?",
+       subtitle = "YouGov Survey Results, 2-3 September 2019",
+       caption = "Source: bit.ly/2lCJZVg",
+       x = "Count",
+       y = NULL)
+
+#patchwork plots together
+guide_area() / (A | B) / C + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'A')
 ```
 
 ![](homework-03_files/figure-gfm/exercise-4-1.png)<!-- -->

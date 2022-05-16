@@ -16,10 +16,6 @@ For question 2, how do you do smoother transitions and longer pause in the end?
 
 For question 3, why does faceted plot not order words in descending order?
 
-for question 3, is there a way to reorder facets?
-
-Why does the document not knit?
-
 ```{r load-packages, message = FALSE}
 #load required packages
 library(tidyverse)
@@ -203,7 +199,7 @@ baltimore_plot <- baltimore_words %>%
        x = "Count",
        y = NULL)
 
-chicago_plot + baltimore_plot
+baltimore_plot + chicago_plot
 
 #rowbind datasets
 chicago_prebind <- chicago_words %>%
@@ -216,10 +212,12 @@ balt_chi <- bind_rows(baltimore_prebind, chicago_prebind)
 
 #present bar charts side by side
 balt_chi %>%
+  mutate(word = reorder_within(word, n, city)) %>%
   group_by(city) %>%
-  ggplot(mapping = aes(y = fct_reorder(word, n, .desc = FALSE), x = n, fill = city)) +
+  ggplot(mapping = aes(y = word, x = n, fill = city)) +
   facet_wrap(vars(city), scales = "free") +
   scale_fill_manual(values = c("lightblue", "pink")) +
+  scale_y_reordered() +
   geom_col(show.legend = FALSE) +
   theme_minimal() +
   labs(title = "20 Most Common Words in Newspaper Headlines",
@@ -238,12 +236,7 @@ brexit <- read_csv("data/brexit.csv") %>%
                                  region == "north" ~ "North",
                                  region == "midlands_wales" ~ "Midlands / Wales",
                                  region == "rest_of_south" ~ "Rest of South",
-                                 region == "london" ~ "London")) %>%
-  mutate(opinion_score = case_when(opinion == "Very badly" ~ 1,
-                                   opinion == "Faily badly" ~ 2,
-                                   opinion == "Don't know" ~ 3,
-                                   opinion == "Fairly well" ~ 4,
-                                   opinion == "Very well" ~ 5))
+                                 region == "london" ~ "London"))
 
 #calculate variables
 brexit_regions <- brexit %>%
@@ -306,6 +299,6 @@ C <- brexit_regions %>%
        y = NULL)
 
 #patchwork plots together
-guide_area() / (A | B) / C + plot_layout(guides = "collect")
+guide_area() / (A | B) / C + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'A')
 ```
 
