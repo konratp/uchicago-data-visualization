@@ -4,18 +4,6 @@ author: "Konrat Pekkip"
 output: github_document
 ---
 
-## Questions
-
-For question 1, how do you set the sequences/breaks for the x axis based on values in the data? e.g. sequence between xmin and xmax by arbitrary number?
-
-For question 1 map part, I get the following error: "old-style crs object detected; please recreate object with a recent sf::st_crs()" -- Is that ok?
-
-For question 2, can you switch between M and T suffix once specific number is reached?
-
-For question 2, how do you do smoother transitions and longer pause in the end?
-
-For question 3, why does faceted plot not order words in descending order?
-
 ```{r load-packages, message = FALSE}
 #load required packages
 library(tidyverse)
@@ -41,11 +29,11 @@ dogs <- read_csv("data/dog_travel.csv")
 dogs_count <- dogs %>%
   filter(contact_state != "17325") %>%
   group_by(contact_state) %>%
-  summarize(count = n())
+  summarize(n = n())
 
 #create histogram showing the distribution of dogs up for adoption by state
 ggplot(data = dogs_count,
-       mapping = aes(x = count)) +
+       mapping = aes(x = n)) +
   geom_histogram(binwidth = 25, fill = "deepskyblue", color = "black") +
   theme_minimal() +
   scale_y_continuous(breaks = seq(0, 10, by = 2)) +
@@ -72,7 +60,7 @@ dogs_states <- full_join(dogs_map, states_sf, by = "state_abbv")
 
 #create a map indicating number of dogs available for adoption per state
 ggplot(data = dogs_states) +
-  geom_sf(mapping = aes(fill= log10(count), geometry = geometry)) +
+  geom_sf(mapping = aes(fill= log10(n), geometry = geometry)) +
   theme_void() +
   theme(axis.text = element_blank(),
         plot.title = element_text(hjust = 0.5),
@@ -84,7 +72,7 @@ ggplot(data = dogs_states) +
        fill = "Number of Dogs,\nTransformed with Log10")
 ```
 
-The map above indicates the number of dogs up for adoption by U.S. state, logarithmically transformed. One can discern some regional patterns: It appears as though many East Coast states have higher numbers of dogs up for adoption, while states on the West Coast boast lower numbers. The states with the least dogs up for adoption appear to be in the U.S. South, specifically Texas and its neighbors to the East, as well as Kansas. The state with the highest number of dogs up for adoption is Virginia. Finally, there is a range of states that do not have any reported data on the matter, most of which are clustered in the Pacific Northwest of the country, as well as Alaska and Hawai'i.
+The map above indicates the number of dogs up for adoption by U.S. state, logarithmically transformed. One can discern some regional patterns: It appears as though many East Coast states have higher numbers of dogs up for adoption, while states on the West Coast boast lower numbers. The states with the least dogs up for adoption appear to be in the U.S. South, specifically Texas and its neighbors to the East, as well as Kansas. The state with the highest number of dogs up for adoption is Virginia. Finally, there is a range of states that do not have any reported data on the matter, most of which are clustered in the northern Mountain States of the country, as well as Alaska and Hawai'i.
 
 2.  **Country populations**
 
@@ -159,22 +147,28 @@ chicago_words <- unnest_tokens(tbl = chicago, output = word, input = title) %>%
   anti_join(stopwords) %>%
   count(word, sort = TRUE) %>%
   slice(1:20) %>%
-  as.tibble()
+  as_tibble()
 
 baltimore_words <- unnest_tokens(tbl = baltimore, output = word, input = title) %>%
   anti_join(stopwords) %>%
   count(word, sort = TRUE) %>%
   slice(1:20) %>%
-  as.tibble()
+  as_tibble()
+
+
+#uncomment the following lines to print prettier tables as opposed to the raw tibbles below
+# kable(x = chicago_words,
+#       col.names = c("Word", "Count"),
+#       caption = "20 Most Common Words in Chicago Sun Times Titles in 2019")
+# 
+# kable(x = baltimore_words,
+#       col.names = c("Word", "Count"),
+#       caption = "20 Most Common Words in Baltimore Sun Titles in 2019")
 
 #print two tables and compare results
-kable(x = chicago_words,
-      col.names = c("Word", "Count"),
-      caption = "20 Most Common Words in Chicago Sun Times Titles in 2019")
+chicago_words
 
-kable(x = baltimore_words,
-      col.names = c("Word", "Count"),
-      caption = "20 Most Common Words in Baltimore Sun Titles in 2019")
+baltimore_words
 ```
 
 Comparing the 20 most common words in headlines from the Chicago Sun Times and the Baltimore Sun in 2019, it appears as though words related to criminal activity occur more often in the Chicago Sun Times. For instance, the words "police", "shot", "killed", "charged", and "shooting" are all among the 20 most used for the Chicago Sun Times, while the only apparently crime-related words among the 20 most used words for the Baltimore Sun is "police". The words most commonly occuring in headlines in the Baltimore Sun instead seem more related to politics: for example, the words "trump", "state", "county", and "school" may all be related to political topics. Another observation is that the Chicago Sun Times covers local sports teams as well, as indicated by the words "bears", "cubs", "white", and "sox" all showing up among the 20 most used in headlines of the Chicago Sun Times. No Baltimore sports team name, as far as I'm informed, shows up in the 20 most used words in headlines of the Baltimore Sun.
@@ -302,3 +296,8 @@ C <- brexit_regions %>%
 guide_area() / (A | B) / C + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'A')
 ```
 
+Plot A indicates public opinion towards the British government's handling of Brexit in 2019 by region. One can see that respondents residing in Scotland and London are most critical of the government's Brexit policies, while those residing in the Rest of South and Midland / Wales areas still appear critical towards the government's policies, though to a lesser degree. In all regions, more than half, and nearly three quarters of respondents appear to view the government's policies either as fairly or very badly, with only few people believing that the government was handling Brexit very well.
+
+Plot B indicates the absolute distribution of responses from respondents of the survey. Here we can see that the "Rest of South" and "North" regions were sampled more heavily than, for instance, Scotland, which is represented the least in the sample. This visualization allows the reader to more easily understand the distribution of respondents by region, but makes it harder to discern and compare relative approval of the government's policies.
+
+Finally, plot C showcases essentially the same information as plot B, except the faceting by region allows for more precise visualization than the stacked bar chart. Here, the reader can see that, in absolute numbers, the most respondents who believe the government is handling Brexit very poorly reside in the Rest of South and North regions. However, this might be subject for misinterpretation, as a comparison with plot A shows that in relative terms, respondents from the Rest of South are the least critical of the government's Brexit policies.

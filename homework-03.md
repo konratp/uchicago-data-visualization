@@ -2,25 +2,6 @@ Homework 03
 ================
 Konrat Pekkip
 
-## Questions
-
-For question 1, how do you set the sequences/breaks for the x axis based
-on values in the data? e.g. sequence between xmin and xmax by arbitrary
-number?
-
-For question 1 map part, I get the following error: “old-style crs
-object detected; please recreate object with a recent sf::st_crs()” – Is
-that ok?
-
-For question 2, can you switch between M and T suffix once specific
-number is reached?
-
-For question 2, how do you do smoother transitions and longer pause in
-the end?
-
-For question 3, why does faceted plot not order words in descending
-order?
-
 ``` r
 #load required packages
 library(tidyverse)
@@ -58,11 +39,11 @@ dogs <- read_csv("data/dog_travel.csv")
 dogs_count <- dogs %>%
   filter(contact_state != "17325") %>%
   group_by(contact_state) %>%
-  summarize(count = n())
+  summarize(n = n())
 
 #create histogram showing the distribution of dogs up for adoption by state
 ggplot(data = dogs_count,
-       mapping = aes(x = count)) +
+       mapping = aes(x = n)) +
   geom_histogram(binwidth = 25, fill = "deepskyblue", color = "black") +
   theme_minimal() +
   scale_y_continuous(breaks = seq(0, 10, by = 2)) +
@@ -101,7 +82,7 @@ dogs_states <- full_join(dogs_map, states_sf, by = "state_abbv")
 ``` r
 #create a map indicating number of dogs available for adoption per state
 ggplot(data = dogs_states) +
-  geom_sf(mapping = aes(fill= log10(count), geometry = geometry)) +
+  geom_sf(mapping = aes(fill= log10(n), geometry = geometry)) +
   theme_void() +
   theme(axis.text = element_blank(),
         plot.title = element_text(hjust = 0.5),
@@ -124,7 +105,7 @@ be in the U.S. South, specifically Texas and its neighbors to the East,
 as well as Kansas. The state with the highest number of dogs up for
 adoption is Virginia. Finally, there is a range of states that do not
 have any reported data on the matter, most of which are clustered in the
-Pacific Northwest of the country, as well as Alaska and Hawai’i.
+northern Mountain States of the country, as well as Alaska and Hawai’i.
 
 2.  **Country populations**
 
@@ -244,14 +225,8 @@ chicago_words <- unnest_tokens(tbl = chicago, output = word, input = title) %>%
   anti_join(stopwords) %>%
   count(word, sort = TRUE) %>%
   slice(1:20) %>%
-  as.tibble()
+  as_tibble()
 ```
-
-    ## Warning: `as.tibble()` was deprecated in tibble 2.0.0.
-    ## Please use `as_tibble()` instead.
-    ## The signature and semantics have changed, see `?as_tibble`.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 
     ## Joining, by = "word"
 
@@ -260,73 +235,76 @@ baltimore_words <- unnest_tokens(tbl = baltimore, output = word, input = title) 
   anti_join(stopwords) %>%
   count(word, sort = TRUE) %>%
   slice(1:20) %>%
-  as.tibble()
+  as_tibble()
 ```
 
     ## Joining, by = "word"
 
 ``` r
+#uncomment the following lines to print prettier tables as opposed to the raw tibbles below
+# kable(x = chicago_words,
+#       col.names = c("Word", "Count"),
+#       caption = "20 Most Common Words in Chicago Sun Times Titles in 2019")
+# 
+# kable(x = baltimore_words,
+#       col.names = c("Word", "Count"),
+#       caption = "20 Most Common Words in Baltimore Sun Titles in 2019")
+
 #print two tables and compare results
-kable(x = chicago_words,
-      col.names = c("Word", "Count"),
-      caption = "20 Most Common Words in Chicago Sun Times Titles in 2019")
+chicago_words
 ```
 
-| Word     | Count |
-|:---------|------:|
-| man      |  2454 |
-| chicago  |  1968 |
-| police   |  1819 |
-| bears    |  1297 |
-| park     |  1188 |
-| shot     |   904 |
-| killed   |   824 |
-| charged  |   812 |
-| cubs     |   812 |
-| woman    |   809 |
-| shooting |   784 |
-| 2        |   759 |
-| white    |   753 |
-| sox      |   720 |
-| 2019     |   692 |
-| new      |   651 |
-| side     |   587 |
-| missing  |   585 |
-| wounded  |   540 |
-| south    |   516 |
-
-20 Most Common Words in Chicago Sun Times Titles in 2019
+    ## # A tibble: 20 × 2
+    ##    word         n
+    ##    <chr>    <int>
+    ##  1 man       2454
+    ##  2 chicago   1968
+    ##  3 police    1819
+    ##  4 bears     1297
+    ##  5 park      1188
+    ##  6 shot       904
+    ##  7 killed     824
+    ##  8 charged    812
+    ##  9 cubs       812
+    ## 10 woman      809
+    ## 11 shooting   784
+    ## 12 2          759
+    ## 13 white      753
+    ## 14 sox        720
+    ## 15 2019       692
+    ## 16 new        651
+    ## 17 side       587
+    ## 18 missing    585
+    ## 19 wounded    540
+    ## 20 south      516
 
 ``` r
-kable(x = baltimore_words,
-      col.names = c("Word", "Count"),
-      caption = "20 Most Common Words in Baltimore Sun Titles in 2019")
+baltimore_words
 ```
 
-| Word       | Count |
-|:-----------|------:|
-| baltimore  |   821 |
-| city       |   323 |
-| police     |   312 |
-| new        |   293 |
-| county     |   242 |
-| news       |   218 |
-| school     |   203 |
-| maryland   |   187 |
-| man        |   178 |
-| state      |   167 |
-| services   |   153 |
-| former     |   146 |
-| says       |   137 |
-| trump      |   137 |
-| year       |   122 |
-| around     |   116 |
-| md         |   113 |
-| plan       |   111 |
-| horoscopes |   110 |
-| center     |   108 |
-
-20 Most Common Words in Baltimore Sun Titles in 2019
+    ## # A tibble: 20 × 2
+    ##    word           n
+    ##    <chr>      <int>
+    ##  1 baltimore    821
+    ##  2 city         323
+    ##  3 police       312
+    ##  4 new          293
+    ##  5 county       242
+    ##  6 news         218
+    ##  7 school       203
+    ##  8 maryland     187
+    ##  9 man          178
+    ## 10 state        167
+    ## 11 services     153
+    ## 12 former       146
+    ## 13 says         137
+    ## 14 trump        137
+    ## 15 year         122
+    ## 16 around       116
+    ## 17 md           113
+    ## 18 plan         111
+    ## 19 horoscopes   110
+    ## 20 center       108
 
 Comparing the 20 most common words in headlines from the Chicago Sun
 Times and the Baltimore Sun in 2019, it appears as though words related
@@ -489,3 +467,30 @@ guide_area() / (A | B) / C + plot_layout(guides = "collect") + plot_annotation(t
 ```
 
 ![](homework-03_files/figure-gfm/exercise-4-1.png)<!-- -->
+
+Plot A indicates public opinion towards the British government’s
+handling of Brexit in 2019 by region. One can see that respondents
+residing in Scotland and London are most critical of the government’s
+Brexit policies, while those residing in the Rest of South and Midland /
+Wales areas still appear critical towards the government’s policies,
+though to a lesser degree. In all regions, more than half, and nearly
+three quarters of respondents appear to view the government’s policies
+either as fairly or very badly, with only few people believing that the
+government was handling Brexit very well.
+
+Plot B indicates the absolute distribution of responses from respondents
+of the survey. Here we can see that the “Rest of South” and “North”
+regions were sampled more heavily than, for instance, Scotland, which is
+represented the least in the sample. This visualization allows the
+reader to more easily understand the distribution of respondents by
+region, but makes it harder to discern and compare relative approval of
+the government’s policies.
+
+Finally, plot C showcases essentially the same information as plot B,
+except the faceting by region allows for more precise visualization than
+the stacked bar chart. Here, the reader can see that, in absolute
+numbers, the most respondents who believe the government is handling
+Brexit very poorly reside in the Rest of South and North regions.
+However, this might be subject for misinterpretation, as a comparison
+with plot A shows that in relative terms, respondents from the Rest of
+South are the least critical of the government’s Brexit policies.
