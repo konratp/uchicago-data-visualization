@@ -46,15 +46,15 @@ For this, we will tap into the vast amount of data available on ATP and WTA tour
 ## Data {#data}
 
 The data we’re using comes from Jeff Sackmann’s GitHub page. In the
-[data folder](data), there are two folders, one containing the data for
-the [men’s ATP](data/atp), and one containing the data for the [women’s
+[data folder](../data), there are two folders, one containing the data for
+the [men’s ATP](../data/atp), and one containing the data for the [women’s
 WTA](data/wta). Both folders contain separate .csv files for matches (by
 year, starting in 1968/1980 for ATP and WTA, respectively) and rankings
 (by decade, starting in the 1970s/1980s for ATP and WTA, respectively).
 To learn more about the variables contained in the data as well as the
 contributors to the dataset, please refer to the README files. You can
-find the README file for the ATP data [here](data/atp/README.md), and
-the README file for the WTA data [here](data/wta/README.md).
+find the README file for the ATP data [here](../data)/atp/README.md), and
+the README file for the WTA data [here](../data/wta/README.md).
 
 ---
 
@@ -88,8 +88,7 @@ entered the top-20 or top-50 of their respective rankings.
 
 ## Shiny App {#shiny-app}
 
-The Shiny app will be where users can view and interact with the data and plots generated to answer our research questions.  The structure of the app wil be comprised of two tabs; one for each research question.  Within each tab, there will be a plot displaying the underlying data along with a series of controls for the user to interact with in order to change the paramters for each plot.  While not finalized,
-we anticipate that these will consist of the ability to change the time window, filter for certain ranges of ranks among the players, and filter for the type of court (clay, grass, hard) that matches were played on.
+The Shiny app will be where users can view and interact with the data and plots generated to answer our research questions.  The structure of the app wil be comprised of two tabs; one for each research question.  Within each tab, there will be a plot displaying the underlying data along with a series of controls for the user to interact with in order to change the paramters for each plot.  While not finalized, we anticipate that these will consist of the ability to change the time window, filter for certain ranges of ranks among the players, and filter for the type of court (clay, grass, hard) that matches were played on.
 
 ---
 
