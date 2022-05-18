@@ -11,20 +11,23 @@ Peewee Marten (Anshuman Pal, Konrat Pekkip)
 
 # Comparing Fluctuations in Performances among Men and Women in Professional Tennis
 
-In this data visualization project, we are interested in gaining a
-better understanding of trends and fluctuations in professional Tennis
-over the years. To accomplish this, we plan on building a shiny app that
-lets users interactively explore the statistics and historical
-trajectories of professional Tennis.
+In this data visualization project, we are interested in gaining a better understanding of trends and fluctuations in professional Tennis
+over the years. To accomplish this, we will analyse from the ATP (men) and WTA (women) tours for the past several decades. Furthermore, 
+we plan on building a shiny app that lets users interactively explore the evolution of these tennis statistics with time.
 
-## Goals
+## Goal and Motivation
 
-While neither Anshuman nor Konrat are particularly talented Tennis
-players, we are intrigued by the sport and the extensive data collection
-that followers and organizers of professional Tennis events have engaged
-in the last century. There is a vast amount of data available on ATP and
-WTA tournaments which we seek to make accessible by building a shiny app
-that lets users explore different dynamics underlying the data.
+The goal is to measure both long-term and short-term consistency in performance among professional men and women tennis players, 
+playing on the ATP and WTA tours resp. To measure consistency, we will measure fluctuations -- a statistically well-defined 
+quantity -- since less fluctuation means more consistency. Why do we study this?  
+  
+This is our contribution to the long-standing debate about performance discrepancies between men and women athletes. There was a parallel debate
+in the professional tennis world for a long time about whether men and women tennis players should get equal prize money. For example, it was only in 2007 that Wimbledon started offering equal money to men and women (see https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed).  
+  
+One of the issues at hand in this debate is whether men and women athletes perform equally well. There are few objective ways of doing so. Measuring the most evident markers of performance, like race times in athletics and swimming, or number of points played and/or won in a tennis match, is not a very fruitful approach, since men and women are naturally built differently and have different physical abilities. So we thought of a tracking not the average performance (viz. a first-order variable), but fluctuations in the performance (viz., a second-order variable).
+  
+  
+For this, we will tap into the vast amount of data available on ATP and WTA tournaments. We will measure both long-term fluctuations and short-term fluctuations (see details below). We also seek to make this analysis accessible by building a shiny app that lets users explore different dynamics underlying the data.
 
 ### Data
 
