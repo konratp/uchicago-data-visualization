@@ -5,7 +5,7 @@ Peewee Marten (Anshuman Pal, Konrat Pekkip)
 -   [Comparing Fluctuations in Performances among Men and Women in
     Professional
     Tennis](#comparing-fluctuations-in-performances-among-men-and-women-in-professional-tennis)
-    -   [Goals](#goals)
+    -   [Goal and motivation](#goals)
     -   [Plan of Attack](#plan-of-attack)
     -   [Repository Organization](#repository-organization)
 
@@ -43,14 +43,17 @@ find the README file for the ATP data [here](data/atp/README.md), and
 the README file for the WTA data [here](data/wta/README.md).
 
 ### Research Question(s)
+---
 
-Question 1: Does the (long-term) fluctuation in rankings differ
-significantly between men and women?
+#### **Question 1**: Do (long-term) fluctuations in rankings differ significantly between men and women?  
 
-Question 2: Does the (short-term) fluctuation in matches (measured by
-tracking average number of service breaks per match in a season) differ
-significantly between men and women?
+To address this, we will make a plot with time on the x-axis, and the fluctuation on the y-axis, one line for women and another for women. So it will show the time evolution of the fluctuations. The exact details will be determined later.
 
+#### **Question 2:** Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?  
+
+Again, the plot will have time on the x-axis, and the fluctuation on the y-axis. Match data allows for access to more variables/dimensions. Thus, we could consider additional faceting over, say, match surface (clay, grass or hard courts).
+
+**Details:**  
 The first question concerns long-term fluctuation in professional
 Tennis. A lot of Tennis players experience highs and lows, and very few
 constantly remain successul at the same level throughout their career.
@@ -63,9 +66,10 @@ average number of service breaks per match in a season, we hope to see
 if there are significant differences in how men and women perform within
 given matches.
 
-For both of these questions, we want to restrict our analysis to matches
-played since the year 2000, and focus on players who at some point
-entered the top-20 of their respective rankings.
+For both of these questions, we want to restrict our analysis to the period between 1980 and today, and focus on players who at some point
+entered the top-20 or top-50 of their respective rankings.
+
+---
 
 ## Plan of Attack
 
