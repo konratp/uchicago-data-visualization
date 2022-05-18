@@ -82,7 +82,7 @@ and rankings (by decade, starting in the 1970s/1980s for ATP and WTA,
 respectively). To learn more about the variables contained in the data
 as well as the contributors to the dataset, please refer to the README
 files. You can find the README file for the ATP data
-[here](../data)/atp/README.md), and the README file for the WTA data
+[here](../data/atp/README.md), and the README file for the WTA data
 [here](../data/wta/README.md).
 
 ------------------------------------------------------------------------
