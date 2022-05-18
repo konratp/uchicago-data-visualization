@@ -1,9 +1,6 @@
 README
 ================
-Peewee Marten (Anshuman Pal, Konrat Pekkip)
-
--   [Description of the Proposal
-    Folder](#description-of-the-proposal-folder)
+Peewee Marten (Anshuman Pal, Konrat Pekkip, Ryan Mazur)
 
 ## Description of the Proposal Folder
 
