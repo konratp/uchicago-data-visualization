@@ -27,14 +27,14 @@ we plan on building a shiny app that lets users interactively explore the evolut
 
 ---
 
-## Goal and Motivation {#goal-and-moitvation}
+## Goal and Motivation {#goal-and-motivation}
 
 The goal is to measure both long-term and short-term consistency in performance among professional men and women tennis players, 
 playing on the ATP and WTA tours resp. To measure consistency, we will measure fluctuations -- a statistically well-defined 
 quantity -- since less fluctuation means more consistency. Why do we study this?  
   
 This is our contribution to the long-standing debate about performance discrepancies between men and women athletes. There was a parallel debate
-in the professional tennis world for a long time about whether men and women tennis players should get equal prize money. For example, it was only in 2007 that Wimbledon started offering equal money to men and women (see https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed).  
+in the professional tennis world for a long time about whether men and women tennis players should get equal prize money. For example, it was only in 2007 that Wimbledon started offering equal money to men and women [(source)](https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed).  
   
 One of the issues at hand in this debate is whether men and women athletes perform equally well. There are few objective ways of doing so. Measuring the most evident markers of performance, like race times in athletics and swimming, or number of points played and/or won in a tennis match, is not a very fruitful approach, since men and women are naturally built differently and have different physical abilities. So we thought of a tracking not the average performance (viz. a first-order variable), but fluctuations in the performance (viz., a second-order variable).
   
@@ -115,9 +115,11 @@ presentation.
 ## Repository Organization {#repository-organization}
 
 As it stands now, this repository contains several files and folders.
-This proposal exists in the [Proposal folder](Proposal), and our data,
+This proposal exists in the [Proposal folder](.), and our data,
 alongside more detailed information on the datasets, can be found in the
-[data folder](data). Eventually, the [Presentation folder](Presentation)
-will contain our presentation, while the [README file](README.md) in the
+[data folder](../data). Eventually, the [Presentation folder](../Presentation)
+will contain our presentation, while the [README file](../README.md) in the
 main repository will contain the write-up of our results. Furthermore,
-all files related to the cleaning and processing of the source data will be in [Data-Processing](Data-Processing) and the shiny app source code will be in [App](App).
+all files related to the cleaning and processing of the source data will
+be in [Data-Processing](../Data-Processing) and the shiny app source code
+will be in [App](../App).

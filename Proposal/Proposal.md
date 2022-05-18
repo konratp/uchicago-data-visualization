@@ -2,18 +2,29 @@ Data Visualization Project 2 Proposal
 ================
 Peewee Marten (Anshuman Pal, Konrat Pekkip, Ryan Mazur)
 
+-   [Comparing Fluctuations in Performances among Men and Women in
+    Professional
+    Tennis](#comparing-fluctuations-in-performances-among-men-and-women-in-professional-tennis)
+    -   [Introduction](#introduction)
+    -   [Goal and Motivation](#goal-and-motivation)
+    -   [Data](#data)
+    -   [Research Questions](#research-questions)
+    -   [Shiny App](#shiny-app)
+    -   [Plan of Attack](#plan-of-attack)
+    -   [Repository Organization](#repository-organization)
+
 # Comparing Fluctuations in Performances among Men and Women in Professional Tennis
 
-  - Table of Contents
-      - [Introduction](#introduction)
-      - [Goal and Motivation](#goal-and-motivation)
-      - [Data](#data)
-      - [Research Questions](#research-questions)
-      - [Shiny App](#shiny-app)
-      - [Plan of Attach](#plan-of-attack)
-      - [Repository Organization](#repository-organization)
+-   Table of Contents
+    -   [Introduction](#introduction)
+    -   [Goal and Motivation](#goal-and-motivation)
+    -   [Data](#data)
+    -   [Research Questions](#research-questions)
+    -   [Shiny App](#shiny-app)
+    -   [Plan of Attach](#plan-of-attack)
+    -   [Repository Organization](#repository-organization)
 
------
+------------------------------------------------------------------------
 
 ## Introduction
 
@@ -24,7 +35,7 @@ and WTA (women) tours for the past several decades. Furthermore, we plan
 on building a shiny app that lets users interactively explore the
 evolution of these tennis statistics with time.
 
------
+------------------------------------------------------------------------
 
 ## Goal and Motivation
 
@@ -39,8 +50,8 @@ discrepancies between men and women athletes. There was a parallel
 debate in the professional tennis world for a long time about whether
 men and women tennis players should get equal prize money. For example,
 it was only in 2007 that Wimbledon started offering equal money to men
-and women (see
-<https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed>).
+and women
+[(source)](https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed).
 
 One of the issues at hand in this debate is whether men and women
 athletes perform equally well. There are few objective ways of doing so.
@@ -58,7 +69,7 @@ short-term fluctuations (see details below). We also seek to make this
 analysis accessible by building a shiny app that lets users explore
 different dynamics underlying the data.
 
------
+------------------------------------------------------------------------
 
 ## Data
 
@@ -73,7 +84,7 @@ contributors to the dataset, please refer to the README files. You can
 find the README file for the ATP data [here](data/atp/README.md), and
 the README file for the WTA data [here](data/wta/README.md).
 
------
+------------------------------------------------------------------------
 
 ## Research Questions
 
@@ -110,7 +121,7 @@ For both of these questions, we want to restrict our analysis to the
 period between 1980 and today, and focus on players who at some point
 entered the top-20 or top-50 of their respective rankings.
 
------
+------------------------------------------------------------------------
 
 ## Shiny App
 
@@ -124,7 +135,7 @@ anticipate that these will consist of the ability to change the time
 window, filter for certain ranges of ranks among the players, and filter
 for the type of court (clay, grass, hard) that matches were played on.
 
------
+------------------------------------------------------------------------
 
 ## Plan of Attack
 
@@ -143,16 +154,17 @@ finalize the write-up.
 Week 5: (beginning May 30th): Finalize the coding work and the
 presentation.
 
------
+------------------------------------------------------------------------
 
 ## Repository Organization
 
 As it stands now, this repository contains several files and folders.
-This proposal exists in the [Proposal folder](Proposal), and our data,
+This proposal exists in the [Proposal folder](.), and our data,
 alongside more detailed information on the datasets, can be found in the
-[data folder](data). Eventually, the [Presentation folder](Presentation)
-will contain our presentation, while the [README file](README.md) in the
-main repository will contain the write-up of our results. Furthermore,
-all files related to the cleaning and processing of the source data will
-be in [Data-Processing](Data-Processing) and the shiny app source code
-will be in [App](App).
+[data folder](../data). Eventually, the [Presentation
+folder](../Presentation) will contain our presentation, while the
+[README file](../README.md) in the main repository will contain the
+write-up of our results. Furthermore, all files related to the cleaning
+and processing of the source data will be in
+[Data-Processing](../Data-Processing) and the shiny app source code will
+be in [App](../App).
