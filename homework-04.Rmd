@@ -1,0 +1,26 @@
+---
+title: "Homework 04"
+author: "INSERT YOUR NAME HERE"
+output: github_document
+---
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+# add any other packages you use here
+```
+
+1.  **How popular am I?**
+
+```{r label-me-1}
+
+```
+
+2.  **The app**
+
+
+
+3.  **The styled app**
+
+```{r label-me-3}
+
+```
