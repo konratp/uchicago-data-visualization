@@ -1,18 +1,34 @@
 ---
 title: "Homework 04"
-author: "INSERT YOUR NAME HERE"
+author: "Konrat Pekkip"
 output: github_document
 ---
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
-# add any other packages you use here
+library(babynames)
+library(ggtext)
 ```
 
 1.  **How popular am I?**
 
-```{r label-me-1}
+```{r exercise-1}
+#load data
+babydata <- read_csv("data/babynames.csv")
 
+#visualize popularity of my name
+babydata %>%
+  filter(name == "Konrad") %>%
+  ggplot(mapping = aes(x = year, y = n)) +
+  geom_line(color = "deepskyblue") +
+  scale_x_continuous(breaks = seq(1910, 2020, by = 10)) +
+  theme_minimal() +
+  theme(plot.title = element_markdown(),
+        plot.subtitle = element_textbox_simple()) +
+  labs(title = "<span style = 'color:deepskyblue'>Number of Babies Named Konrad</span>",
+       subtitle ="<span style = 'color:navy'>In the United States between 1913 and 2022</span>",
+       x = "Year",
+       y = "Number of Babies Named Konrad")
 ```
 
 2.  **The app**
