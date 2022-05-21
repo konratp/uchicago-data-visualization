@@ -65,8 +65,35 @@ ui <- fluidPage(
 
 # Define server function --------------------------------------------
 server <- function(input, output, session) {
+  output$name_abs_plot =
 
 }
+
+renderPlot({
+  # base plot
+  age_plot +
+    # label the current point
+    geom_point(
+      data = tibble(
+        you = input$age_you,
+        partner = input$age_partner
+      ),
+      mapping = aes(x = you, y = partner),
+      shape = 4,
+      size = 4
+    ) +
+    # leave appropriate cushion on x and y axes
+    coord_cartesian(
+      xlim = c(
+        max(age_min_data, input$age_you - cushion),
+        min(age_max_data, input$age_you + cushion)
+      ),
+      ylim = c(
+        max(age_min_data, input$age_partner - cushion),
+        min(age_max_data, input$age_partner + cushion)
+      )
+    )
+})
 
 
 server <- function(input, output) {
