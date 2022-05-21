@@ -19,6 +19,15 @@ popular_names <- babydata %>%
 names_data <- babydata %>%
   filter(name %in% popular_names$name)
 
+#extract names as a character vector
+name_choices <- names_data %>%
+  distinct(name) %>%
+  arrange(name) %>%
+  pull(name)
+
+#random sample of two names to compare
+selected_name_choices <- sample(name_choices, 2)
+
 # Define UI --------------------------------------------------------------------
 
 ui <- fluidPage(
