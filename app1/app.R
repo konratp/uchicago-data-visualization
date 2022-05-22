@@ -64,10 +64,10 @@ ui <- fluidPage(
 )
 
 # Define server function --------------------------------------------
-server <- function(input, output, session) {
-  output$name_abs_plot =
-
-}
+# server <- function(input, output, session) {
+#   output$name_abs_plot =
+#
+# }
 
 renderPlot({
   # base plot

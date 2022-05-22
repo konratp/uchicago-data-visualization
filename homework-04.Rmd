@@ -14,22 +14,29 @@ library(ggtext)
 
 ```{r exercise-1}
 #load data
-babydata <- read_csv("data/babynames.csv")
+babydata <- read_csv("data/babynames.csv", show_col_types = FALSE)
 
 #visualize popularity of my name
 babydata %>%
-  filter(name == "Konrad") %>%
-  ggplot(mapping = aes(x = year, y = n)) +
-  geom_line(color = "deepskyblue") +
-  scale_x_continuous(breaks = seq(1910, 2020, by = 10)) +
+  filter(name == "Konrad" | name == "Conrad",
+         sex == "M") %>%
+  ggplot(mapping = aes(x = year, y = n, color = name)) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(1880, 2020, by = 20)) +
+  scale_y_continuous(breaks = seq(0, 600, by = 100)) +
+  scale_color_manual(values = c("deepskyblue", "navy")) +
   theme_minimal() +
   theme(plot.title = element_markdown(),
         plot.subtitle = element_textbox_simple()) +
-  labs(title = "<span style = 'color:deepskyblue'>Number of Babies Named Konrad</span>",
-       subtitle ="<span style = 'color:navy'>In the United States between 1913 and 2022</span>",
+  labs(title = "<span style = 'color:deepskyblue'>Number of Babies Named Konrad or Conrad</span>",
+       subtitle ="<span style = 'color:navy'>In the United States between 1880 and 2020</span>",
        x = "Year",
-       y = "Number of Babies Named Konrad")
+       y = "Number of Babies Named Konrad or Conrad",
+       color = "Name")
 ```
+
+My name, Konrat, is unavailable in the dataset. This not particularly surprising to me, as it is a rather uncommon Turkish name. My parents gave me this name in part because people in Germany (where I grew up) would be familiar with the similar German name "Konrad," and perhaps more accepting of me than if I had a more recognizably Turkish name like Ahmet (my father's name) or Can. Therefore, even though it's not my name, I decided to browse the dataset for the names "Konrad" and "Conrad." It appears as though in the United States, the spelling "Conrad" has always been more popular than "Konrad," and I even know of some famous American "Conrads" -- e.g. Conrad Hilton. Most of the famous "Konrads" I'm aware of are German; take, for example, Konrad Zuse (a pioneer in computer science) or Konrad Adenauer (first post-WWII Chancellor of Germany).
+
 
 2.  **The app**
 
