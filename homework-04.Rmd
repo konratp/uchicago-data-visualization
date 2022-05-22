@@ -27,11 +27,14 @@ babydata %>%
   scale_color_manual(values = c("deepskyblue", "navy")) +
   theme_minimal() +
   theme(plot.title = element_markdown(),
-        plot.subtitle = element_textbox_simple()) +
-  labs(title = "<span style = 'color:deepskyblue'>Number of Babies Named Konrad or Conrad</span>",
-       subtitle ="<span style = 'color:navy'>In the United States between 1880 and 2020</span>",
-       x = "Year",
-       y = "Number of Babies Named Konrad or Conrad",
+        plot.subtitle = element_textbox_simple(),
+        axis.title.x = element_textbox_simple(),
+        axis.title.y = element_textbox_simple(orientation = "left-rotated"),
+        legend.position = "right")+
+  labs(title = "<span style = 'font-size:14pt; font-family:Century Gothic; color:deepskyblue'>Number of Babies Named Konrad or Conrad</span>",
+       subtitle ="<span style = 'font-size:10pt; font-family:Century Gothic; color:navy'>In the United States between 1880 and 2020</span>",
+       x = "<span style = 'font-size:10pt; font-family:Century Gothic'>Year</span>",
+       y = "<span style = 'font-size:10pt; font-family:Century Gothic'>Number of Babies named Konrad or Conrad</span>",
        color = "Name")
 ```
 
@@ -40,7 +43,7 @@ My name, Konrat, is unavailable in the dataset. This not particularly surprising
 
 2.  **The app**
 
-
+Please refer to the 
 
 3.  **The styled app**
 
