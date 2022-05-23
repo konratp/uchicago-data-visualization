@@ -71,7 +71,16 @@ server <- function(input, output, session) {
 
    babydata_fun <- reactive({
      babydata %>%
-       filter(name %in% input$name_choices)
+       filter(name %in% input$name_choices) %>%
+       group_by(name, year) %>%
+       summarize(n = sum(n))
+   })
+
+   babydata_fun2 <- reactive({
+     babydata %>%
+       filter(name %in% input$name_choices) %>%
+       group_by(name, year) %>%
+       summarize(prop = sum(prop))
    })
 
    output$name_abs_plot <- renderPlot({
@@ -85,7 +94,6 @@ server <- function(input, output, session) {
      )
 
      babydata_fun() %>%
-       group_by(name, year) %>%
        # draw the plot
        ggplot(
          mapping = aes(
@@ -105,6 +113,37 @@ server <- function(input, output, session) {
          title = "Absolute Name Popularity over Time"
        )
      })
+
+   output$name_rel_plot <- renderPlot({
+     validate(
+       need(
+         #if
+         expr = length(input$name_choices) <= 10,
+         #else
+         message = "Please select a maximum of 10 names"
+       )
+     )
+
+     babydata_fun2() %>%
+       # draw the plot
+       ggplot(
+         mapping = aes(
+           x = year,
+           y = prop,
+           group = name,
+           color = name
+         )
+       ) +
+       geom_line(size = 1) +
+       theme_minimal(base_size = 16) +
+       theme(legend.position = "bottom") +
+       labs(
+         x = "Year",
+         y = "Number of Babies Named {named_choices}",
+         color = "Name",
+         title = "Absolute Name Popularity over Time"
+       )
+   })
 }
 
 renderPlot({
