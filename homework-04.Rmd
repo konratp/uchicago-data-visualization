@@ -38,7 +38,7 @@ babydata %>%
        color = "Name")
 ```
 
-My name, Konrat, is unavailable in the dataset. This not particularly surprising to me, as it is a rather uncommon Turkish name. My parents gave me this name in part because people in Germany (where I grew up) would be familiar with the similar German name "Konrad," and perhaps more accepting of me than if I had a more recognizably Turkish name like Ahmet (my father's name) or Can. Therefore, even though it's not my name, I decided to browse the dataset for the names "Konrad" and "Conrad." It appears as though in the United States, the spelling "Conrad" has always been more popular than "Konrad," and I even know of some famous American "Conrads" -- e.g. Conrad Hilton. Most of the famous "Konrads" I'm aware of are German; take, for example, Konrad Zuse (a pioneer in computer science) or Konrad Adenauer (first post-WWII Chancellor of Germany).
+My name, Konrat, is unavailable in the dataset. This not particularly surprising to me, as it is a rather uncommon Turkish name. My parents gave me this name in part because people in Germany (where I grew up) would be familiar with the similar German name "Konrad," and perhaps more accepting of me than if I had a more recognizably Turkish name like Ahmet (my father's name) or Can. Therefore, even though it's not my name, I decided to browse the dataset for the names "Konrad" and "Conrad." It appears as though in the United States, the spelling "Conrad" has always been more popular than "Konrad," and I even know of some famous American "Conrads" -- e.g. Conrad Hilton. Most of the famous "Konrads" I'm aware of are German; take, for example, Konrad Zuse (a pioneer in computer science) or Konrad Adenauer (first post-WWII Chancellor of West Germany).
 
 2.  **The app**
 

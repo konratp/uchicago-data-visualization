@@ -16,11 +16,11 @@ popular_names <- babydata %>%
   slice(1:15) %>%
   mutate(most_popular = 1)
 
-names_data <- babydata %>%
+babydata <- babydata %>%
   filter(name %in% popular_names$name)
 
 #extract names as a character vector
-name_choices <- names_data %>%
+name_choices <- babydata %>%
   distinct(name) %>%
   arrange(name) %>%
   pull(name)
@@ -64,10 +64,48 @@ ui <- fluidPage(
 )
 
 # Define server function --------------------------------------------
-# server <- function(input, output, session) {
-#   output$name_abs_plot =
-#
-# }
+server <- function(input, output, session) {
+   output$name_choices <- reactive({
+     paste("You've selected",  length(input$name_choices), "names")
+   })
+
+   babydata_fun <- reactive({
+     babydata %>%
+       filter(name %in% input$name_choices)
+   })
+
+   output$name_abs_plot <- renderPlot({
+     validate(
+       need(
+         #if
+         expr = length(input$name_choices) <= 10,
+         #else
+         message = "Please select a maximum of 10 names"
+       )
+     )
+
+     babydata_fun() %>%
+       group_by(name, year) %>%
+       # draw the plot
+       ggplot(
+         mapping = aes(
+           x = year,
+           y = n,
+           group = name,
+           color = name
+         )
+       ) +
+       geom_line(size = 1) +
+       theme_minimal(base_size = 16) +
+       theme(legend.position = "bottom") +
+       labs(
+         x = "Year",
+         y = "Number of Babies Named {named_choices}",
+         color = "Name",
+         title = "Absolute Name Popularity over Time"
+       )
+     })
+}
 
 renderPlot({
   # base plot
@@ -94,42 +132,6 @@ renderPlot({
       )
     )
 })
-
-
-server <- function(input, output) {
-  # create a reactive plot based on age inputs
-  output$age_plot <- renderPlot({
-    # base plot
-    age_plot +
-      # label the current point
-      geom_point(
-        data = tibble(
-          you = input$age_you,
-          partner = input$age_partner
-        ),
-        mapping = aes(x = you, y = partner),
-        shape = 4,
-        size = 4
-      ) +
-      # leave appropriate cushion on x and y axes
-      coord_cartesian(
-        xlim = c(
-          max(age_min_data, input$age_you - cushion),
-          min(age_max_data, input$age_you + cushion)
-        ),
-        ylim = c(
-          max(age_min_data, input$age_partner - cushion),
-          min(age_max_data, input$age_partner + cushion)
-        )
-      )
-  })
-
-  # calculate if the relationship is permissible
-  output$age_check <- renderText(age_check(
-    input$age_you,
-    input$age_partner
-  ))
-}
 
 # Create the Shiny app object ---------------------------------------
 shinyApp(ui = ui, server = server)
