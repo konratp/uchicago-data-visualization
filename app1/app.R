@@ -45,11 +45,11 @@ ui <- fluidPage(
       tabsetPanel(
         type = "tabs",
         tabPanel(
-          title = "Name Popularity over Time, in Absolute Numbers",
+          title = "Absolute Name Popularity over Time",
           plotOutput(outputId = "name_abs_plot")
         ),
         tabPanel(
-          title = "Name Popularity over Time, in Relative Numbers",
+          title = "Relative Name Popularity over Time",
           plotOutput(outputId = "name_rel_plot")
         ),
         tabPanel(
@@ -74,7 +74,7 @@ server <- function(input, output, session) {
        filter(name %in% input$name_choices) %>%
        group_by(name, year) %>%
        summarize(n = sum(n),
-                 prop = sum(prop))
+                 percent = (sum(prop) * 100))
    })
 
    output$name_abs_plot <- renderPlot({
@@ -83,7 +83,7 @@ server <- function(input, output, session) {
          #if
          expr = length(input$name_choices) <= 10,
          #else
-         message = "Please select a maximum of 10 names"
+         message = "Please select a maximum of 10 names."
        )
      )
 
@@ -102,9 +102,10 @@ server <- function(input, output, session) {
        theme(legend.position = "bottom") +
        labs(
          x = "Year",
-         y = "Number of Babies Named {named_choices}",
+         y = "Number of Babies Born",
          color = "Name",
-         title = "Absolute Name Popularity over Time"
+         title = "Number of Babies Named Selected Names",
+         subtitle = "in the United States, 1880-2020"
        )
      })
 
@@ -123,7 +124,7 @@ server <- function(input, output, session) {
        ggplot(
          mapping = aes(
            x = year,
-           y = prop,
+           y = percent,
            group = name,
            color = name
          )
@@ -133,9 +134,10 @@ server <- function(input, output, session) {
        theme(legend.position = "bottom") +
        labs(
          x = "Year",
-         y = "Number of Babies Named {named_choices}",
+         y = "Percentage of Babies Born",
          color = "Name",
-         title = "Absolute Name Popularity over Time"
+         title = "Percentage of Babies Named Selected Names",
+         subtitle = "in the United States, 1880-2020"
        )
 
    })
