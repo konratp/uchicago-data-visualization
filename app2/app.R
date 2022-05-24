@@ -1,16 +1,20 @@
 # Load packages ----------------------------------------------------------------
 
 library(shiny)
+library(shinythemes)
+library(thematic)
 library(tidyverse)
 
 # Load data --------------------------------------------------------------------
 
 babydata <- read_csv("data/babynames.csv", show_col_types = FALSE)
 
+thematic_on()
+
 # Data manipulation ------------------------------------------------------------
 
 friend_names <- babydata %>%
-  filter((name == "Konrad" & sex == "M") | (name == "Hayley" & sex == "F") | (name == "Zachary" & sex == "M") | (name == "William" & sex == "M") | (name == "Zachariah" & sex == "M") | (name == "Levi" & sex == "M") | (name == "Alison" & sex == "F") | (name == "Carter" & sex == "M") | (name == "Emmanuel" & sex == "M") | (name == "Jack" & sex == "M") | (name == "Logan" & sex == "M") | (name == "Caroline" & sex == "F") | (name == "Richard" & sex == "M") | (name == "Wendy" & sex == "F") | (name == "Nikita" & sex == "M") | (name == "Clara" & sex == "F") | (name == "Silvio" & sex == "M") | (name == "Brenna" & sex == "F"))
+  filter((name == "Konrad" & sex == "M") | (name == "Hayley" & sex == "F") | (name == "Lisa" & sex == "F") | (name == "Zachary" & sex == "M") | (name == "William" & sex == "M") | (name == "Zachariah" & sex == "M") | (name == "Levi" & sex == "M") | (name == "Alison" & sex == "F") | (name == "Carter" & sex == "M") | (name == "Emmanuel" & sex == "M") | (name == "Jack" & sex == "M") | (name == "Logan" & sex == "M") | (name == "Caroline" & sex == "F") | (name == "Richard" & sex == "M") | (name == "Wendy" & sex == "F") | (name == "Nikita" & sex == "M") | (name == "Clara" & sex == "F") | (name == "Silvio" & sex == "M") | (name == "Brenna" & sex == "F"))
 
 babydata <- babydata %>%
   filter(name %in% friend_names$name)
@@ -27,6 +31,7 @@ selected_name_choices <- sample(name_choices, 2)
 # Define UI --------------------------------------------------------------------
 
 ui <- fluidPage(
+  theme = shinytheme("united"),
   titlePanel(title = "Name Popularity"),
   sidebarLayout(
     sidebarPanel = sidebarPanel(

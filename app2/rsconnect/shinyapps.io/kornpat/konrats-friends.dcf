@@ -5,9 +5,9 @@ account: kornpat
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6359395
-bundleId: 5937370
+bundleId: 5937423
 url: https://kornpat.shinyapps.io/konrats-friends/
-when: 1653359047.94717
-lastSyncTime: 1653359047.94718
+when: 1653360221.37853
+lastSyncTime: 1653360221.37856
 asMultiple: FALSE
 asStatic: FALSE
