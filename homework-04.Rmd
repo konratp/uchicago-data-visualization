@@ -13,7 +13,7 @@ library(rsconnect)
 
 1.  **How popular am I?**
 
-```{r exercise-1}
+```{r exercise-1-chunk}
 #load data
 babydata <- read_csv("data/babynames.csv", show_col_types = FALSE)
 
@@ -43,10 +43,10 @@ My name, Konrat, is unavailable in the dataset. This not particularly surprising
 
 2.  **The app**
 
-Please refer to the [App.R file](app1/app.R). You can access the published application [here.](https://kornpat.shinyapps.io/name-popularity-checker/)
+Please refer to the [App.R file](app1/app.R). You can access the published application [here](https://kornpat.shinyapps.io/name-popularity-checker/).
 
 3.  **The styled app**
 
-```{r label-me-3}
+```{r exercise-3-chunk}
 
 ```
