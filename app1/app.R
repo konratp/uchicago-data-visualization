@@ -81,6 +81,15 @@ server <- function(input, output, session) {
      validate(
        need(
          #if
+         expr = input$name_choices,
+         #else
+         message = "Please select at least 1 name."
+       )
+     )
+
+     validate(
+       need(
+         #if
          expr = length(input$name_choices) <= 10,
          #else
          message = "Please select a maximum of 10 names."
@@ -99,13 +108,15 @@ server <- function(input, output, session) {
        ) +
        geom_line(size = 1) +
        theme_minimal(base_size = 16) +
-       theme(legend.position = "bottom") +
+       theme(legend.position = "bottom",
+             plot.caption = element_text(hjust = 0)) +
        labs(
          x = "Year",
          y = "Number of Babies Born",
          color = "Name",
          title = "Number of Babies Named Selected Names",
-         subtitle = "in the United States, 1880-2020"
+         subtitle = "in the United States, 1880-2020",
+         caption = "Options are limited to the 15 most popular names by sex in the United States in 2020"
        )
      })
 
@@ -131,13 +142,15 @@ server <- function(input, output, session) {
        ) +
        geom_line(size = 1) +
        theme_minimal(base_size = 16) +
-       theme(legend.position = "bottom") +
+       theme(legend.position = "bottom",
+             plot.caption = element_text(hjust = 0)) +
        labs(
          x = "Year",
          y = "Percentage of Babies Born",
          color = "Name",
          title = "Percentage of Babies Named Selected Names",
-         subtitle = "in the United States, 1880-2020"
+         subtitle = "in the United States, 1880-2020",
+         caption = "Options are limited to the 15 most popular names by sex in the United States in 2020"
        )
 
    })
