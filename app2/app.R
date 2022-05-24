@@ -91,9 +91,9 @@ server <- function(input, output, session) {
     validate(
       need(
         #if
-        expr = length(input$name_choices) <= 10,
+        expr = length(input$name_choices) <= 8,
         #else
-        message = "Please select a maximum of 10 names."
+        message = "Please select a maximum of 8 names."
       )
     )
 
@@ -115,7 +115,7 @@ server <- function(input, output, session) {
         x = "Year",
         y = "Number of Babies Born",
         color = "Name",
-        title = "Number of Babies Named Selected Names",
+        title = paste("Number of Babies Named", paste(input$name_choices, collapse = ", ")),
         subtitle = "in the United States, 1880-2020",
         caption = "Options are limited to the names of a selection of Konrat's friends"
       )
@@ -149,10 +149,11 @@ server <- function(input, output, session) {
         x = "Year",
         y = "Percentage of Babies Born",
         color = "Name",
-        title = "Percentage of Babies Named Selected Names",
+        title = paste("Percentage of Babies Named", paste(input$name_choices, collapse = ", ")),
         subtitle = "in the United States, 1880-2020",
         caption = "Options are limited to the names of a selection of Konrat's friends"
       )
+
 
   })
 
