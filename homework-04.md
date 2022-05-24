@@ -7,6 +7,7 @@ library(tidyverse)
 library(babynames)
 library(ggtext)
 library(rsconnect)
+library(shinythemes)
 ```
 
 1.  **How popular am I?**
@@ -37,7 +38,7 @@ babydata %>%
        color = "Name")
 ```
 
-![](homework-04_files/figure-gfm/exercise-1-1.png)<!-- -->
+![](homework-04_files/figure-gfm/exercise-1-chunk-1.png)<!-- -->
 
 My name, Konrat, is unavailable in the dataset. This not particularly
 surprising to me, as it is a rather uncommon Turkish name. My parents
@@ -55,8 +56,15 @@ Chancellor of West Germany).
 
 2.  **The app**
 
-Please refer to the [App.R file](app1/app.R). You can access the
-published application
-[here.](https://kornpat.shinyapps.io/name-popularity-checker/)
+For this exercise, I built an app where one can look at the absolute and
+relative popularities of the top-15 most popular names in 2020 by sex.
+Please refer to the [app.R file](app1/app.R) for the code. You can
+access the published application
+[here](https://kornpat.shinyapps.io/name-popularity-checker/).
 
 3.  **The styled app**
+
+For this exercise, I kept the same basic structure from the previous
+app, but this time changed the selection to include a few names of my
+friends. You can find the code [here](app2/app.R), and the published
+application [here](https://kornpat.shinyapps.io/konrats-friends/).
