@@ -1,7 +1,7 @@
 ---
 title: "analysis - ATP and WTA rankings"
 output: html_document
-date: '2022-05-11'
+date: '2022-05-24'
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +10,7 @@ library(tidyverse)
 library(colorspace)
 library(scales)
 library(lubridate)
-library(readr)
+library(data.table)
 
 # set default theme for ggplot2
 ggplot2::theme_set(ggplot2::theme_minimal(base_size = 16))
@@ -26,55 +26,37 @@ options(dplyr.print_max = 6, dplyr.print_min = 6)
 ## Import data
 
 ```{r import_data}
-rankings <- read_csv("data/atp/atp_rankings_80s.csv") # NB: ranking points are given from 90s onwards.
+rankings <- read_csv("data/atp/atp_rankings_00s.csv") # NB: ranking points are given from 90s onwards.
 
 rankings %>%  str
 rankings %>% head
 
-# keep top 20 or 50 or 100 ranked players only. Rankings go up to 1300.
+# ------------------------------------- keep data for only top 20 or 50 or 100 ranks. Rankings go up to 1300. -------------------------------------
 rankings = rankings %>% filter(rank < 20)
 
-```
-
-```{r load_all_files, echo=FALSE}
-# read in all ranking csv files
-
-mydir = "./data/atp/"
-myfiles = list.files(path=mydir, pattern="atp_rankings*", full.names=TRUE)
-myfiles 
-
-rankings_all =  
-  myfiles %>% 
-  map_df(~read_csv(.))
-
-rankings_all = rankings_all %>% filter(rank < 20)
-rankings_all
-```
-
-
-```{r date_column}
-# convert ranking_date to a Date object -------------------------------------
+# ------------------------------------- convert ranking_date to a Date object -------------------------------------
 rankings = rankings %>% 
   mutate(rankingDate = ymd(ranking_date) ) %>% 
   select(-ranking_date)
-# rankings
 
 ```
+
 ## Plot sample trajectories
 ```{r sample_trajectories}
 rankings$player %>%  unique
 
-# rankings %>%  filter(player %in% c(101736, 102338, 101948)) %>% 
-rankings %>%  filter(player %in% c(100437, 100284, 100428)) %>% 
+rankings %>%  filter(player %in% c(101736, 102338, 101948)) %>%
+# rankings %>%  filter(player %in% c(100437, 100284, 100428)) %>% 
   ggplot(aes( x= rankingDate, y = rank, colour= as.factor(player) )) +
   geom_line(alpha=0.2) +
   geom_point() +
   scale_colour_discrete_qualitative("Dark 3")
 ```
 ## Note: We could collect statistics for ranking *points* instead of the rank itself. However, points are only awarded from the 90s onwards, so to be able to treat previous decades, we look at the rank itself.
-## Note 2: This means that the fluctuations will have objectively small values. 
+## Note 2: This means that the fluctuations will have small values. 
 
-```{r collect_statistics}
+```{r collect_statistics_for_decade} 
+## This method gives one (mean,SD) pair for each player for the entire dataframe, i.e. for a 10-year period.
 rankingStats = rankings %>%  
   group_by(player) %>% 
   summarise(
@@ -84,16 +66,171 @@ rankingStats = rankings %>%
   na.omit()
 rankingStats 
 
-sum(rankingStats$spreadRanking)/nrow(rankingStats)
+## Final quantity we want is the average spread for all men, = sqrt((\sum \sigma_i^2)/N),
+## where N is the number of players in consideration. 
+## NB: N will not be the same between men and women, since we are subsetting the df to the top-R ranks. Here, R=20. 
+## But N should be of similar values between men and women.
+spread_men = '^'(sum('^'(rankingStats$spreadRanking,2))/nrow(rankingStats), 1/2)
+
+nrow(rankingStats)
 
 ```
 
+## Test Zone for slicing code
+```{r}
+# Cut up a time-series df into custom time slices. See: https://stackoverflow.com/questions/72280177/average-over-time-series-data-with-custom-time-slice-window
+# slice_by_year <- function(rankings, y) {
+#   # y: number of years
+#   rankings %>%
+#   mutate(floor = y * floor(lubridate::year(rankingDate) / y),
+#          slice = paste(floor, floor + 1, sep = '-')) %>%
+#   select(-floor)
+# }
+# 
+# # rankings_sliced_by_year = 
+#   slice_by_year(rankings, 8) %>%
+#   group_by(player, slice) %>%
+#   summarize(average_ranking = mean(rank)) %>% 
+#     arrange(player)
+  
+
+
+
+## Faster option, works! ...
+time_slice <- function(s,e,p, u=c("y","m","d")) {
+  # s: start date. string or Date.
+  # e: end date. Ditto.
+  # p: period. integer.
+  # return: a data.table object, with an extra int `period` column that gives the index of the time slice
+  
+  u=match.arg(u)
+  uf = list("y"=years,"m"=months,"d"=days)
+  data.table(s = seq(as.Date(s), as.Date(e),by=paste(p,u)))[,`:=`(e=s %m+% uf[[u]](p), period=1:.N)]
+}
+
+setDT(rankings)
+rankings_sliced = rankings[time_slice("2000-01-01", max(rankings$rankingDate), 2), on=.(rankingDate>=s, rankingDate<=e)] %>%
+  .[,.(avg_rank=mean(rank,na.rm=T), sd_rank=sd(rank,na.rm=T)), by=.(player,period )]
+
+
+# plot rankings for same 3 players from before
+rankings_sliced %>%  filter(player %in% c(101736, 102338, 101948)) %>%
+  ggplot(aes( x= period, y = avg_rank, colour= as.factor(player) )) +
+  geom_line(alpha=0.2) +
+  geom_point() +
+  scale_colour_discrete_qualitative("Dark 3")
+
+# calculate net SD for men for all time slices
+rankings_sliced %>% group_by(period) %>% 
+  summarise(total_sd = seewave::rms(sd_rank, na.rm=T))
+
+```
+
+# Now treat all ranking files at one go
+
+```{r load_all_ATP, echo=FALSE}
+# ------------------------------------- read in all ranking csv files -----------------------------------------
+mydir = "./data/atp/"
+myfiles = list.files(path=mydir, pattern="atp_rankings*", full.names=TRUE)
+myfiles 
+
+rankings_all_ATP = myfiles %>% map_df(~read_csv(.))
+
+# ------------------------------------- data wrangling -----------------------------------------
+rankings_all_ATP = rankings_all_ATP %>% 
+  # keep only top R rankings
+  filter(rank <= 50) %>% 
+  # turn year column into a Date object
+  mutate(rankingDate = ymd(ranking_date) ) %>% 
+  select(-ranking_date)
+
+rankings_all_ATP %>% head
+```
+
+```{r stats_all_ATP}
+
+# -------------------- slice into 5-year slices (or whatever period you wish) -----------------------------------------
+setDT(rankings_all_ATP)
+start = min(rankings_all_ATP$rankingDate) # must be a string or Date, like "2000-01-01"
+end = max(rankings_all_ATP$rankingDate)
+
+# slice data
+rankings_all_ATP_sliced = rankings_all_ATP[time_slice(start, end, 5), on=.(rankingDate>=s, rankingDate<=e)] %>%
+  .[,.(avg_rank=mean(rank,na.rm=T), sd_rank=sd(rank,na.rm=T)), by=.(player,period )]
+
+
+# calculate average SD for men for each time slice
+stats_ATP = rankings_all_ATP_sliced %>% group_by(period) %>% 
+  summarise(total_sd = seewave::rms(sd_rank, na.rm=T)) 
+
+stats_ATP %>% ggplot(aes(x=period, y=total_sd)) +
+  geom_point(colour="blue") +
+  geom_hline(yintercept=mean(stats_ATP$total_sd)) +
+  labs(
+    title = "Inconsistency in performance of ATP players",
+    subtitle = "1970-2020, 5-year chunks",
+    y = "Spread",
+    x = "Time period"
+  )
+
+
+```
+
+```{r load_all_WTA, echo=FALSE}
+# ------------------------------------- read in all ranking csv files -----------------------------------------
+mydir = "./data/wta/"
+myfiles = list.files(path=mydir, pattern="wta_rankings*", full.names=TRUE)
+myfiles 
+
+rankings_all_WTA = myfiles %>% map_df(~read_csv(.))
+
+# ------------------------------------- data wrangling -----------------------------------------
+rankings_all_WTA = rankings_all_WTA %>% 
+  # keep only top R rankings
+  filter(rank <= 50) %>% 
+  # turn year column into a Date object
+  mutate(rankingDate = ymd(ranking_date) ) %>% 
+  select(-ranking_date)
+
+rankings_all_WTA %>% head
+```
+
+```{r stats_all_WTA}
+
+# -------------------- slice into 5-year slices (or whatever period you wish) -----------------------------------------
+setDT(rankings_all_WTA)
+start = min(rankings_all_WTA$rankingDate) # must be a string or Date, like "2000-01-01"
+end = max(rankings_all_WTA$rankingDate)
+
+# slice data
+rankings_all_WTA_sliced = rankings_all_WTA[time_slice(start, end, 5), on=.(rankingDate>=s, rankingDate<=e)] %>%
+  .[,.(avg_rank=mean(rank,na.rm=T), sd_rank=sd(rank,na.rm=T)), by=.(player,period )]
+
+
+# calculate average SD for men for each time slice
+stats_WTA = rankings_all_WTA_sliced %>% group_by(period) %>% 
+  summarise(total_sd = seewave::rms(sd_rank, na.rm=T)) 
+
+stats_WTA %>% ggplot(aes(x=period, y=total_sd)) +
+  geom_point(colour="red") +
+  geom_hline(yintercept=mean(stats_WTA$total_sd)) +
+  labs(
+    title = "Inconsistency in performance of WTA players",
+    subtitle = "1970-2020, 5-year chunks",
+    y = "Spread",
+    x = "Time period"
+  )
+```
+
+
+---
+## Ignore everything below
 ```{r create_function}
 calculate_fluctuations_rankings <- function(rankings_df, NPLAYERS) {
   
   # keep top NPLAYERS players only -------------------------------------
   # Suggest NPLAYERS=20, 50 or 100. Rankings go up to 1300.
-  rankings = rankings_df %>% filter(rank < NPLAYERS)
+  rankings = rankings_df %>% filter(rank <= NPLAYERS)
   
   # convert ranking_date to a Date object -------------------------------------
   rankings = rankings %>% 
@@ -135,7 +272,7 @@ stats_top20_10 = calculate_fluctuations_rankings(rankings10, 20)
 rankings20 <- read_csv("data/atp/atp_rankings_20s.csv") # NB: ranking points are given from 90s onwards.
 stats_top20_20 = calculate_fluctuations_rankings(rankings20, 20)
 ```
-```{r}
+```{r treat all decades}
 
 list_dfs = list(rankings80,rankings90,rankings00,rankings10,rankings20)
 fluctuations_top20 = lapply(list_dfs, calculate_fluctuations_rankings, 20)
