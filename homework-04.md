@@ -6,6 +6,7 @@ Konrat Pekkip
 library(tidyverse)
 library(babynames)
 library(ggtext)
+library(rsconnect)
 ```
 
 1.  **How popular am I?**
@@ -50,10 +51,12 @@ name, I decided to browse the dataset for the names “Konrad” and
 some famous American “Conrads” – e.g. Conrad Hilton. Most of the famous
 “Konrads” I’m aware of are German; take, for example, Konrad Zuse (a
 pioneer in computer science) or Konrad Adenauer (first post-WWII
-Chancellor of Germany).
+Chancellor of West Germany).
 
 2.  **The app**
 
-Please refer to the [App.R file](app1/app.R).
+Please refer to the [App.R file](app1/app.R). You can access the
+published application
+[here.](https://kornpat.shinyapps.io/name-popularity-checker/)
 
 3.  **The styled app**

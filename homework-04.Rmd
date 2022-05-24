@@ -8,6 +8,7 @@ output: github_document
 library(tidyverse)
 library(babynames)
 library(ggtext)
+library(rsconnect)
 ```
 
 1.  **How popular am I?**
@@ -42,33 +43,7 @@ My name, Konrat, is unavailable in the dataset. This not particularly surprising
 
 2.  **The app**
 
-Please refer to the [App.R file](app1/app.R).
-
-```{r test-chunk}
-#build static plot for first part
-  
-babydata_amended %>%
-  group_by(name) %>%
-  filter(name == "Emma") %>%
-       group_by(name, year) %>%
-       # draw the plot
-       ggplot(
-         mapping = aes(
-           x = year,
-           y = n,
-           group = name,
-           color = name
-         )
-       ) +
-       geom_line(size = 1) +
-       theme_minimal(base_size = 16) +
-       theme(legend.position = "bottom") +
-       labs(
-         x = "Year",
-         y = "Number of Babies Named {named_choices}",
-         color = "Name",
-         title = "Absolute Name Popularity over Time")
-```
+Please refer to the [App.R file](app1/app.R). You can access the published application [here.](https://kornpat.shinyapps.io/name-popularity-checker/)
 
 3.  **The styled app**
 
