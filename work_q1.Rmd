@@ -1,5 +1,5 @@
 ---
-title: "analysis - ATP and WTA rankings"
+title: "Rough work - ATP and WTA rankings"
 output: html_document
 date: '2022-05-24'
 ---
@@ -98,6 +98,7 @@ nrow(rankingStats)
 
 ## Faster option, works! ...
 time_slice <- function(s,e,p, u=c("y","m","d")) {
+  # Function for slicing a df along the time axis, using start date, end date, and time period to skip.
   # s: start date. string or Date.
   # e: end date. Ditto.
   # p: period. integer.
@@ -193,33 +194,91 @@ rankings_all_WTA = rankings_all_WTA %>%
   select(-ranking_date)
 
 rankings_all_WTA %>% head
+
+```
+```{r define_functions}
+time_slice <- function(s,e,p, u=c("y","m","d")) {
+  # Function for slicing a df along the time axis, using start date, end date, and time period to skip.
+  # s: start date. string or Date.
+  # e: end date. Ditto.
+  # p: period. integer.
+  # return: a data.table object, with an extra int `period` column that gives the index of the time slice
+  
+  u=match.arg(u)
+  uf = list("y"=years,"m"=months,"d"=days)
+  data.table(s = seq(as.Date(s), as.Date(e),by=paste(p,u)))[,`:=`(e=s %m+% uf[[u]](p), period=1:.N)]
+}
+
+
+treat_rankings_data = function(df, R,Y){
+  # Function to filter and slice rankings date using parameters R (for rank) and Y (for years).
+  # R: subset data for only top R rankings. integer.
+  # Y: make Y-year time slices. integer.
+  # returns: data.frame dataframe with time encoded in the variable `period`
+
+  
+ ## -------------------  treat df, incl. restricting to top R ranks -------------------
+  df = df %>% 
+    # keep only top R rankings
+    filter(rank <= R) %>% 
+    # turn year column into a Date object
+    mutate(rankingDate = ymd(ranking_date) ) %>% 
+    select(-ranking_date)
+  
+  ## -------------------- slice into Y-year slices (or whatever period you wish -------------------
+  setDT(df)
+  start = min(df$rankingDate) # must be a string or Date, like "2000-01-01"
+  end = max(df$rankingDate)
+  
+  # slice data
+  df_sliced = df[time_slice(start, end, Y), on=.(rankingDate>=s, rankingDate<=e)] %>%
+    .[,.(avg_rank=mean(rank,na.rm=T), sd_rank=sd(rank,na.rm=T)), by=.(player,period )]
+  
+  df_sliced
+}
 ```
 
 ```{r stats_all_WTA}
+rankings_all_ATP_sliced = treat_rankings_data(rankings_all_ATP, R=20, Y=3)
+rankings_all_WTA_sliced = treat_rankings_data(rankings_all_WTA, R=20, Y=3)
 
-# -------------------- slice into 5-year slices (or whatever period you wish) -----------------------------------------
-setDT(rankings_all_WTA)
-start = min(rankings_all_WTA$rankingDate) # must be a string or Date, like "2000-01-01"
-end = max(rankings_all_WTA$rankingDate)
+## Calculate average SD for each time slice
+## Final quantity we want is the average SD for all men = RMS(individual SD's).
 
-# slice data
-rankings_all_WTA_sliced = rankings_all_WTA[time_slice(start, end, 5), on=.(rankingDate>=s, rankingDate<=e)] %>%
-  .[,.(avg_rank=mean(rank,na.rm=T), sd_rank=sd(rank,na.rm=T)), by=.(player,period )]
-
-
-# calculate average SD for men for each time slice
+stats_ATP = rankings_all_ATP_sliced %>% group_by(period) %>% 
+  summarise(total_sd = seewave::rms(sd_rank, na.rm=T)) 
 stats_WTA = rankings_all_WTA_sliced %>% group_by(period) %>% 
   summarise(total_sd = seewave::rms(sd_rank, na.rm=T)) 
 
-stats_WTA %>% ggplot(aes(x=period, y=total_sd)) +
-  geom_point(colour="red") +
-  geom_hline(yintercept=mean(stats_WTA$total_sd)) +
+## Combine df's and plot
+bind_rows(stats_ATP, stats_WTA, .id = "id") %>% 
+  mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
+  ggplot(aes(x=period, y=total_sd, colour=id)) +
+  geom_point() +
+  geom_hline(yintercept=mean(stats_ATP$total_sd), colour="red") +
+  geom_hline(yintercept=mean(stats_WTA$total_sd), colour="blue") +
   labs(
     title = "Inconsistency in performance of WTA players",
     subtitle = "1970-2020, 5-year chunks",
     y = "Spread",
     x = "Time period"
   )
+
+```
+```{r}
+bind_rows(stats_ATP, stats_WTA, .id = "id") %>% 
+  mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
+  ggplot(aes(x=period, y=total_sd, colour=id)) +
+  geom_point() +
+  geom_hline(yintercept=mean(stats_ATP$total_sd), colour="red") +
+  geom_hline(yintercept=mean(stats_WTA$total_sd), colour="blue") +
+  labs(
+    title = "Inconsistency in performance of WTA players",
+    subtitle = "1970-2020, 5-year chunks",
+    y = "Spread",
+    x = "Time period"
+  )
+  
 ```
 
 

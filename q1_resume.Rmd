@@ -1,0 +1,128 @@
+---
+title: "Analysis - ATP and WTA rankings"
+output: html_document
+date: '2022-05-25'
+---
+
+```{r setup, include=FALSE}
+# load packages
+library(tidyverse)
+library(colorspace)
+library(scales)
+library(lubridate)
+library(data.table)
+
+# set default theme for ggplot2
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 16))
+# set default figure parameters for knitr
+knitr::opts_chunk$set(
+  fig.width = 8, fig.asp = 0.618, fig.retina = 3,
+  dpi = 400, out.width = "90%"
+)
+# dplyr print min and max
+options(dplyr.print_max = 6, dplyr.print_min = 6)
+```
+
+## Define necessary functions  
+We should not need to touch these again.
+
+```{r define_functions}
+time_slice <- function(s,e,p, u=c("y","m","d")) {
+  # Function for slicing a df along the time axis, using start date, end date, and time period to skip.
+  # s: start date. string or Date.
+  # e: end date. Ditto.
+  # p: period. integer.
+  # return: a data.table object, with an extra int `period` column that gives the index of the time slice
+  
+  u=match.arg(u)
+  uf = list("y"=years,"m"=months,"d"=days)
+  data.table(s = seq(as.Date(s), as.Date(e),by=paste(p,u)))[,`:=`(e=s %m+% uf[[u]](p), period=1:.N)]
+}
+
+
+treat_rankings_data = function(df, R,Y){
+  # Function to filter and slice rankings date using parameters R (for rank) and Y (for years).
+  # R: subset data for only top R rankings. integer.
+  # Y: make Y-year time slices. integer.
+  # returns: data.frame dataframe with time encoded in the variable `period`
+
+  
+ ## -------------------  treat df, incl. restricting to top R ranks -------------------
+  df = df %>% 
+    # keep only top R rankings
+    filter(rank <= R) %>% 
+    # turn year column into a Date object
+    mutate(rankingDate = ymd(ranking_date) ) %>% 
+    select(-ranking_date)
+  
+  ## -------------------- slice into Y-year slices (or whatever period you wish -------------------
+  setDT(df)
+  start = min(df$rankingDate) # must be a string or Date, like "2000-01-01"
+  end = max(df$rankingDate)
+  
+  # slice data and collect mean and SD of `rank` variable
+  df_sliced = df[time_slice(start, end, Y), on=.(rankingDate>=s, rankingDate<=e)] %>%
+    .[,.(avg_rank=mean(rank,na.rm=T), sd_rank=sd(rank,na.rm=T)), by=.(player,period )]
+  
+  df_sliced
+}
+```
+
+## Load data
+
+```{r load_data, echo=FALSE}
+# ------------------------------------- read in all ATP ranking csv files -----------------------------------------
+mydir = "./data/atp/"
+myfiles = list.files(path=mydir, pattern="atp_rankings*", full.names=TRUE)
+myfiles 
+
+rankings_all_ATP = myfiles %>% map_df(~read_csv(., show_col_types = FALSE))
+
+# ------------------------------------- read in all WTA ranking csv files -----------------------------------------
+mydir = "./data/wta/"
+myfiles = list.files(path=mydir, pattern="wta_rankings*", full.names=TRUE)
+myfiles 
+
+rankings_all_WTA = myfiles %>% map_df(~read_csv(., show_col_types = FALSE))
+
+```
+
+## Get time-sliced data, calculate stats, then plot
+
+```{r stats_and_plot}
+R = 20 # top R-rankings
+Y = 3 # Y-year time slices
+
+rankings_all_ATP_sliced = treat_rankings_data(rankings_all_ATP, R, Y)
+rankings_all_WTA_sliced = treat_rankings_data(rankings_all_WTA, R, Y)
+
+## Calculate average SD for each time slice
+## NB: final quantity we want is the average SD for all men = RMS(individual SD's).
+stats_ATP = rankings_all_ATP_sliced %>% group_by(period) %>% 
+  summarise(total_sd = seewave::rms(sd_rank, na.rm=T)) 
+stats_WTA = rankings_all_WTA_sliced %>% group_by(period) %>% 
+  summarise(total_sd = seewave::rms(sd_rank, na.rm=T)) 
+
+## Combine stats df's and plot
+bind_rows(stats_ATP, stats_WTA, .id = "id") %>% 
+  mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
+  ggplot(aes(x=period, y=total_sd, colour=id)) +
+  geom_point() +
+  geom_hline(yintercept=mean(stats_ATP$total_sd), colour="red") +
+  geom_hline(yintercept=mean(stats_WTA$total_sd), colour="blue") +
+  labs(
+    title = "Inconsistency in performance of pro tennis players",
+    subtitle = paste0("1980-2020, ", Y, "-year time slices, ", "top ", R," ranks only"),
+    y = "Spread",
+    x = "Time period"
+  )
+
+```
+
+
+### REMARKS (faceting, shiny interactions, etc.):  
+There are two dimensions along which one could 'facet' this plot: the top-R rankings, and slice along Y-year time period. We should include both as options in the shiny app, so that people can explore as they please. For the presentation, we need to explore the data set ourselves with different options, and see what trends we find. This will be our finding for Q1.
+
+#### **For Shiny**:  
+For Y, include a drop-down list with common-sense options like 1, 2, 5, 10 (10 should be max).  
+For R, I guess we could again do a drop-down menu with options like 10, 20, 50, 100, 200, 500, 1000, All (There are total 1300 rankings on the tour, I believe).
