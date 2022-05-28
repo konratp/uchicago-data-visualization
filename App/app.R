@@ -10,6 +10,12 @@ library(data.table)
 library(shiny)
 library(shinythemes)
 library(thematic)
+library(ggtext)
+
+# atp_rankings_20s.csv
+# wta_rankings_20s.csv
+# atp_rankings_current.csv
+# wta_rankings_current.csv
 
 # load data
 # read in all ATP ranking csv files
@@ -76,11 +82,10 @@ treat_rankings_data <- function(df, R, Y) {
 tab1_sidebar_content <- sidebarPanel(
     selectInput(
         "time_slice", "Time Slice",
-        c("1" = 1,
-            "2" = 2,
+        c("2" = 2,
             "5" = 5,
             "10" = 10),
-        selected = 1
+        selected = 2
     ),
     selectInput(
         "ranks", "Ranks to Include",
@@ -92,7 +97,17 @@ tab1_sidebar_content <- sidebarPanel(
             "500" = 500,
             "1000" = 1000),
         selected = 10
-    )
+    ),
+    p("This plot presents a visual representation of the ",
+        strong("standard deviation"),
+        "of ",
+        strong("ATP", style = "color:#c82027"),
+        " (male) and ",
+        strong("WTA", style = "color:#1f1a4f"),
+        " (female) players."
+    ),
+    p("- Change the time slice to aggregate different numbers of years into a single period.  The value selected operates as the number of years to aggregate."),
+    p("- Change the ranks to include to incorporate greater or fewer players into each aggregation.  Ranks up to the value selected will be included.")
 )
 
 tab1_main_content <- mainPanel(
@@ -100,8 +115,8 @@ tab1_main_content <- mainPanel(
 )
 
 tab1 <- tabPanel(
-    "Tab1",
-    titlePanel("Tab1 title"),
+    "Standard Deviation of Ranks",
+    titlePanel("Do (long-term) fluctuations in rankings differ significantly between men and women?"),
     sidebarLayout(tab1_sidebar_content, tab1_main_content)
 )
 
@@ -144,19 +159,45 @@ server <- function(input, output, session) {
             group_by(period) %>%
             summarise(total_sd = seewave::rms(sd_rank, na.rm = T))
 
+        limits <- c(0)
+        breaks <- c(0)
+        labels <- c(0)
+        
+        if (Y == 2) {
+            limits <- c(1, 20)
+            breaks <- c(1, 5, 10, 15, 20)
+            labels <- c("80-81", "88-89", "98-99", "08-09", "18-19")
+        } else if (Y == 5) {
+            limits <- c(1, 8)
+            breaks <- c(1, 2, 3, 4, 5, 6, 7, 8)
+            labels <- c("80-84", "85-89","90-94","95-99","00-04","05-09","10-14","15-19")
+        } else {
+            limits <- c(1, 4)
+            breaks <- c(1, 2, 3, 4)
+            labels <- c("80-89", "90-99", "00-09", "10-19")
+        }
+
         ## Combine stats df's and plot
         bind_rows(stats_ATP, stats_WTA, .id = "id") %>%
             mutate(id = recode(id, "1" = "ATP", "2" = "WTA")) %>%
         ggplot(aes(x = period, y = total_sd, colour = id)) +
             geom_point() +
-            geom_hline(yintercept = mean(stats_ATP$total_sd), colour = "red") +
-            geom_hline(yintercept = mean(stats_WTA$total_sd), colour = "blue") +
+            geom_hline(yintercept = mean(stats_ATP$total_sd), colour = "#c82027") +
+            geom_hline(yintercept = mean(stats_WTA$total_sd), colour = "#1f1a4f") +
+            scale_color_manual(values = c("ATP" = "#c82027", "WTA" = "#1f1a4f")) +
+            scale_x_continuous(
+                limits = limits,
+                breaks = breaks,
+                labels = labels
+            ) +
+            theme(legend.position = "none") +
             labs(
-                title = "Inconsistency in performance of pro tennis players",
-                subtitle = paste0("1980-2020, ", Y, "-year time slices, ", "top ", R," ranks only"),
+                title = "Average Standard Deviation in Rankings of <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> Tennis Players",
+                subtitle = paste0("1980-2019, ", Y, "-year time slices, ", "Top ", R," ranks only"),
                 y = "Spread",
                 x = "Time period"
-        )
+            ) +
+            theme(plot.title = element_markdown())
     })
 }
 
