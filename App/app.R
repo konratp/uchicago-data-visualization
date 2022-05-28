@@ -7,6 +7,9 @@ library(colorspace)
 library(scales)
 library(lubridate)
 library(data.table)
+library(shiny)
+library(shinythemes)
+library(thematic)
 
 # load data
 # read in all ATP ranking csv files
@@ -22,6 +25,10 @@ my_files <- list.files(path = "./data/wta/",
                     full.names = TRUE)
 
 rankings_all_WTA <- my_files %>% map_df(~read_csv(., show_col_types = FALSE))
+
+#set theme
+
+thematic_on()
 
 # define helper functions
 
@@ -113,6 +120,7 @@ tab2 <- tabPanel(
 )
 
 ui <- navbarPage(
+    theme = shinytheme("united"),
     "Title of the project",
     tab1,
     tab2
