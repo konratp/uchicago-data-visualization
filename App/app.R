@@ -1,5 +1,5 @@
-# load packages
 
+# load packages
 library(shiny)
 library(tidyverse)
 library(rsconnect)
@@ -7,15 +7,10 @@ library(colorspace)
 library(scales)
 library(lubridate)
 library(data.table)
-library(shiny)
-library(shinythemes)
-library(thematic)
+# library(shinythemes)
+# library(thematic)
 library(ggtext)
-
-# atp_rankings_20s.csv
-# wta_rankings_20s.csv
-# atp_rankings_current.csv
-# wta_rankings_current.csv
+library(stringi)
 
 # load data
 # read in all ATP ranking csv files
@@ -32,9 +27,71 @@ my_files <- list.files(path = "./data/wta/",
 
 rankings_all_WTA <- my_files %>% map_df(~read_csv(., show_col_types = FALSE))
 
+
+# read in all ATP match data
+filenames <- list.files(path = "./data/atp/",
+                        pattern = "atp_matches*",
+                        full.names = TRUE)
+
+combo_data_ATP <- map_df(filenames,
+    ~read_csv(.x,
+    col_types = cols_only(best_of = "i",
+                            w_bpFaced = "i",
+                            w_bpSaved = "i",
+                            l_bpFaced = "i",
+                            l_bpSaved = "i",
+                            surface = "c"),
+    show_col_types = FALSE)
+    %>% mutate(year = as.integer(stri_extract_last(.x, regex = "(\\d+)")))
+) %>%
+    na.omit()
+
+# read in all WTP match data
+filenames <- list.files(path = "./data/wta/",
+                        pattern = "wta_matches*",
+                        full.names = TRUE)
+
+combo_data_WTA <- map_df(filenames,
+    ~read_csv(.x,
+    col_types = cols_only(best_of = "i",
+                            w_bpFaced = "i",
+                            w_bpSaved = "i",
+                            l_bpFaced = "i",
+                            l_bpSaved = "i",
+                            surface = "c"),
+    show_col_types = FALSE)
+    %>% mutate(year = as.integer(stri_extract_last(.x, regex = "(\\d+)")))
+) %>%
+  na.omit()
+
+# calculate stats
+# ATP stats
+breaks_stats_ATP <- combo_data_ATP %>%
+    mutate(total_breaks = (w_bpFaced - w_bpSaved) + (l_bpFaced - l_bpSaved)) %>%
+    mutate(breaks_per_set = total_breaks / best_of) %>%
+    group_by(year, surface) %>%
+    summarise(
+        avg_breaks_surface = mean(breaks_per_set, na.rm = TRUE)
+    )
+
+breaks_per_year_ATP <- breaks_stats_ATP %>%
+    summarise(avg_breaks = mean(avg_breaks_surface))
+
+# WTA stats
+breaks_stats_WTA <- combo_data_WTA %>%
+    mutate(total_breaks = (w_bpFaced - w_bpSaved) + (l_bpFaced - l_bpSaved)) %>%
+    mutate(breaks_per_set = total_breaks / best_of) %>%
+    group_by(year, surface) %>%
+    summarise(
+        avg_breaks_surface = mean(breaks_per_set, na.rm = TRUE)
+    )
+
+breaks_per_year_WTA <- breaks_stats_WTA %>%
+  summarise(avg_breaks = mean(avg_breaks_surface))
+
 #set theme
 
-thematic_on()
+# thematic_on()
 
 # define helper functions
 
@@ -121,21 +178,28 @@ tab1 <- tabPanel(
 )
 
 tab2_sidebar_content <- sidebarPanel(
-    "tab2 sidebar panel"
+    selectInput(
+        "surface", "Surface",
+        c("All" = "All",
+            "Hard" = "Hard",
+            "Grass" = "Grass",
+            "Clay" = "Clay",
+            "Carpet" = "Carpet")
+    )
 )
 
 tab2_main_content <- mainPanel(
-    "tab2 main panel"
+    plotOutput("plot2")
 )
 
 tab2 <- tabPanel(
-    "Tab2",
-    titlePanel("Tab2 title"),
+    "Rate of Broken Serves",
+    titlePanel("Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
     sidebarLayout(tab2_sidebar_content, tab2_main_content)
 )
 
 ui <- navbarPage(
-    theme = shinytheme("united"),
+    # theme = shinytheme("united"),
     "Title of the project",
     tab1,
     tab2
@@ -198,6 +262,36 @@ server <- function(input, output, session) {
                 x = "Time period"
             ) +
             theme(plot.title = element_markdown())
+    })
+
+    output$plot2 <- renderPlot({
+        surface <- input$surface
+
+        if (surface == "All") {
+            bind_rows(breaks_per_year_ATP, breaks_per_year_WTA, .id = "id") %>% 
+            mutate(id = recode(id, '1'='ATP', '2'='WTA')) %>% 
+            ggplot(aes(x = year, y = avg_breaks, colour = id)) +
+                geom_point() +  
+                geom_hline(yintercept = mean(breaks_per_year_ATP$avg_breaks), colour = "red") +
+                geom_hline(yintercept = mean(breaks_per_year_WTA$avg_breaks), colour = "blue") +
+                labs(
+                    title = "How common are service breaks? (1991-current)",
+                    y = "Breaks per set",
+                    x = "Time"
+                )
+        } else {
+            bind_rows(breaks_stats_ATP, breaks_stats_WTA, .id = "id") %>% 
+            mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
+            filter(surface != surface) %>%
+            ggplot(aes(x = year, y = avg_breaks_surface, colour = id)) +
+                geom_point() +
+                labs(
+                    title = "How common are service breaks? (1991-current)",
+                    subtitle = "Dependence on playing surface",
+                    y = "Breaks per set",
+                    x = "Time"
+                )
+        }
     })
 }
 
