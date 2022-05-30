@@ -7,8 +7,8 @@ library(colorspace)
 library(scales)
 library(lubridate)
 library(data.table)
-library(shinythemes)
-library(thematic)
+# library(shinythemes)
+# library(thematic)
 library(ggtext)
 library(stringi)
 
@@ -91,23 +91,23 @@ breaks_per_year_WTA <- breaks_stats_WTA %>%
 
 #set theme
 
-thematic_on()
+# thematic_on()
 
 # define helper functions
 
 # slices a df along the time axis,
 # uses start date, end data, and time period to skip
-  # s: start date. string or Date.
-  # e: end date. Ditto.
-  # p: period. integer.
-  # return: a data.table object,
-  # with an extra int `period` column that gives the index of the time slice
-time_slice <- function(s, e, p, u=c("y", "m", "d")) {
+#   s: start date. string or Date.
+#   e: end date. Ditto.
+#   p: period. integer.
+#   return: a data.table object,
+#   with an extra int `period` column that gives the index of the time slice
+time_slice <- function(s, e, p, u=c("y", "m", "d")) { 
     u <- match.arg(u)
-    uf <- list("y" = years,"m" = months, "d" = days)
+    uf <- list("y" = years, "m" = months, "d" = days)
     data.table(s = seq(as.Date(s),
             as.Date(e),
-            by = paste(p, u)))[, `:=` (e = s %m+% uf[[u]](p), period = 1:.N)]
+            by = paste(p, u)))[, `:=`(e = s %m+% uf[[u]](p), period = 1:.N)]
 }
 
 # filters and slices rankings date
@@ -263,7 +263,7 @@ tab2 <- tabPanel(
 )
 
 ui <- navbarPage(
-    theme = shinytheme("sandstone"),
+    # theme = shinytheme("sandstone"),
     "",
     tab0,
     tab1,
@@ -273,8 +273,8 @@ ui <- navbarPage(
 # define server function
 server <- function(input, output, session) {
     output$plot1 <- renderPlot({
-        R <- input$ranks # top R-rankings
-        Y <- input$time_slice # Y-year time slices
+        R <- as.integer(input$ranks) # top R-rankings
+        Y <- as.integer(input$time_slice) # Y-year time slices
 
         rankings_all_ATP_sliced <- treat_rankings_data(rankings_all_ATP, R, Y)
         rankings_all_WTA_sliced <- treat_rankings_data(rankings_all_WTA, R, Y)
@@ -310,7 +310,7 @@ server <- function(input, output, session) {
         bind_rows(stats_ATP, stats_WTA, .id = "id") %>%
             mutate(id = recode(id, "1" = "ATP", "2" = "WTA")) %>%
         ggplot(aes(x = period, y = total_sd, colour = id)) +
-            geom_point() +
+            geom_point(size = 3) +
             geom_hline(yintercept = mean(stats_ATP$total_sd), colour = "#c82027") +
             geom_hline(yintercept = mean(stats_WTA$total_sd), colour = "#1f1a4f") +
             scale_color_manual(values = c("ATP" = "#c82027", "WTA" = "#1f1a4f")) +
@@ -337,7 +337,7 @@ server <- function(input, output, session) {
             bind_rows(breaks_per_year_ATP, breaks_per_year_WTA, .id = "id") %>%
             mutate(id = recode(id, "1" = "ATP", "2" = "WTA")) %>%
             ggplot(aes(x = year, y = avg_breaks, colour = id)) +
-                geom_point() +
+                geom_point(size = 3) +
                 scale_color_manual(values = c("ATP" = "#c82027", "WTA" = "#1f1a4f")) +
                 labs(
                     title = "Rate of Service Breaks for <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> players",
@@ -353,7 +353,7 @@ server <- function(input, output, session) {
             mutate(id = recode(id, "1" = "ATP", "2" = "WTA")) %>%
             filter(surface == selected_surface) %>%
             ggplot(aes(x = year, y = avg_breaks_surface, colour = id)) +
-                geom_point() +
+                geom_point(size = 3) +
                 scale_color_manual(values = c("ATP" = "#c82027", "WTA" = "#1f1a4f")) +
                 labs(
                     title = "Rate of Service Breaks for <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> players",
