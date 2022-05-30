@@ -167,7 +167,10 @@ find the README file for the ATP data [here](../data/atp/README.md), and
 the README file for the WTA data [here](../data/wta/README.md)."),
 
     h2("Question 1: Do (long-term) fluctuations in rankings differ significantly between men and women?"),
-    p("Findings"),
+    p("We can see that quite consistently, regardless of how many ranks we include in the analysis, the fluctuation in rankings differs more for the ATP (men’s) division than the WTA (women’s) division. This might indicate a difference in competitiveness of the two divisions, as one could conclude that there is a greater amount of highly-skilled players vying for the top ranks in the ATP than the WTA, and that ATP players are closer to one another when it comes to skill level than players in the WTA. Anecdotal evidence – e.g. Serena Williams’ domination of female Tennis for many years as opposed to multiple male players winning important tournaments on a regular basis – may support this claim, though an analysis of other measures would be crucial before drawing final conclusions. 
+
+Another interesting finding is that the fluctuation in rankings increases as one includes more ranks in the analysis, indicating that there is a higher fluctuation in the lower ranks, and that relative to lower-ranked players, higher-ranked players experience less fluctuation in their rank. Perhaps once players reach a certain level, outside factors such as sponsoring, equipment, or training facilities might all contribute to a cementing of a given player in the top, while lower-ranked players may not be able to assert their dominance over even lower-ranked players as easily.
+"),
 
     h2("Question 2: Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
     p("Findings")
