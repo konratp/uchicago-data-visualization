@@ -138,8 +138,39 @@ treat_rankings_data <- function(df, R, Y) {
 
 tab0 <- tabPanel(
     "About",
-    h1("Title stuff"),
-    p("other stuff")
+    h1("Comparing Fluctuations in Performance for Men and Women in Professional Tennis"),
+
+    h2("Introduction"),
+    p("In this data visualization project, we are interested in gaining a better understanding of trends and fluctuations in professional Tennis
+over the years. To accomplish this, we will analyse from the ATP (men) and WTA (women) tours for the past several decades. Furthermore, 
+we plan on building a shiny app that lets users interactively explore the evolution of these tennis statistics with time."),
+
+    h2("Goal and Motivation"),
+    p("The goal is to measure both long-term and short-term consistency in performance among professional men and women tennis players, 
+playing on the ATP and WTA tours resp. To measure consistency, we will measure fluctuations -- a statistically well-defined 
+quantity -- since less fluctuation means more consistency. Why do we study this?"),
+    p("This is our contribution to the long-standing debate about performance discrepancies between men and women athletes. There was a parallel debate
+in the professional tennis world for a long time about whether men and women tennis players should get equal prize money. For example, it was only in 2007 that Wimbledon started offering equal money to men and women [(source)](https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed)."),
+    p("One of the issues at hand in this debate is whether men and women athletes perform equally well. There are few objective ways of doing so. Measuring the most evident markers of performance, like race times in athletics and swimming, or number of points played and/or won in a tennis match, is not a very fruitful approach, since men and women are naturally built differently and have different physical abilities. So we thought of a tracking not the average performance (viz. a first-order variable), but fluctuations in the performance (viz., a second-order variable)."),
+    p("For this, we will tap into the vast amount of data available on ATP and WTA tournaments. We will measure both long-term fluctuations and short-term fluctuations (see details below). We also seek to make this analysis accessible by building a shiny app that lets users explore different dynamics underlying the data."),
+
+    h2("Data"),
+    p("The data we’re using comes from Jeff Sackmann’s GitHub page. In the
+[data folder](../data), there are two folders, one containing the data for
+the [men’s ATP](../data/atp), and one containing the data for the [women’s
+WTA](data/wta). Both folders contain separate .csv files for matches (by
+year, starting in 1968/1980 for ATP and WTA, respectively) and rankings
+(by decade, starting in the 1970s/1980s for ATP and WTA, respectively).
+To learn more about the variables contained in the data as well as the
+contributors to the dataset, please refer to the README files. You can
+find the README file for the ATP data [here](../data/atp/README.md), and
+the README file for the WTA data [here](../data/wta/README.md)."),
+
+    h2("Question 1: Do (long-term) fluctuations in rankings differ significantly between men and women?"),
+    p("Findings"),
+
+    h2("Question 2: Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
+    p("Findings")
 )
 
 tab1_sidebar_content <- sidebarPanel(
@@ -187,7 +218,7 @@ tab1 <- tabPanel(
         ),
         p(
             ""
-        ),
+        )
     )
 )
 
@@ -227,7 +258,7 @@ tab2 <- tabPanel(
 )
 
 ui <- navbarPage(
-    theme = shinytheme("united"),
+    theme = shinytheme("sandstone"),
     "",
     tab0,
     tab1,
@@ -288,7 +319,8 @@ server <- function(input, output, session) {
                 title = "Average Standard Deviation in Rankings of <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> Tennis Players",
                 subtitle = paste0("1980-2019, ", Y, "-year time slices, ", "Top ", R," ranks only"),
                 y = "Spread",
-                x = "Time period"
+                x = "Time period",
+                caption = "https://github.com/JeffSackmann"
             ) +
             theme(plot.title = element_markdown())
     })
@@ -306,7 +338,8 @@ server <- function(input, output, session) {
                     title = "Rate of Service Breaks for <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> players",
                     subtitle = "1991 - Current",
                     y = "Breaks per set",
-                    x = "Year"
+                    x = "Year",
+                    caption = "https://github.com/JeffSackmann"
                 ) +
                 theme(legend.position = "none") +
                 theme(plot.title = element_markdown())
@@ -321,7 +354,8 @@ server <- function(input, output, session) {
                     title = "Rate of Service Breaks for <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> players",
                     subtitle = "1991 - Current",
                     y = "Breaks per set",
-                    x = "Year"
+                    x = "Year",
+                    caption = "https://github.com/JeffSackmann"
                 ) +
                 theme(legend.position = "none") +
                 theme(plot.title = element_markdown())
