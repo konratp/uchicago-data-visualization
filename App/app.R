@@ -244,7 +244,7 @@ tab2_main_content <- mainPanel(
 tab2_vis_elements <- sidebarLayout(tab2_sidebar_content, tab2_main_content)
 
 tab2 <- tabPanel(
-    "Rate of service breaks",
+    "Frequency of service breaks during matches",
     titlePanel("Short-term analysis: Do fluctuations during matches differ significantly between men and women?"),
     verticalLayout(
         tab2_vis_elements,
