@@ -7,8 +7,8 @@ library(colorspace)
 library(scales)
 library(lubridate)
 library(data.table)
-# library(shinythemes)
-# library(thematic)
+library(shinythemes)
+library(thematic)
 library(ggtext)
 library(stringi)
 
@@ -91,7 +91,7 @@ breaks_per_year_WTA <- breaks_stats_WTA %>%
 
 #set theme
 
-# thematic_on()
+thematic_on()
 
 # define helper functions
 
@@ -136,13 +136,19 @@ treat_rankings_data <- function(df, R, Y) {
 
 # define UI
 
+tab0 <- tabPanel(
+    "About",
+    h1("Title stuff"),
+    p("other stuff")
+)
+
 tab1_sidebar_content <- sidebarPanel(
     selectInput(
         "time_slice", "Time Slice",
         c("2" = 2,
             "5" = 5,
             "10" = 10),
-        selected = 2
+        selected = 5
     ),
     selectInput(
         "ranks", "Ranks to Include",
@@ -153,17 +159,9 @@ tab1_sidebar_content <- sidebarPanel(
             "200" = 200,
             "500" = 500,
             "1000" = 1000),
-        selected = 10
+        selected = 100
     ),
-    p("This plot presents a visual representation of the ",
-        strong("standard deviation"),
-        "of ",
-        strong("ATP", style = "color:#c82027"),
-        " (male) and ",
-        strong("WTA", style = "color:#1f1a4f"),
-        " (female) players."
-    ),
-    p("- Change the time slice to aggregate different numbers of years into a single period.  The value selected operates as the number of years to aggregate."),
+    p("- Change the time slice to aggregate a different number of years into a single period.  The value selected operates as the number of years to aggregate."),
     p("- Change the ranks to include to incorporate greater or fewer players into each aggregation.  Ranks up to the value selected will be included.")
 )
 
@@ -171,10 +169,26 @@ tab1_main_content <- mainPanel(
     plotOutput("plot1")
 )
 
+tab1_vis_elements <- sidebarLayout(tab1_sidebar_content, tab1_main_content)
+
 tab1 <- tabPanel(
     "Standard Deviation of Ranks",
     titlePanel("Do (long-term) fluctuations in rankings differ significantly between men and women?"),
-    sidebarLayout(tab1_sidebar_content, tab1_main_content)
+    verticalLayout(
+        tab1_vis_elements,
+        p(
+            "In this plot, we are investigating the ",
+            strong("standard deviation"),
+            "for ",
+            strong("ATP", style = "color:#c82027"),
+            " (male) and ",
+            strong("WTA", style = "color:#1f1a4f"),
+            " (female) player rankings in order to evaluate differences between long-term fluctuations between the two."
+        ),
+        p(
+            ""
+        ),
+    )
 )
 
 tab2_sidebar_content <- sidebarPanel(
@@ -185,22 +199,37 @@ tab2_sidebar_content <- sidebarPanel(
             "Grass" = "Grass",
             "Clay" = "Clay",
             "Carpet" = "Carpet")
-    )
+    ),
+    p("- Select a specific surface to only include data for that surface or all to include the entire data set.")
 )
 
 tab2_main_content <- mainPanel(
     plotOutput("plot2")
 )
 
+tab2_vis_elements <- sidebarLayout(tab2_sidebar_content, tab2_main_content)
+
 tab2 <- tabPanel(
     "Rate of Broken Serves",
     titlePanel("Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
-    sidebarLayout(tab2_sidebar_content, tab2_main_content)
+    verticalLayout(
+        tab2_vis_elements,
+        p(
+            "In this plot, we are investigating the ",
+            strong("rate of service breaks"),
+            "for ",
+            strong("ATP", style = "color:#c82027"),
+            " (male) and ",
+            strong("WTA", style = "color:#1f1a4f"),
+            " (female) players on different court surfaces."
+        )
+    )
 )
 
 ui <- navbarPage(
-    # theme = shinytheme("united"),
-    "Title of the project",
+    theme = shinytheme("united"),
+    "",
+    tab0,
     tab1,
     tab2
 )
@@ -265,32 +294,37 @@ server <- function(input, output, session) {
     })
 
     output$plot2 <- renderPlot({
-        surface <- input$surface
+        selected_surface <- input$surface
 
-        if (surface == "All") {
-            bind_rows(breaks_per_year_ATP, breaks_per_year_WTA, .id = "id") %>% 
-            mutate(id = recode(id, '1'='ATP', '2'='WTA')) %>% 
+        if (selected_surface == "All") {
+            bind_rows(breaks_per_year_ATP, breaks_per_year_WTA, .id = "id") %>%
+            mutate(id = recode(id, "1" = "ATP", "2" = "WTA")) %>%
             ggplot(aes(x = year, y = avg_breaks, colour = id)) +
-                geom_point() +  
-                geom_hline(yintercept = mean(breaks_per_year_ATP$avg_breaks), colour = "red") +
-                geom_hline(yintercept = mean(breaks_per_year_WTA$avg_breaks), colour = "blue") +
+                geom_point() +
+                scale_color_manual(values = c("ATP" = "#c82027", "WTA" = "#1f1a4f")) +
                 labs(
-                    title = "How common are service breaks? (1991-current)",
+                    title = "Rate of Service Breaks for <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> players",
+                    subtitle = "1991 - Current",
                     y = "Breaks per set",
-                    x = "Time"
-                )
+                    x = "Year"
+                ) +
+                theme(legend.position = "none") +
+                theme(plot.title = element_markdown())
         } else {
-            bind_rows(breaks_stats_ATP, breaks_stats_WTA, .id = "id") %>% 
-            mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
-            filter(surface != surface) %>%
+            bind_rows(breaks_stats_ATP, breaks_stats_WTA, .id = "id") %>%
+            mutate(id = recode(id, "1" = "ATP", "2" = "WTA")) %>%
+            filter(surface == selected_surface) %>%
             ggplot(aes(x = year, y = avg_breaks_surface, colour = id)) +
                 geom_point() +
+                scale_color_manual(values = c("ATP" = "#c82027", "WTA" = "#1f1a4f")) +
                 labs(
-                    title = "How common are service breaks? (1991-current)",
-                    subtitle = "Dependence on playing surface",
+                    title = "Rate of Service Breaks for <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> players",
+                    subtitle = "1991 - Current",
                     y = "Breaks per set",
-                    x = "Time"
-                )
+                    x = "Year"
+                ) +
+                theme(legend.position = "none") +
+                theme(plot.title = element_markdown())
         }
     })
 }
