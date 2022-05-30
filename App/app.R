@@ -173,7 +173,7 @@ Another interesting finding is that the fluctuation in rankings increases as one
 "),
 
     h2("Question 2: Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
-    p("Findings")
+    p("The second question pertains to short-term fluctuations in performance among female and male players. No matter the surface of the field, there are less service breaks in male Tennis matches than female ones. This indicates that once in the lead, a male Tennis player is more likely to maintain this lead than a female one. One could conclude that female Tennis matches are more interesting to watch, as there is less certainty as to who takes away the win in the end. In any year since the data has been recorded, service breaks occur in WTA matches at a rate of at least two breaks per set, while observations for male players cluster around 1.5 breaks per set. Interestingly, also, the rate of service breaks per match has decreased over time for ATP players, while it has stayed more constant for WTA players.")
 )
 
 tab1_sidebar_content <- sidebarPanel(
