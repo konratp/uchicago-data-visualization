@@ -72,14 +72,14 @@ treat_rankings_data = function(df, R,Y){
 
 ```{r load_data, echo=FALSE}
 # ------------------------------------- read in all ATP ranking csv files -----------------------------------------
-mydir = "./data/atp/"
+mydir = "../data/atp/"
 myfiles = list.files(path=mydir, pattern="atp_rankings*", full.names=TRUE)
 myfiles 
 
 rankings_all_ATP = myfiles %>% map_df(~read_csv(., show_col_types = FALSE))
 
 # ------------------------------------- read in all WTA ranking csv files -----------------------------------------
-mydir = "./data/wta/"
+mydir = "../data/wta/"
 myfiles = list.files(path=mydir, pattern="wta_rankings*", full.names=TRUE)
 myfiles 
 
@@ -90,8 +90,8 @@ rankings_all_WTA = myfiles %>% map_df(~read_csv(., show_col_types = FALSE))
 ## Get time-sliced data, calculate stats, then plot
 
 ```{r stats_and_plot}
-R = 20 # top R-rankings
-Y = 3 # Y-year time slices
+R = 100 # top R-rankings
+Y = 2 # Y-year time slices
 
 rankings_all_ATP_sliced = treat_rankings_data(rankings_all_ATP, R, Y)
 rankings_all_WTA_sliced = treat_rankings_data(rankings_all_WTA, R, Y)
