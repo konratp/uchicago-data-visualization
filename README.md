@@ -93,9 +93,11 @@ Do (short-term) fluctuations in matches (measured by tracking average
 number of service breaks per match) differ significantly between men and
 women?
 
-Again, the plot showcases time on the x-axis, and the average number of
-service breaks per match on the y-axis. Users can customize the plot by
-selecting different surfaces (e.g. clay, grass, etc.).
+Again, a scatterplot maps time onto the x-axis, and the average number
+of service breaks per match onto the y-axis. The color aesthetic again
+maps gender onto the scatterplot, with blue dots indicating WTA values,
+and red indicating ATP values. Users can customize the plot by selecting
+different surfaces (e.g. clay, grass, etc.).
 
 ### Findings
 
