@@ -138,7 +138,7 @@ treat_rankings_data <- function(df, R, Y) {
 
 tab0 <- tabPanel(
     "About",
-    h1("Comparing Fluctuations in Performance for Men and Women in Professional Tennis"),
+    h1("Comparing Consistency in Performance between Men and Women in Professional Tennis"),
 
     h2("Introduction"),
     p("In this data visualization project, we are interested in gaining a better understanding of trends and fluctuations in professional Tennis
@@ -245,7 +245,7 @@ tab2_vis_elements <- sidebarLayout(tab2_sidebar_content, tab2_main_content)
 
 tab2 <- tabPanel(
     "Rate of service breaks",
-    titlePanel("Short-term analysis: Do fluctuations in matches differ significantly between men and women?"),
+    titlePanel("Short-term analysis: Do fluctuations during matches differ significantly between men and women?"),
     verticalLayout(
         tab2_vis_elements,
         p(
