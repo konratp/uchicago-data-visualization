@@ -203,19 +203,22 @@ tab1_main_content <- mainPanel(
 tab1_vis_elements <- sidebarLayout(tab1_sidebar_content, tab1_main_content)
 
 tab1 <- tabPanel(
-    "Standard Deviation of Ranks",
-    titlePanel("Do (long-term) fluctuations in rankings differ significantly between men and women?"),
+    "Fluctuations in rankings",
+    titlePanel("Long-term analysis: Do fluctuations in rankings differ significantly between men and women?"),
     verticalLayout(
         tab1_vis_elements,
         p(
-            "In this plot, we are investigating the ",
-            strong("standard deviation"),
+          "In this plot, we show the ",
+            strong("standard deviation (SD) in rankings"),
             "for ",
             strong("ATP", style = "color:#c82027"),
             " (male) and ",
-            strong("WTA", style = "color:#1f1a4f"),
-            " (female) player rankings in order to evaluate differences between long-term fluctuations between the two."
+          strong("WTA", style = "color:#1f1a4f"),
+          " (female) player rankings."
         ),
+            "Why?: As a measure of long-term fluctuations, we measure the standard deviation (SD) in rankings over some time period. To be able to 
+            explore different different 'regions' of ranking space, we include the ability to analyse only the top-R spots in the rankings. 
+            For simplicity, these are restricted to some chosen values.",
         p(
             ""
         )
@@ -241,18 +244,20 @@ tab2_main_content <- mainPanel(
 tab2_vis_elements <- sidebarLayout(tab2_sidebar_content, tab2_main_content)
 
 tab2 <- tabPanel(
-    "Rate of Broken Serves",
-    titlePanel("Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
+    "Rate of service breaks",
+    titlePanel("Short-term analysis: Do fluctuations in matches differ significantly between men and women?"),
     verticalLayout(
         tab2_vis_elements,
         p(
-            "In this plot, we are investigating the ",
+            "In this plot, we show the ",
             strong("rate of service breaks"),
             "for ",
             strong("ATP", style = "color:#c82027"),
             " (male) and ",
             strong("WTA", style = "color:#1f1a4f"),
-            " (female) players on different court surfaces."
+            " (female) players on different court surfaces." 
+        ),
+        p("As a proxy for short-term fluctuations -- i.e. fluctuations at the time scale of a match -- we count the average number of service breaks per set."
         )
     )
 )
@@ -318,9 +323,9 @@ server <- function(input, output, session) {
             labs(
                 title = "Average Standard Deviation in Rankings of <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> Tennis Players",
                 subtitle = paste0("1980-2019, ", Y, "-year time slices, ", "Top ", R," ranks only"),
-                y = "Spread",
+                y = "Rankings SD",
                 x = "Time period",
-                caption = "https://github.com/JeffSackmann"
+                caption = "Source: https://github.com/JeffSackmann"
             ) +
             theme(plot.title = element_markdown())
     })
@@ -339,7 +344,7 @@ server <- function(input, output, session) {
                     subtitle = "1991 - Current",
                     y = "Breaks per set",
                     x = "Year",
-                    caption = "https://github.com/JeffSackmann"
+                    caption = "Source: https://github.com/JeffSackmann"
                 ) +
                 theme(legend.position = "none") +
                 theme(plot.title = element_markdown())
@@ -355,7 +360,7 @@ server <- function(input, output, session) {
                     subtitle = "1991 - Current",
                     y = "Breaks per set",
                     x = "Year",
-                    caption = "https://github.com/JeffSackmann"
+                    caption = "Source: https://github.com/JeffSackmann"
                 ) +
                 theme(legend.position = "none") +
                 theme(plot.title = element_markdown())
