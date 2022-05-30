@@ -157,16 +157,7 @@ in the professional tennis world for a long time about whether men and women ten
     h2("Data"),
     p("The data we’re using comes from Jeff Sackmann’s GitHub page. The data contains separate .csv files for matches (by
 year, starting in 1968/1980 for ATP and WTA, respectively) and rankings
-(by decade, starting in the 1970s/1980s for ATP and WTA, respectively)."),
-
-    h2("Question 1: Do (long-term) fluctuations in rankings differ significantly between men and women?"),
-    p("We can see that quite consistently, regardless of how many ranks we include in the analysis, the fluctuation in rankings differs more for the ATP (men’s) division than the WTA (women’s) division. This might indicate a difference in competitiveness of the two divisions, as one could conclude that there is a greater amount of highly-skilled players vying for the top ranks in the ATP than the WTA, and that ATP players are closer to one another when it comes to skill level than players in the WTA. Anecdotal evidence – e.g. Serena Williams’ domination of female Tennis for many years as opposed to multiple male players winning important tournaments on a regular basis – may support this claim, though an analysis of other measures would be crucial before drawing final conclusions. 
-
-Another interesting finding is that the fluctuation in rankings increases as one includes more ranks in the analysis, indicating that there is a higher fluctuation in the lower ranks, and that relative to lower-ranked players, higher-ranked players experience less fluctuation in their rank. Perhaps once players reach a certain level, outside factors such as sponsoring, equipment, or training facilities might all contribute to a cementing of a given player in the top, while lower-ranked players may not be able to assert their dominance over even lower-ranked players as easily.
-"),
-
-    h2("Question 2: Do (short-term) fluctuations in matches (measured by tracking average number of service breaks per match) differ significantly between men and women?"),
-    p("The second question pertains to short-term fluctuations in performance among female and male players. No matter the surface of the field, there are less service breaks in male Tennis matches than female ones. This indicates that once in the lead, a male Tennis player is more likely to maintain this lead than a female one. One could conclude that female Tennis matches are more interesting to watch, as there is less certainty as to who takes away the win in the end. In any year since the data has been recorded, service breaks occur in WTA matches at a rate of at least two breaks per set, while observations for male players cluster around 1.5 breaks per set. Interestingly, also, the rate of service breaks per match has decreased over time for ATP players, while it has stayed more constant for WTA players.")
+(by decade, starting in the 1970s/1980s for ATP and WTA, respectively).")
 )
 
 tab1_sidebar_content <- sidebarPanel(
@@ -216,11 +207,11 @@ tab1 <- tabPanel(
             explore different different 'regions' of ranking space, we include the ability to analyse only the top-R spots in the rankings. 
             For simplicity, these are restricted to some chosen values.",
         br(),
-        p(
-            "- On the whole, the standard deviation of ranks is generally higher for the ATP than for the WTA."
-        ),
-        p("- However, for the top ranks, for example a time slice of 5 and the top 10 ranks, the WTA has higher standard deviation."),
-        p("- Yet, when including a greater portion of the rank space the ATP has greater standard deviation, for example looking at a time slice of 10 and the top 500 ranks.")
+        p("We can see that quite consistently, regardless of how many ranks we include in the analysis, the fluctuation in rankings differs more for the ATP (men’s) division than the WTA (women’s) division. This might indicate a difference in competitiveness of the two divisions, as one could conclude that there is a greater amount of highly-skilled players vying for the top ranks in the ATP than the WTA, and that ATP players are closer to one another when it comes to skill level than players in the WTA. Anecdotal evidence – e.g. Serena Williams’ domination of female Tennis for many years as opposed to multiple male players winning important tournaments on a regular basis – may support this claim, though an analysis of other measures would be crucial before drawing final conclusions.", br(), "
+        Another interesting finding is that the fluctuation in rankings increases as one includes more ranks in the analysis, indicating that there is a higher fluctuation in the lower ranks, and that relative to lower-ranked players, higher-ranked players experience less fluctuation in their rank. Perhaps once players reach a certain level, outside factors such as sponsoring, equipment, or training facilities might all contribute to a cementing of a given player in the top, while lower-ranked players may not be able to assert their dominance over even lower-ranked players as easily.
+        ")
+
+        # time slice 5 and top 10 ranks, time slice of 10 and top 500 ranks
     )
 )
 
@@ -259,8 +250,7 @@ tab2 <- tabPanel(
         p("As a proxy for short-term fluctuations -- i.e. fluctuations at the time scale of a match -- we count the average number of service breaks per set."
         ),
         br(),
-        p("- Across the board, the rate of service breaks is higher for the WTA and for the ATP.  Interestingly, the differnce between the men and women is quite similar for the different surfaces."),
-        p("- Notably, grass appears to have to lowest rate of service breaks and clay has the highest.")
+        p("The second question pertains to short-term fluctuations in performance among female and male players. No matter the surface of the field, there are less service breaks in male Tennis matches than female ones. This indicates that once in the lead, a male Tennis player is more likely to maintain this lead than a female one. One could conclude that female Tennis matches are more interesting to watch, as there is less certainty as to who takes away the win in the end. In any year since the data has been recorded, service breaks occur in WTA matches at a rate of at least two breaks per set, while observations for male players cluster around 1.5 breaks per set. Interestingly, also, the rate of service breaks per match has decreased over time for ATP players, while it has stayed more constant for WTA players.")
     )
 )
 
