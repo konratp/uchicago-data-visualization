@@ -270,8 +270,9 @@ tab2 <- tabPanel(
           what we can infer from this is not evident. The only clear inference is that women are less stronger than serving than men, which
           could easily be attributed to differences in base physique and genetic makeup. To infer from this than women are less 'consistent' 
           than men during a match is still a tenuous claim. It requires a further step in logic, and needs to be backed up with more analysis."),
-        p("Interestingly, we also see that the rate of service breaks per match has decreased over time for both WTA and ATP players. The trend is more 
-          noticeable since for ATP since their data extends further back into the past (1991 vs. 2003 for women).")
+        p("Interestingly, we also see that the rate of service breaks per match has decreased over time for both WTA and ATP players. This might indicate
+        that both men and women are gradually learning to take better advantage of their service games. The trend is more 
+          noticeable for ATP since their data extends further back into the past (1991 vs. 2003 for women).")
     )
 )
 
