@@ -7,8 +7,8 @@ library(colorspace)
 library(scales)
 library(lubridate)
 library(data.table)
-# library(shinythemes)
-# library(thematic)
+library(shinythemes)
+library(thematic)
 library(ggtext)
 library(stringi)
 
@@ -91,7 +91,7 @@ breaks_per_year_WTA <- breaks_stats_WTA %>%
 
 #set theme
 
-# thematic_on()
+thematic_on()
 
 # define helper functions
 
@@ -150,21 +150,14 @@ we plan on building a shiny app that lets users interactively explore the evolut
 playing on the ATP and WTA tours resp. To measure consistency, we will measure fluctuations -- a statistically well-defined 
 quantity -- since less fluctuation means more consistency. Why do we study this?"),
     p("This is our contribution to the long-standing debate about performance discrepancies between men and women athletes. There was a parallel debate
-in the professional tennis world for a long time about whether men and women tennis players should get equal prize money. For example, it was only in 2007 that Wimbledon started offering equal money to men and women [(source)](https://www.espn.com/tennis/story/_/id/24599816/us-open-follow-money-how-pay-gap-grand-slam-tennis-closed)."),
+in the professional tennis world for a long time about whether men and women tennis players should get equal prize money. For example, it was only in 2007 that Wimbledon started offering equal money to men and women."),
     p("One of the issues at hand in this debate is whether men and women athletes perform equally well. There are few objective ways of doing so. Measuring the most evident markers of performance, like race times in athletics and swimming, or number of points played and/or won in a tennis match, is not a very fruitful approach, since men and women are naturally built differently and have different physical abilities. So we thought of a tracking not the average performance (viz. a first-order variable), but fluctuations in the performance (viz., a second-order variable)."),
     p("For this, we will tap into the vast amount of data available on ATP and WTA tournaments. We will measure both long-term fluctuations and short-term fluctuations (see details below). We also seek to make this analysis accessible by building a shiny app that lets users explore different dynamics underlying the data."),
 
     h2("Data"),
-    p("The data we’re using comes from Jeff Sackmann’s GitHub page. In the
-[data folder](../data), there are two folders, one containing the data for
-the [men’s ATP](../data/atp), and one containing the data for the [women’s
-WTA](data/wta). Both folders contain separate .csv files for matches (by
+    p("The data we’re using comes from Jeff Sackmann’s GitHub page. The data contains separate .csv files for matches (by
 year, starting in 1968/1980 for ATP and WTA, respectively) and rankings
-(by decade, starting in the 1970s/1980s for ATP and WTA, respectively).
-To learn more about the variables contained in the data as well as the
-contributors to the dataset, please refer to the README files. You can
-find the README file for the ATP data [here](../data/atp/README.md), and
-the README file for the WTA data [here](../data/wta/README.md)."),
+(by decade, starting in the 1970s/1980s for ATP and WTA, respectively)."),
 
     h2("Question 1: Do (long-term) fluctuations in rankings differ significantly between men and women?"),
     p("We can see that quite consistently, regardless of how many ranks we include in the analysis, the fluctuation in rankings differs more for the ATP (men’s) division than the WTA (women’s) division. This might indicate a difference in competitiveness of the two divisions, as one could conclude that there is a greater amount of highly-skilled players vying for the top ranks in the ATP than the WTA, and that ATP players are closer to one another when it comes to skill level than players in the WTA. Anecdotal evidence – e.g. Serena Williams’ domination of female Tennis for many years as opposed to multiple male players winning important tournaments on a regular basis – may support this claim, though an analysis of other measures would be crucial before drawing final conclusions. 
@@ -219,12 +212,15 @@ tab1 <- tabPanel(
           strong("WTA", style = "color:#1f1a4f"),
           " (female) player rankings."
         ),
-            "Why?: As a measure of long-term fluctuations, we measure the standard deviation (SD) in rankings over some time period. To be able to 
+            "As a measure of long-term fluctuations, we measure the standard deviation (SD) in rankings over some time period. To be able to 
             explore different different 'regions' of ranking space, we include the ability to analyse only the top-R spots in the rankings. 
             For simplicity, these are restricted to some chosen values.",
+        br(),
         p(
-            ""
-        )
+            "- On the whole, the standard deviation of ranks is generally higher for the ATP than for the WTA."
+        ),
+        p("- However, for the top ranks, for example a time slice of 5 and the top 10 ranks, the WTA has higher standard deviation."),
+        p("- Yet, when including a greater portion of the rank space the ATP has greater standard deviation, for example looking at a time slice of 10 and the top 500 ranks.")
     )
 )
 
@@ -261,12 +257,21 @@ tab2 <- tabPanel(
             " (female) players on different court surfaces." 
         ),
         p("As a proxy for short-term fluctuations -- i.e. fluctuations at the time scale of a match -- we count the average number of service breaks per set."
-        )
+        ),
+        br(),
+        p("- Across the board, the rate of service breaks is higher for the WTA and for the ATP.  Interestingly, the differnce between the men and women is quite similar for the different surfaces."),
+        p("- Notably, grass appears to have to lowest rate of service breaks and clay has the highest.")
     )
 )
 
+# all, 2.5, 1.6
+# hard, 2.5, 1.7
+# grass, 2.2, 1.4
+# clay, 2.7, 1.7
+# carpet, 2.5, 1.5
+
 ui <- navbarPage(
-    # theme = shinytheme("sandstone"),
+    theme = shinytheme("sandstone"),
     "",
     tab0,
     tab1,
