@@ -1,4 +1,4 @@
-Project 2 – Measuring Fluctuation in Professional Tennis
+Project 2 – Measuring Performance Consistency/Fluctuations in Professional Tennis
 ================
 Peewee Marten (Anshuman Pal, Konrat Pekkip, Ryan Mazur)
 
