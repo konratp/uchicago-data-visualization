@@ -208,16 +208,26 @@ tab1 <- tabPanel(
         ),
         br(),
         strong("How:"),
-        p("As a measure of long-term fluctuations, we measure the standard deviation (SD) in rankings over some time period. To be able to 
+        p("As a measure of long-term fluctuations, we measure the standard deviation (SD) in player rankings over some time period. To be able to 
             explore different different 'regions' of ranking space, we include the ability to analyse only the top-R spots in the rankings. 
-            For simplicity, these are restricted to some chosen values."),
+            Above, to keep the app simple, we restrict R to a few chosen values."),
         br(),
         strong("Observations:"),
-        p("We can see that for a most combinations of rank and time slice, the fluctuation in rankings differs more for the ATP (men’s) division than the WTA (women’s) division. This might indicate a difference in competitiveness of the two divisions, as one could conclude that there is a greater amount of highly-skilled players vying for the top ranks in the ATP than the WTA, and that ATP players are closer to one another when it comes to skill level than players in the WTA. Anecdotal evidence – e.g. Serena Williams’ domination of female Tennis for many years as opposed to multiple male players winning important tournaments on a regular basis – may support this claim, though an analysis of other measures would be crucial before drawing final conclusions. 
-
-Another interesting finding is that the fluctuation in rankings increases as one includes more ranks in the analysis, indicating that there is a higher fluctuation in the lower ranks, and that relative to lower-ranked players, higher-ranked players experience less fluctuation in their rank. Perhaps once players reach a certain level, outside factors such as sponsoring, equipment, or training facilities might all contribute to a cementing of a given player in the top, while lower-ranked players may not be able to assert their dominance over even lower-ranked players as easily.")
-
-        # time slice 5 and top 10 ranks, time slice of 10 and top 500 ranks
+        p("Our method allows us to see how much movement or churning there is in the rankings. Our findings depend starkly on the value of R.
+        At the very top of the rankings (R<=10), we find that the women's tour (WTA) has more fluctuations, by roughly 10-20% depending on the time window chosen. 
+        In other words, there is comparatively (lot) more movement among the top 10 players in the women’s game; players are dropping in and out regularly.
+        In contrast, the list of top 10 players on the men’s tour (ATP) is more stable."),
+        p("However, outside the top 10 (e.g., choosing R>=20), we find that ranking fluctuations on the men's tour (ATP) are slightly higher 
+        (by ~2-5% depending on the time window chosen)."),
+        p("While an effect of ~2-5% is not that significant, the ~10-20% difference between ATP and WTA in the top 10 of the rankings warrants some explanation. 
+        If we understand higher ranking fluctuations to mean the presence of equally-skilled players and more competition, then our findings imply
+        that the women's tour has more players of equal capability in the top 10, with few players standing out. Comparatively, the men's tour 
+        generally has some players that stand out at the very top. In terms of probability distributions, the men's tour has a 'fat tail', 
+        leading to the simultaneous presence of multiple exceptional players that stand out from the rest. Anecdotal evidence: Over the past decade (the 2010s), 
+        the women's game has been dominated by one player: Serena Williams. In comparison, the men's tour has been dominated by
+          three players: Roger Federer, Rafael Nadal and Novak Djokovic."),
+        p("Further analysis is needed before drawing final conclusions.")
+        
     )
 )
 
@@ -341,7 +351,7 @@ server <- function(input, output, session) {
             ) +
             theme(legend.position = "none") +
             labs(
-                title = "Average Standard Deviation in Rankings of <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> Tennis Players",
+                title = "Average Standard Deviation (SD) in Rankings of <span style = 'color:#c82027;'>**ATP**</span> and <span style = 'color:#1f1a4f;'>**WTA**</span> Tennis Players",
                 subtitle = paste0("1980-2019, ", Y, "-year time slices, ", "Top ", R," ranks only"),
                 y = "Rankings SD",
                 x = "Time period",
