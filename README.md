@@ -29,9 +29,10 @@ Measuring the most evident markers of performance, like race times in
 athletics and swimming, or number of points played and/or won in a
 tennis match, is not a very fruitful approach, since men and women are
 naturally built differently and have different physical abilities. So we
-thought of a tracking not the average performance (viz. a first-order
+thought of a tracking not the average performance of a player (viz. a first-order
 variable), but fluctuations in the performance (viz., a second-order
-variable).
+variable). In other words, how consistently does a player play at her/his level, irrespective
+of what that level might be.
 
 ## Data
 
