@@ -37,9 +37,9 @@ of what that level might be.
 ## Data
 
 The data we’re using comes from Jeff Sackmann’s GitHub page. In the
-[data folder](../data), there are two folders, one containing the data
-for the [men’s ATP tour](../data/atp), and one containing the data for the
-[women’s WTA tour](../data/wta). Both folders contain separate .csv files for
+[data folder](../../data), there are two folders, one containing the data
+for the [men’s ATP tour](../../data/atp), and one containing the data for the
+[women’s WTA tour](../../data/wta). Both folders contain separate .csv files for
 matches (by year, starting in 1968/1980 for ATP and WTA, respectively)
 and rankings (by decade, starting in the 1970s/1980s for ATP and WTA,
 respectively). To learn more about the variables contained in the data
