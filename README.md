@@ -1,6 +1,8 @@
-Project 2 – Measuring Performance Consistency/Fluctuations in Professional Tennis
+Project 2 – Measuring Fluctuation in Professional Tennis
 ================
 Peewee Marten (Anshuman Pal, Konrat Pekkip, Ryan Mazur)
+
+<https://ryangmazur.shinyapps.io/tennisApp/>
 
 ## Introduction
 
@@ -29,17 +31,16 @@ Measuring the most evident markers of performance, like race times in
 athletics and swimming, or number of points played and/or won in a
 tennis match, is not a very fruitful approach, since men and women are
 naturally built differently and have different physical abilities. So we
-thought of a tracking not the average performance of a player (viz. a first-order
+thought of a tracking not the average performance (viz. a first-order
 variable), but fluctuations in the performance (viz., a second-order
-variable). In other words, how consistently does a player play at her/his level, irrespective
-of what that level might be.
+variable).
 
 ## Data
 
 The data we’re using comes from Jeff Sackmann’s GitHub page. In the
-[data folder](../../tree/main/data), there are two folders, one containing the data
-for the [men’s ATP tour](../../tree/main/data/atp), and one containing the data for the
-[women’s WTA tour](../../tree/main/data/wta). Both folders contain separate .csv files for
+[data folder](../data), there are two folders, one containing the data
+for the [men’s ATP](../data/atp), and one containing the data for the
+[women’s WTA](data/wta). Both folders contain separate .csv files for
 matches (by year, starting in 1968/1980 for ATP and WTA, respectively)
 and rankings (by decade, starting in the 1970s/1980s for ATP and WTA,
 respectively). To learn more about the variables contained in the data
@@ -50,58 +51,60 @@ files. You can find the README file for the ATP data
 
 ## Question 1
 
-### Long-term analysis: Do fluctuations in rankings differ significantly between men and women?
+### Overview
 
-### **Methods
-As a measure of long-term fluctuations, we measured the standard deviation (SD) in player rankings over some time period.
+Do (long-term) fluctuations in rankings differ significantly between men
+and women?
 
-We made a scatterplot with time on the x-axis, and the
+To address this, we made a scatterplot with time on the x-axis, and the
 fluctuation on the y-axis, with the color aesthetic mapping gender onto
 the graphic. We also added line indicating the average of the
-fluctuation over time. For better data visualisation and analysis, we enable app users to select two parameters: 
-1. The time window (in years) over which the data is averaged, since this can have an effect on the statistics.
-2. The top-R ranking spots, to be able to explore different different 'regions' of ranking space.
+fluctuation over time, and users of the app can select different time
+slices and number of ranks to include to customize the visualization.
 
-### **Findings
-Our method allows us to see how much movement or churning there is in the rankings. Our findings depend starkly on the value of R.
+### Findings
 
-At the very top of the rankings (R<=10), we find that the women's tour (WTA) has more fluctuations, by roughly 10-20% depending on the time window chosen. 
-In other words, there is comparatively (lot) more movement among the top 10 players in the women’s game; players are dropping in and out regularly.
-In contrast, the list of top 10 players on the men’s tour (ATP) is more stable.  
+We can see that for a most combinations of rank and time slice, the
+fluctuation in rankings differs more for the ATP (men’s) division than
+the WTA (women’s) division. This might indicate a difference in
+competitiveness of the two divisions, as one could conclude that there
+is a greater amount of highly-skilled players vying for the top ranks in
+the ATP than the WTA, and that ATP players are closer to one another
+when it comes to skill level than players in the WTA. Anecdotal evidence
+– e.g. Serena Williams’ domination of female Tennis for many years as
+opposed to multiple male players winning important tournaments on a
+regular basis – may support this claim, though an analysis of other
+measures would be crucial before drawing final conclusions.
 
-However, outside the top 10 (e.g., choosing R>=20), we find that ranking fluctuations on the men's tour (ATP) are slightly higher 
-(by ~2-5% depending on the time window chosen).  
-
-While an effect of ~2-5% is not that significant, the ~10-20% difference between ATP and WTA in the top 10 of the rankings warrants some explanation. 
-If we understand higher ranking fluctuations to mean the presence of equally-skilled players and more competition, then our findings imply
-that the women's tour has more players of equal capability in the top 10, with few players standing out. Comparatively, the men's tour 
-generally has some players that stand out at the very top. In terms of probability distributions, the men's tour has a 'fat tail', 
-leading to the simultaneous presence of multiple exceptional players that stand out from the rest. Anecdotal evidence: Over the past decade (the 2010s), 
-the women's game has been dominated by one player: Serena Williams. In comparison, the men's tour has been dominated by
-three players: Roger Federer, Rafael Nadal and Novak Djokovic.  
-
-However, further analysis is needed before drawing final conclusions.
+Another interesting finding is that the fluctuation in rankings
+increases as one includes more ranks in the analysis, indicating that
+there is a higher fluctuation in the lower ranks, and that relative to
+lower-ranked players, higher-ranked players experience less fluctuation
+in their rank. Perhaps once players reach a certain level, outside
+factors such as sponsoring, equipment, or training facilities might all
+contribute to a cementing of a given player in the top, while
+lower-ranked players may not be able to assert their dominance over even
+lower-ranked players as easily.
 
 ## Question 2
-### Short-term analysis: Do fluctuations during matches (measured by tracking frequency of service breaks in a match) differ significantly between men and women?
 
-### **Methods  
+### Overview
 
-As a proxy for short-term fluctuations -- i.e. fluctuations at the time scale of a match -- we count the average number of service breaks per set. 
-The assumption here is that getting to serve is an advantage in tennis. Thus, *holding one's serve is a marker of playing with consistency*.
-Therefore, counting the number of breaks of serve in a match is a proxy for the 'net playing inconsistency' in the match.
+Do (short-term) fluctuations in matches (measured by tracking average
+number of service breaks per match) differ significantly between men and
+women?
 
-To plot the data, we again made a scatterplot with time on the x-axis, and the average number
-of service breaks per set -- a tennis match can have 3 or 5 sets -- on the y-axis. The color aesthetic again
+Again, a scatterplot maps time onto the x-axis, and the average number
+of service breaks per match onto the y-axis. The color aesthetic again
 maps gender onto the scatterplot, with blue dots indicating WTA values,
 and red indicating ATP values. Users can customize the plot by selecting
 different surfaces (e.g. clay, grass, etc.).
 
-### **Findings
+### Findings
 
 The results for the second question, again, seem quite clearly separated
 by gender. No matter the surface of the field, there are less service
-breaks in male tennis matches than female ones. This clearly indicates
+breaks in male Tennis matches than female ones. This clearly indicates
 the men hold their serve more consistently than women, by a ratio of
 roughly 70%. However, this what we can infer from this is not evident.
 The only clear inference is that women are less stronger than serving
@@ -111,7 +114,7 @@ physique and genetic makeup. To infer from this than women are less
 requires a further step in logic, and needs to be backed up with more
 analysis.
 
-One could conclude that female tennis matches are more interesting to
+One could conclude that female Tennis matches are more interesting to
 watch, as there is less certainty as to who takes away the win in the
 end. In any year since the data has been recorded, service breaks occur
 in WTA matches at a rate of at least two breaks per set, while
@@ -129,14 +132,13 @@ data extends further back into the past (1991 vs. 2003 for women).
 ## Final Takeaways
 
 While it is hard to draw crystal-clear conclusions about performance
-discrepancies betweeen men and women in professional tennis, we can
+discrepancies betweeen men and women in professional Tennis, we can
 firmly state that differences between players of the two sexes do exist.
 Of course, a major limitation to our study is that there is little
 evidence that short-term or long-term fluctuation are meaningfully
 related to performance in any sport; however, the fact that these
-differences exist suggests these things are not meaningless. 
-
-We hope that users of our Shiny application enjoy the process of customizing the
+differences exist suggests these things are not meaningless. We hope
+that users of our shiny application enjoy the process of customizing the
 visualizations and exploring how trends change over time and under
 different parameters, and we encourage users to come to their own
 conclusions about what to make of this data.
