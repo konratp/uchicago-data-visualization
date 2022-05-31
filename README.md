@@ -62,18 +62,17 @@ slices and number of ranks to include to customize the visualization.
 
 ### Findings
 
-We can see that quite consistently, regardless of how many ranks we
-include in the analysis, the fluctuation in rankings differs more for
-the ATP (men’s) division than the WTA (women’s) division. This might
-indicate a difference in competitiveness of the two divisions, as one
-could conclude that there is a greater amount of highly-skilled players
-vying for the top ranks in the ATP than the WTA, and that ATP players
-are closer to one another when it comes to skill level than players in
-the WTA. Anecdotal evidence – e.g. Serena Williams’ domination of female
-Tennis for many years as opposed to multiple male players winning
-important tournaments on a regular basis – may support this claim,
-though an analysis of other measures would be crucial before drawing
-final conclusions.
+We can see that for a most combinations of rank and time slice, the
+fluctuation in rankings differs more for the ATP (men’s) division than
+the WTA (women’s) division. This might indicate a difference in
+competitiveness of the two divisions, as one could conclude that there
+is a greater amount of highly-skilled players vying for the top ranks in
+the ATP than the WTA, and that ATP players are closer to one another
+when it comes to skill level than players in the WTA. Anecdotal evidence
+– e.g. Serena Williams’ domination of female Tennis for many years as
+opposed to multiple male players winning important tournaments on a
+regular basis – may support this claim, though an analysis of other
+measures would be crucial before drawing final conclusions.
 
 Another interesting finding is that the fluctuation in rankings
 increases as one includes more ranks in the analysis, indicating that
@@ -103,15 +102,41 @@ different surfaces (e.g. clay, grass, etc.).
 
 The results for the second question, again, seem quite clearly separated
 by gender. No matter the surface of the field, there are less service
-breaks in male Tennis matches than female ones. This indicates that once
-in the lead, a male Tennis player is more likely to maintain this lead
-than a female one. One could conclude that female Tennis matches are
-more interesting to watch, as there is less certainty as to who takes
-away the win in the end. In any year since the data has been recorded,
-service breaks occur in WTA matches at a rate of at least two breaks per
-set, while observations for male players cluster around 1.5 breaks per
-set. Interestingly, also, the rate of service breaks per match has
-decreased over time for ATP players, while it has stayed more constant
-for WTA players.
+breaks in male Tennis matches than female ones. This clearly indicates
+the men hold their serve more consistently than women, by a ratio of
+roughly 70%. However, this what we can infer from this is not evident.
+The only clear inference is that women are less stronger than serving
+than men, which could easily be attributed to differences in base
+physique and genetic makeup. To infer from this than women are less
+‘consistent’ than men during a match is still a tenuous claim. It
+requires a further step in logic, and needs to be backed up with more
+analysis.
+
+One could conclude that female Tennis matches are more interesting to
+watch, as there is less certainty as to who takes away the win in the
+end. In any year since the data has been recorded, service breaks occur
+in WTA matches at a rate of at least two breaks per set, while
+observations for male players cluster around 1.5 breaks per set.
+Interestingly, also, the rate of service breaks per match has decreased
+over time for ATP players, while it has stayed more constant for WTA
+players.
+
+Interestingly, we also see that the rate of service breaks per match has
+decreased over time for both WTA and ATP players. This might indicate
+that both men and women are gradually learning to take better advantage
+of their service games. The trend is more noticeable for ATP since their
+data extends further back into the past (1991 vs. 2003 for women).
 
 ## Final Takeaways
+
+While it is hard to draw crystal-clear conclusions about performance
+discrepancies betweeen men and women in professional Tennis, we can
+firmly state that differences between players of the two sexes do exist.
+Of course, a major limitation to our study is that there is little
+evidence that short-term or long-term fluctuation are meaningfully
+related to performance in any sport; however, the fact that these
+differences exist suggests these things are not meaningless. We hope
+that users of our shiny application enjoy the process of customizing the
+visualizations and exploring how trends change over time and under
+different parameters, and we encourage users to come to their own
+conclusions about what to make of this data.
