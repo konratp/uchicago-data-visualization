@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 50a98eb5e29cfcf3c43ad8c05e0eb98de89f1ba7
 # History files
 .Rhistory
 .Rapp.history
@@ -37,5 +41,15 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+<<<<<<< HEAD
 
 README.html
+=======
+=======
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+>>>>>>> ed2889edd42da43a59e6aeda57705b51d7e63455
+>>>>>>> 50a98eb5e29cfcf3c43ad8c05e0eb98de89f1ba7

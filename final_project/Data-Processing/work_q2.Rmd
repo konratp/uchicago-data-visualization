@@ -1,0 +1,144 @@
+---
+title: "work_q2"
+output: html_document
+date: '2022-05-29'
+---
+
+```{r setup, include=FALSE}
+# load packages
+library(tidyverse)
+library(colorspace)
+library(scales)
+library(lubridate)
+library(data.table)
+library(stringi)
+
+# set default theme for ggplot2
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 16))
+# set default figure parameters for knitr
+knitr::opts_chunk$set(
+  fig.width = 8, fig.asp = 0.618, fig.retina = 3,
+  dpi = 400, out.width = "90%"
+)
+# dplyr print min and max
+options(dplyr.print_max = 6, dplyr.print_min = 6)
+```
+## Import data:
+We need only 5 columns from the dataset. Some data exploration shows that the break points columns are `NA` for the datasets from 1990 and before. So, those .csv files can be ignored for our purposes.
+
+```{r}
+matches = read_csv("data/atp/atp_matches_2000.csv", col_select = c(-winner_seed,-loser_seed))
+
+## import only the columns you need
+# matches = read_csv("data/atp/atp_matches_1991.csv", 
+#                    col_types = cols_only(best_of = 'i', w_bpFaced = 'i', w_bpSaved = 'i', l_bpFaced = 'i', l_bpSaved = 'i'))
+
+matches %>% glimpse
+```
+```{r}
+#calculate total successful break points in match
+matches = matches %>% mutate(
+  total_breaks = (w_bpFaced-w_bpSaved) + (l_bpFaced-l_bpSaved)
+)
+
+matches %>% select(best_of, total_breaks) %>% 
+  mutate(breaks_per_set = total_breaks/best_of) %>% 
+  filter(best_of == 5) %>% 
+  summarise(avg_breaks = mean(breaks_per_set, na.rm = TRUE))
+
+```
+# Break point data is available for ATP from 1991 onwards, and for WTA from 2003 onwards.  
+After dropping `NA`'s, we are left with ~1 million observations (ATP) and ~35k observations (WTA).
+
+Help taken from:
+# see: https://stackoverflow.com/questions/5788117/only-read-selected-columns,
+# and: https://stackoverflow.com/questions/41355912/extracting-a-numeric-value-from-multiple-filename-in-r
+
+```{r atp_data}
+# ----------- read in all ATP match csv files ----------- 
+filenames = list.files(path = "./data/atp/", pattern = "atp_matches*", full.names = TRUE) 
+
+combo_data_ATP = map_df(filenames,
+                    ~read_csv(.x, 
+                              col_types = cols_only(best_of = 'i', w_bpFaced = 'i', w_bpSaved = 'i', l_bpFaced = 'i', l_bpSaved = 'i', surface = "c"), 
+                              show_col_types = FALSE) 
+                    %>% mutate(year = as.integer(stri_extract_last(.x, regex = "(\\d+)")))
+) %>%
+  na.omit()
+
+# ----------- calculate stats -----------
+breaks_stats_ATP = combo_data_ATP %>% mutate(
+  total_breaks = (w_bpFaced-w_bpSaved) + (l_bpFaced-l_bpSaved)) %>%
+  mutate(breaks_per_set = total_breaks/best_of) %>% 
+  group_by(year, surface) %>% 
+  summarise(
+    avg_breaks_surface = mean(breaks_per_set, na.rm = TRUE)
+    )
+
+breaks_per_year_ATP = breaks_stats_ATP %>% summarise(avg_breaks = mean(avg_breaks_surface))
+```
+```{r wta_data}
+# ----------- read in all WTA match csv files ----------- 
+filenames = list.files(path = "./data/wta/", pattern = "wta_matches*", full.names = TRUE) 
+
+combo_data_WTA = map_df(filenames,
+                        ~read_csv(.x, 
+                                  col_types = cols_only(best_of = 'i', w_bpFaced = 'i', w_bpSaved = 'i', l_bpFaced = 'i', l_bpSaved = 'i', surface = "c"), 
+                                  show_col_types = FALSE) 
+                        %>% mutate(year = as.integer(stri_extract_last(.x, regex = "(\\d+)")))
+) %>%
+  na.omit()
+
+
+# ----------- calculate stats -----------
+breaks_stats_WTA = combo_data_WTA %>% mutate(
+  total_breaks = (w_bpFaced-w_bpSaved) + (l_bpFaced-l_bpSaved)) %>%
+  mutate(breaks_per_set = total_breaks/best_of) %>% 
+  group_by(year, surface) %>% 
+  summarise(
+    avg_breaks_surface = mean(breaks_per_set, na.rm = TRUE)
+  )
+
+breaks_per_year_WTA = breaks_stats_WTA %>% 
+  summarise(avg_breaks = mean(avg_breaks_surface))
+
+breaks_per_year_WTA
+```
+
+```{r combine_and_plot}
+
+# Plot 1
+# -------  Combine breaks_per_year datasets for men and women, and plot ----
+bind_rows(breaks_per_year_ATP, breaks_per_year_WTA, .id = "id") %>% 
+  mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
+  ggplot(aes(x=year, y=avg_breaks, colour=id)) +
+  geom_point() +  
+  geom_hline(yintercept=mean(breaks_per_year_ATP$avg_breaks), colour="red") +
+  geom_hline(yintercept=mean(breaks_per_year_WTA$avg_breaks), colour="blue") +
+  labs(
+    title = "How common are service breaks? (1991-current)",
+    y = "Breaks per set",
+    x = "Time"
+  )
+
+# Plot 2
+# ------- Combine combo_data_WTA datasets for men and women, and plot ------
+# NB: This has additional `playing surface` information
+
+bind_rows(breaks_stats_ATP, breaks_stats_WTA, .id = "id") %>% 
+  mutate(id=recode(id, '1'='ATP', '2'='WTA')) %>% 
+  ggplot(aes(x=year, y=avg_breaks_surface, colour=id)) +
+  geom_point() +
+  facet_wrap(vars(surface)) +
+  labs(
+    title = "How common are service breaks? (1991-current)",
+    subtitle = "Dependence on playing surface",
+    y = "Breaks per set",
+    x = "Time"
+  )
+
+
+breaks_stats_WTA
+```
+
+
