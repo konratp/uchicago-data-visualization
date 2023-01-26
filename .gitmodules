@@ -1,0 +1,3 @@
+[submodule "proj2-peewee-marten"]
+	path = proj2-peewee-marten
+	url = git@github.com:dataviz-sp22/proj2-peewee-marten.git
