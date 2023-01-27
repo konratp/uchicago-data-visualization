@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 50a98eb5e29cfcf3c43ad8c05e0eb98de89f1ba7
+>>>>>>> c917e536e78c7d44e36ceceb5d6c399763041525
+>>>>>>> 416ba82284befdf243fa3c45021c3dade7193a78
+>>>>>>> eceabe2282dfae73b3c46d7866192af05378cebf
 # History files
 .Rhistory
 .Rapp.history
@@ -5,6 +18,18 @@
 # Session Data files
 .RData
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+# User-specific files
+.Ruserdata
+
+>>>>>>> c917e536e78c7d44e36ceceb5d6c399763041525
+>>>>>>> 416ba82284befdf243fa3c45021c3dade7193a78
+>>>>>>> eceabe2282dfae73b3c46d7866192af05378cebf
 # Example code in package build process
 *-Ex.R
 
@@ -24,9 +49,24 @@ vignettes/*.pdf
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 
+<<<<<<< HEAD
 # .Rprofile API keys
 .Rprofile
 
+=======
+<<<<<<< HEAD
+# .Rprofile API keys
+.Rprofile
+
+=======
+<<<<<<< HEAD
+# .Rprofile API keys
+.Rprofile
+
+=======
+>>>>>>> c917e536e78c7d44e36ceceb5d6c399763041525
+>>>>>>> 416ba82284befdf243fa3c45021c3dade7193a78
+>>>>>>> eceabe2282dfae73b3c46d7866192af05378cebf
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
@@ -34,6 +74,13 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 416ba82284befdf243fa3c45021c3dade7193a78
+>>>>>>> eceabe2282dfae73b3c46d7866192af05378cebf
 .Rproj.user
 
 # Excel temporary
@@ -41,3 +88,26 @@ vignettes/*.pdf
 
 # .DS_Store
 .DS_Store
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+
+# R Environment Variables
+.Renviron
+<<<<<<< HEAD
+
+README.html
+=======
+=======
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+>>>>>>> ed2889edd42da43a59e6aeda57705b51d7e63455
+>>>>>>> 50a98eb5e29cfcf3c43ad8c05e0eb98de89f1ba7
+>>>>>>> c917e536e78c7d44e36ceceb5d6c399763041525
+>>>>>>> 416ba82284befdf243fa3c45021c3dade7193a78
+>>>>>>> eceabe2282dfae73b3c46d7866192af05378cebf

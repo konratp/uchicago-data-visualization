@@ -1,0 +1,13 @@
+name: name-popularity-checker
+title: name-popularity-checker
+username:
+account: kornpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6359266
+bundleId: 5939869
+url: https://kornpat.shinyapps.io/name-popularity-checker/
+when: 1653414210.11562
+lastSyncTime: 1653414210.11564
+asMultiple: FALSE
+asStatic: FALSE

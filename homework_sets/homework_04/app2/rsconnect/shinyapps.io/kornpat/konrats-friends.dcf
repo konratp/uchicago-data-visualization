@@ -1,0 +1,13 @@
+name: konrats-friends
+title: konrats-friends
+username:
+account: kornpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6359395
+bundleId: 5939877
+url: https://kornpat.shinyapps.io/konrats-friends/
+when: 1653414406.14604
+lastSyncTime: 1653414406.14605
+asMultiple: FALSE
+asStatic: FALSE
