@@ -1,0 +1,7 @@
+#specify languages used in repository
+**.Rmd linguist-language=RMarkdown
+**.rmd linguist-language=RMarkdown
+**.Rproj linguist-language=R
+**.rds linguist-language=R
+**.R linguist-language=R
+**.r linguist-language=R
